@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Ticket</title>
+</head>
+<body>
+    <h1>Create New Ticket</h1>
+
+    <form action="/tickets/tickets/save" method="post">
+        <label for="topicName">Topic Name:</label>
+        <input type="text" id="topicName" name="topicName" th:value="${ticket.tName}" readonly><br>
+
+        <label for="activity">Activity:</label>
+        <input type="text" id="activity" name="activity" th:value="${ticket.tDescription}" readonly><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea><br>
+
+        <input type="hidden" name="primePicksId" th:value="${ticket.tDescription}">
+        
+        <button type="submit">Create Ticket</button>
+    </form>
+</html>

@@ -1,0 +1,78 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Active PrimePicks</title>
+</head>
+<body>
+    <h1>Active PrimePicks</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Topic Name</th>
+                <th>Activity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+  
+        
+        
+            Loop through the list of active PrimePicks
+            <tr th:each="primePick : ${activePrimePicks}">
+                <td th:text="${primePick.ppID}"></td>
+                <td th:text="${primePick.topicName}"></td>
+                <td th:text="${primePick.activity}"></td>
+                <td>
+                    Redirect to the ticket creation page with pre-filled PrimePicks data
+                    <a th:href="@{/tickets/tickets/new(ppID=${primePick.ppID},topicName=${#strings.urlEncode(primePick.topicName)},activity=${#strings.urlEncode(primePick.activity)})}">
+                        Claim Task
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Active PrimePicks</title>
+</head>
+<body>
+    <h1>Active PrimePicks</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Topic Name</th>
+                <th>Activity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+             <!-- Loop through the list of active PrimePicks -->
+            <tr th:each="primePick : ${activePrimePicks}">
+                <td th:text="${primePick.ppID}"></td>
+                <td th:text="${primePick.topicName}"></td>
+                <td th:text="${primePick.activity}"></td>
+                <td>
+                    Redirect to the ticket creation page with pre-filled PrimePicks data
+	<a th:href="@{/tickets/tickets/ticketsAI/new(ppID=${primePick.ppID}, topicName=${primePick.topicName}, activity=${primePick.activity})}">
+    Claim Task
+</a>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

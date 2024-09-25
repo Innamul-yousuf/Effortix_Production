@@ -1,0 +1,212 @@
+package com.effortix.backend.AIServices;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class FindEmployyeeAI {
+	 public void runAPI() {
+	        try {
+	            // Define the API URL (Replace YOUR_API_KEY with the actual API key)
+	            String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCObxtlyDEDrzupiBXBcGZKz7u2az8zX_M";
+
+	            // Create URL object
+	            URL url = new URL(apiUrl);
+	            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+	            // Set request method to POST
+	            connection.setRequestMethod("POST");
+
+	            // Set the request headers
+	            connection.setRequestProperty("Content-Type", "application/json; utf-8");
+	            connection.setRequestProperty("Accept", "application/json");
+
+	            // Allow sending the request body
+	            connection.setDoOutput(true);
+
+	            // JSON request payload (modify the content as needed)
+	            String jsonInputString = "{ \"contents\": [{ \"parts\": [{ \"text\": \"Explain to make a Paper Rocket\" }]}]}";
+
+	            // Write JSON input string to the request body
+	            try (OutputStream os = connection.getOutputStream()) {
+	                byte[] input = jsonInputString.getBytes("utf-8");
+	                os.write(input, 0, input.length);
+	            }
+
+	            // Get the response code
+	            int responseCode = connection.getResponseCode();
+	            System.out.println("Response Code: " + responseCode);
+
+	            // Check if the response is successful
+	            if (responseCode == HttpURLConnection.HTTP_OK) {
+	                // Read the response
+	                try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+	                    StringBuilder response = new StringBuilder();
+	                    String responseLine;
+	                    while ((responseLine = br.readLine()) != null) {
+	                        response.append(responseLine.trim());
+	                    }
+	                    System.out.println("Response Body: " + response.toString());
+	                }
+	            } else {
+	                // Handle non-2xx response codes (error response)
+	                try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), "utf-8"))) {
+	                    StringBuilder errorResponse = new StringBuilder();
+	                    String responseLine;
+	                    while ((responseLine = br.readLine()) != null) {
+	                        errorResponse.append(responseLine.trim());
+	                    }
+	                    System.out.println("Error Response Body: " + errorResponse.toString());
+	                }
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	 
+//	 
+//	 public void findTaskResource() {
+//		String API_KEY="AIzaSyDaDPREzETk0KTH3x2sAhLP3s5dsF2pe9I";
+//
+//
+//				 # Adjust safety settings in generationConfig below.
+//				 # See https://ai.google.dev/gemini-api/docs/safety-settings
+//				 curl \
+//				   -X POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY} \
+//				   -H 'Content-Type: application/json' \
+//				   -d @<(echo '{
+//				   "contents": [
+//				     {
+//				       "role": "user",
+//				       "parts": [
+//				         {
+//				           "text": "So you are an expert in all the IT skills that are utilized in the IT domain. Just give the JSON output and don'\''t give any explanations"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Java  language.\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E001,Java,Expert in Java programming, including Spring Boot.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Python language.\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E002,Python,Skilled in data analysis and machine learning with Python.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in C#.\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Databases like SQL.\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Ruby\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in PHP\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Backend Services like GO\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E008,Go,Knowledgeable in Go for backend microservices.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Swift services\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\'''\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Kotlin services\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in TypeScript services\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript applications.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Machine learning services\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E012,Machine Learning, Strong background in machine learning algorithms and frameworks.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Data visualization like Power BI and tableau services\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E013,Data Visualization,Skilled in creating interactive data visualizations using D3.js and Tableau.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in DevOps services\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E014,DevOps,Experienced in CI/CD pipelines and Docker containerization.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Frontend services like UI/UX services\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E015,UI/UX Design, Proficient in user interface and user experience design principles.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Networking services\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E016,Networking,Knowledgeable in network protocols and infrastructure management.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Cloud computing services like GCP, AWS etc\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': \"Looking for someone who is skilled in Agile methodologies like Scrum, Jira\",\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: {'\''Response'\'':'\''E018,Agile Methodologies, Skilled in Agile project management and Scrum practices.'\''}"
+//				         },
+//				         {
+//				           "text": "input: {'\''Requirement'\'': Looking for two employees who have skills in Data Visual analytics analytics and are experts in managing Databases,\n'\''Employee_details'\'':\n['\''E001,Java,Expert in Java programming, including Spring Boot.'\'',\n'\''E002,Python,Skilled in data analysis and machine learning with\nPython.'\'',\n'\''E003,C#,Experienced in C# for enterprise applications and ASP.NET.'\'',\n'\''E004,SQL,Strong knowledge of SQL databases and query optimization.'\'',\n'\''E005,Ruby,Proficient in Ruby on Rails for web development.'\'',\n'\''E006,HTML,CSS,Skilled in creating responsive web designs using HTML and CSS.'\'',\n'\''E007,PHP,Experienced in server-side scripting with PHP and Laravel.'\'',\n'\''E008,Go,Knowledgeable in Go for backend microservices.'\'',\n'\''E009,Swift,Proficient in iOS development using Swift and Xcode.'\'',\n'\''E010,Kotlin,Skilled in Android app development with Kotlin.'\'',\n'\''E011,TypeScript,Expert in TypeScript for large-scale JavaScript\napplications.'\'',\n'\''E012,Machine Learning,Strong background in machine learning\nalgorithms and frameworks.'\'',\n'\''E013,Data Visualization,Skilled in creating interactive data\nvisualizations using D3.js and Tableau.'\'',\n'\''E014,DevOps,Experienced in CI/CD pipelines and Docker\ncontainerization.'\'',\n'\''E015,UI/UX Design,Proficient in user interface and user experience design principles.'\''\n'\''E016,Networking,Knowledgeable in network protocols and\ninfrastructure management.'\'',\n'\''E017,Cloud Computing,Experienced in AWS and Azure cloud services.'\'',\n'\''E018,Agile Methodologies,Skilled in Agile project management and Scrum practices.'\'']}"
+//				         },
+//				         {
+//				           "text": "output: "
+//				         }
+//				       ]
+//				     }
+//				   ],
+//				   "generationConfig": {
+//				     "temperature": 1,
+//				     "topK": 64,
+//				     "topP": 0.95,
+//				     "maxOutputTokens": 8192,
+//				     "responseMimeType": "text/plain"
+//				   }
+//				 }'); 
+//	 }
+//	 }
+}

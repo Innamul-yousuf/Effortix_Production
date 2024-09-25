@@ -29,7 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@Controller
+//@Controller
+//@RequestMapping("/primepicks")
 public class PrimePicksController {
 
     @Autowired
@@ -76,11 +77,11 @@ public class PrimePicksController {
 	 * }
 	 */
     
-    @GetMapping("/primepicks/active")
+    @GetMapping("/active")
     public String getActivePrimePicks(Model model) {
         List<PrimePicks> primePicksList = primePicksService.getActivePrimePicks();
         model.addAttribute("primePicksList", primePicksList);
-        return "primePicksUI/PickTasks"; // This corresponds to active.html
+        return "primePicksUI/active"; // This corresponds to active.html
     }
     
 

@@ -26,4 +26,10 @@ public class PrimePicksService {
     public PrimePicks createPrimePicks(PrimePicks primePicks) {
         return primePicksRepository.save(primePicks);
     }
+    
+    public PrimePicks getPrimePicksById(Long ppId) {
+    	
+    	return primePicksRepository.getById(ppId);
+    }
+    
 }

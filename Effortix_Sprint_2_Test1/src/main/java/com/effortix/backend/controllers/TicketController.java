@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.effortix.backend.EmailsUps.EmailService;
 import com.effortix.backend.models.Employee;
@@ -136,37 +137,36 @@ public class TicketController {
     }
 
     
-    @Autowired
-    ProjectService projectService2;
-    @GetMapping("/tickets/new")
-    public String createNewTicket(Model model) {
-        Ticket ticket=new Ticket();
-        List<Employee> employees = employeeService.getAllEmployees();
-        System.out.println("Employees For Form:"+employees.size()+employees+employees.get(0).geteId());
-        for(int i=0; i <employees.size();i++) {
-        	System.out.println("Employee name: "+employees.get(i).geteName());
-        }
-        List<Project> projects = projectService2.getAllProjects();
-        for(int i=0; i <projects.size();i++) {
-        	System.out.println("projects name: "+projects.get(i).getpName());
-        }
-   
-        
-        model.addAttribute("ticket", ticket);
-        model.addAttribute("employees", employees);
-        model.addAttribute("projects", projects);
-        
-        return "ticketUI/ticket_form";
-    }
+	
+	  @Autowired ProjectService projectService2;
+	  
+	  @GetMapping("/tickets/new") public String createNewTicket(Model model) {
+	  Ticket ticket=new Ticket(); List<Employee> employees =
+	  employeeService.getAllEmployees();
+	  System.out.println("Employees For Form:"+employees.size()+employees+employees
+	  .get(0).geteId()); for(int i=0; i <employees.size();i++) {
+	  System.out.println("Employee name: "+employees.get(i).geteName()); }
+	  List<Project> projects = projectService2.getAllProjects(); for(int i=0; i
+	  <projects.size();i++) {
+	  System.out.println("projects name: "+projects.get(i).getpName()); }
+	  
+	  
+	  model.addAttribute("ticket", ticket); model.addAttribute("employees",
+	  employees); model.addAttribute("projects", projects);
+	  
+	  return "ticketUI/ticket_form"; }
+	 
 
-	/*
-	 * @PostMapping("/tickets/save") public String saveTicket(Ticket ticket) {
-	 * 
-	 * ticketService.saveOrUpdateTicket(ticket);
-	 * System.out.println("ticket"+ticket.getTId()); sendEmailToResponsible(ticket);
-	 * System.out.println("saveTicket"); return "redirect:/tickets"; }
-	 * 
-	 */
+	
+	  @PostMapping("/tickets/save") public String saveTicket(Ticket ticket) {
+	  
+	  ticketService.saveOrUpdateTicket(ticket);
+	  System.out.println("ticket"+ticket.getTId()); sendEmailToResponsible(ticket);
+	  System.out.println("saveTicket"); return "redirect:/tickets"; 
+	  
+	  }
+	  
+	 
     
     @Autowired
    	private EmailService emailService;
@@ -192,6 +192,74 @@ public class TicketController {
     
     
     
-    
+       
+       
+       /////////////////AI Tasks
+    // Show the ticket creation form, pre-filled with values from the PrimePicks
+		/*
+		 * @GetMapping("/tickets/tickets/new") public String showNewTicketForm(
+		 * 
+		 * @RequestParam(name = "topicName", required = false) String topicName,
+		 * 
+		 * @RequestParam(name = "activity", required = false) String activity, Model
+		 * model) {
+		 * 
+		 * // Create a new empty ticket object Ticket ticket = new Ticket();
+		 * 
+		 * // Pre-fill ticket fields with PrimePicks data if available
+		 * 
+		 * if (topicName != null) { ticket.setTName(topicName); } if (activity != null)
+		 * { ticket.setTDescription(activity); }
+		 * 
+		 * // Get employees and projects for the form List<Employee> employees =
+		 * employeeService.getAllEmployees(); List<Project> projects =
+		 * projectService.getAllProjects();
+		 * 
+		 * // Add attributes to the model model.addAttribute("ticket", ticket);
+		 * model.addAttribute("employees", employees); model.addAttribute("projects",
+		 * projects);
+		 * 
+		 * return "ticketUI/ticket_form"; // Return the Thymeleaf template for the form
+		 * }
+		 */
+       
+       
+       @GetMapping("/tickets/ticketsAI/new")
+       public String showNewTicketForm(
+               @RequestParam(name = "ppID", required = false) Long ppID,
+               @RequestParam(name = "topicName", required = false) String topicName,
+               @RequestParam(name = "activity", required = false) String activity,
+               Model model) {
+
+           // Create a new empty ticket object
+           Ticket ticket = new Ticket();
+
+           // Pre-fill ticket fields with PrimePicks data if available
+           if (ppID != null) {
+              System.out.println("ppID: "+ppID); //) there is a field for PrimePicks ID
+           }
+           if (topicName != null) {
+               ticket.setTName(topicName);
+           }
+           if (activity != null) {
+               ticket.setTDescription(activity);
+           }
+           ticket.setTType("AI Generated");
+           Optional<Employee> fromEmployee=employeeService.getEmployeeById(152L);
+           ticket.setFromEmployee(fromEmployee.get());
+           ticket.setTStatus("Assigned");
+           
+           // Get employees and projects for the form
+           List<Employee> employees = employeeService.getAllEmployees();
+           List<Project> projects = projectService2.getAllProjects();
+
+           // Add attributes to the model
+           model.addAttribute("ticket", ticket);
+           model.addAttribute("employees", employees);
+           model.addAttribute("projects", projects);
+           
+           return "ticketUI/ticket_form";  // Return the Thymeleaf template for the form
+       }
+       
     
 }
