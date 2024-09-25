@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Active PrimePicks</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h1>Active PrimePicks</h1>
+
+<!-- Table to display prime picks -->
+<table border="1">
+    <thead>
+        <tr>
+            <th>Task Name</th>
+            <th>Description</th>
+            <th>Claim</th>
+        </tr>
+    </thead>
+    <tbody id="primePicksTable">
+        <!-- Rows will be populated here via AJAX -->
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function() {
+        // Fetch active prime picks and populate the table
+        $.ajax({
+            url: '/primepicks/active',  // Call the backend to get active prime picks
+            type: 'GET',
+            success: function(data) {
+                const primePicksList = data.primePicksList; // Assuming this is an array of prime picks
+                primePicksList.forEach(function(pick) {
+                    $('#primePicksTable').append(
+                        '<tr>' +
+                            '<td>' + pick.tName + '</td>' +
+                            '<td>' + pick.description + '</td>' +
+                            '<td><button onclick="claimTask(' + pick.id + ')">Claim</button></td>' +
+                        '</tr>'
+                    );
+                });
+            },
+            error: function() {
+                alert('Error fetching prime picks.');
+            }
+        });
+    });
+
+    // Claim Task function (triggered when "Claim" button is clicked)
+    function claimTask(taskId) {
+        // Create the ticket object with some sample data
+        let ticket = {
+            tName: 'Task-' + taskId, // Task name (you can customize as per your needs)
+            toEmployee: {
+                eEmail: 'employee@example.com' // Fetch employee email dynamically (use authentication in production)
+            }
+        };
+
+        // AJAX request to save the ticket
+        $.ajax({
+            url: '/save',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(ticket), // Convert the ticket object to JSON
+            success: function(response) {
+                alert('Task claimed successfully!');
+                location.reload(); // Reload the page to update the list
+            },
+            error: function() {
+                alert('Error claiming task.');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

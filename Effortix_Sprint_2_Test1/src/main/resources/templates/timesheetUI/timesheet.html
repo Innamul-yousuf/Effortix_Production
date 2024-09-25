@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Timesheet</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ 	<script src="/js/timesheet.js" th:src="@{/js/timesheet.js}"></script>
+ 	</head>
+<body>
+    <h1>Timesheet Page</h1>
+
+    <!-- Employee selection -->
+    <form id="timesheetForm">
+        <label for="employeeId">Select Employee:</label>
+        <select name="employeeId" id="employeeId" required>
+            <option value="" disabled selected>Select an employee</option>
+            <option th:each="employee : ${employees}" 
+                    th:value="${employee.eId}" 
+                    th:text="${employee.eName} + ' (' + ${employee.eDesignation} + ')'"></option>
+        </select>
+
+        <label for="fromDate">From Date:</label>
+        <input type="date" name="fromDate" id="fromDate" required>
+
+        <label for="toDate">To Date:</label>
+        <input type="date" name="toDate" id="toDate" required>
+
+        <button type="submit">Get Timesheet</button>
+    </form>
+
+    <!-- Render the timesheet entries -->
+    <div id="timesheetEntriesContainer">
+        <h2>Timesheet Entries</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+            <tbody id="timesheetEntriesTable">
+                <!-- Entries will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+
+    
+    
+</body>
+</html>

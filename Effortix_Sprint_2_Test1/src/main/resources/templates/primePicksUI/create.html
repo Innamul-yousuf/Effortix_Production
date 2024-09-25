@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create PrimePicks</title>
+</head>
+<body>
+<h1>Create PrimePicks</h1>
+
+<form th:action="@{/primepicks/create}" th:object="${primePicks}" method="post">
+    <label for="topicName">Topic Name:</label>
+    <input type="text" id="topicName" th:field="*{topicName}" required><br/>
+
+    <label for="status">Status:</label>
+    <select id="status" th:field="*{status}">
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+    </select><br/>
+
+    <label for="activity">Activity:</label>
+    <input type="text" id="activity" th:field="*{activity}" required><br/>
+
+    <button type="submit">Create PrimePicks</button>
+</form>
+
+<a href="/primepicks/active">Back to Active PrimePicks</a>
+</body>
+</html>

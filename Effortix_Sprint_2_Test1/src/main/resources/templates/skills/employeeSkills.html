@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Skills</title>
+</head>
+<body>
+    <h1>Employee Skills</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Skills</th>
+                <th>Skill Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="skill : ${skillsList}">
+                <td th:text="${skill.EId}"></td>
+                <td th:text="${skill.skills}"></td>
+                <td th:text="${skill.skills_detail}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
