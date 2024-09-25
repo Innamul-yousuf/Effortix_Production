@@ -8,7 +8,7 @@ import java.net.URL;
 
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class GeminiTesterClass {
 	 public void runAPI() {
 	        try {

@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.effortix.backend.AIServices.FindEmployyeeAI;
 import com.effortix.backend.EmailsUps.EmailService;
 import com.effortix.backend.models.EmployeeSkills;
 import com.effortix.backend.services.EmployeeSkillsService;
@@ -126,4 +127,18 @@ public class EffortixSprint2Application {
 
 		};
 	}
+	
+	@Autowired
+	private FindEmployyeeAI employyeeAI;
+	@Bean
+	public CommandLineRunner callFindResourceCode() {
+		return (args) -> {
+			System.out.println("________Started Finding Resource________");
+
+			employyeeAI.callerMethod();
+			
+
+		};
+	}
+	
 }
