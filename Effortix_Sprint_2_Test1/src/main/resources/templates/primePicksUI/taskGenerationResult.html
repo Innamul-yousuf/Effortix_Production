@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Generated Tasks for Employee</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Generated Tasks</h2>
+
+        <!-- Table to display the tasks -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>File Link</th>
+                    <th>Reference File</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Action</th> <!-- New column for the claim button -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Iterate over the list of tickets -->
+                <tr th:each="ticket : ${ticketList}">
+                    <td th:text="${ticket.tName}"></td>
+                    <td th:text="${ticket.tDescription}"></td>
+                    <td>
+                        <a th:href="${ticket.tFileLink}" th:text="${ticket.tFileLink}"></a>
+                    </td>
+                    <td th:text="${ticket.locationOfFile}"></td>
+                    <td th:text="${ticket.tStatus}"></td>
+                    <td th:text="${ticket.tType}"></td>
+                    <td>
+                        <!-- Form to claim the task -->
+                        <form th:action="@{/tickets/save}" method="post">
+                            <input type="hidden" th:name="tName" th:value="${ticket.tName}">
+                            <input type="hidden" th:name="tDescription" th:value="${ticket.tDescription}">
+                            <input type="hidden" th:name="tFileLink" th:value="${ticket.tFileLink}">
+                            <input type="hidden" th:name="locationOfFile" th:value="${ticket.locationOfFile}">
+                            <input type="hidden" th:name="tStatus" value="In Progress">
+                            <input type="hidden" th:name="tType" th:value="${ticket.tType}">
+                            <!-- Assuming the employee information is available and set by the controller -->
+                            <input type="hidden" th:name="toEmployee.eId" th:value="${employee.eId}">
+                            
+                            <button type="submit" class="btn btn-primary">Claim Task</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Back to employee selection or any other link -->
+        <a href="/employee-list" class="btn btn-primary">Back to Employee List</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html> -->
+<!-- <html xmlns:th="http://www.thymeleaf.org"> -->
+<!-- <head> -->
+<!--     <meta charset="UTF-8"> -->
+<!--     <title>Generated Tasks for Employee</title> -->
+<!--     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css"> -->
+<!-- </head> -->
+<!-- <body> -->
+<!--     <div class="container mt-4"> -->
+<!--         <h2>Generated Tasks</h2> -->
+
+<!--         Table to display the tasks -->
+<!--         <table class="table table-bordered"> -->
+<!--             <thead> -->
+<!--                 <tr> -->
+<!--                     <th>Task Name</th> -->
+<!--                     <th>Description</th> -->
+<!--                     <th>File Link</th> -->
+<!--                     <th>Reference File</th> -->
+<!--                     <th>Status</th> -->
+<!--                     <th>Type</th> -->
+<!--                 </tr> -->
+<!--             </thead> -->
+<!--             <tbody> -->
+<!--                 Iterate over the list of tickets -->
+<!--                 <tr th:each="ticket : ${ticketList}"> -->
+<!--                     <td th:text="${ticket.tName}"></td> -->
+<!--                     <td th:text="${ticket.tDescription}"></td> -->
+<!--                     <td> -->
+<!--                         <a th:href="${ticket.tFileLink}" th:text="${ticket.tFileLink}"></a> -->
+<!--                     </td> -->
+<!--                     <td th:text="${ticket.locationOfFile}"></td> -->
+<!--                     <td th:text="${ticket.tStatus}"></td> -->
+<!--                     <td th:text="${ticket.tType}"></td> -->
+<!--                 </tr> -->
+<!--             </tbody> -->
+<!--         </table> -->
+
+<!--         Back to employee selection or any other link -->
+<!--         <a href="/employee-list" class="btn btn-primary">Back to Employee List</a> -->
+<!--     </div> -->
+
+<!--     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+<!--     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script> -->
+<!--     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<!-- </body> -->
+<!-- </html> -->

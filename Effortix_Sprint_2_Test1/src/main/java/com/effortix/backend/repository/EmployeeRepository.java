@@ -8,4 +8,5 @@ import com.effortix.backend.models.Employee;
 public
 interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	 // Additional query methods can be defined here if needed
+	  Employee findByEIdAndEPassword(Long eId, String ePassword);
 }

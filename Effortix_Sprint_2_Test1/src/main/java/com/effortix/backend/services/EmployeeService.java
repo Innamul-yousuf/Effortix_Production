@@ -31,5 +31,8 @@ public class EmployeeService {
 	public void deleteEmployee(Long id) {
 		employeeRepository.deleteById(id);
 	}
-
+	
+	public Employee findByIdAndPassword(Long eId, String ePassword) {
+        return employeeRepository.findByEIdAndEPassword(eId, ePassword);
+    }
 }

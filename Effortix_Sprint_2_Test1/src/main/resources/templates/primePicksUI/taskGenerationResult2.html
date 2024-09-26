@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Task Generation Result</title>
+</head>
+<body>
+    <h1>Task Generation</h1>
+    
+    <h2>Employee Skills</h2>
+    <ul>
+        <li th:each="skill : ${employeeSkills}" th:text="${skill.skills}">Skill Name</li>
+    </ul>
+    
+    <h2>Active PrimePicks</h2>
+    <ul>
+        <li th:each="primePick : ${activePrimePicks}" th:text="${primePick.Activity}">PrimePick Topic</li>
+    </ul>
+    
+    <a href="/tasks/active">Back to Active Tasks</a>
+</body>
+</html>

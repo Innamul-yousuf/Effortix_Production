@@ -80,11 +80,37 @@ public class TicketController {
 		  System.out.println("Ticket"+ticket.getTName()+" ");
 		  System.out.println("Ticket"+ticket.getToEmployee().geteEmail()+" ");
 		  
-		  Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
-		  sendEmailToResponsible(ticket);
+		 
+		
 	  //sendEmailToResponsible(ticket);
 		 
+		  if (ticket.getCreatedDate() == null) {
+	            ticket.setCreatedDate(new Date()); // Set the current date
+	        }
 
+	        // Defaulting the project and fromEmployee if not set
+	        if (ticket.getProject() == null) {
+	            Optional<Project> aiProject = projectService.getProjectById(4L); // Fetch the AI_Project (you can use actual ID)
+	            if(aiProject.isEmpty()) {
+		            ticket.setProject(aiProject.get());
+
+	            }else{
+	            	System.out.println("not a Project");
+	
+	            }
+	        }
+
+	        if (ticket.getFromEmployee() == null) {
+	            Optional<Employee> aiEmployee = employeeService.getEmployeeById(654646546565L); // Fetch the AI employee (set this in the database)
+	            if(aiEmployee.isEmpty()) {
+	            	 ticket.setFromEmployee(aiEmployee.get());
+	            }else {
+	            	System.out.println("not a Employee");
+	            }
+	           
+	        }
+	        Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
+	        sendEmailToResponsible(ticket);
 	  System.out.println("saveTicket2"); 
 	  return "redirect:/tickets"; // Redirects//to the ticket list }
 	  }
@@ -129,7 +155,7 @@ public class TicketController {
         List<Employee> employees = employeeService.getAllEmployees(); // Fetch all employees
         List<Project> projects = projectService.getAllProjects(); // Fetch all projects
 
-        model.addAttribute("ticket", ticket);
+        model.addAttribute("ticket", ticket.get());
         model.addAttribute("employees", employees);
         model.addAttribute("projects", projects);
         
@@ -154,14 +180,18 @@ public class TicketController {
 	  model.addAttribute("ticket", ticket); model.addAttribute("employees",
 	  employees); model.addAttribute("projects", projects);
 	  
-	  return "ticketUI/ticket_form"; }
+	  return "ticketUI/ticket_form"; 
+	  
+	  
+	  }
 	 
 
 	
 	  @PostMapping("/tickets/save") public String saveTicket(Ticket ticket) {
 	  
 	  ticketService.saveOrUpdateTicket(ticket);
-	  System.out.println("ticket"+ticket.getTId()); sendEmailToResponsible(ticket);
+	  System.out.println("ticket"+ticket.getTId()); 
+	  sendEmailToResponsible(ticket);
 	  System.out.println("saveTicket"); return "redirect:/tickets"; 
 	  
 	  }

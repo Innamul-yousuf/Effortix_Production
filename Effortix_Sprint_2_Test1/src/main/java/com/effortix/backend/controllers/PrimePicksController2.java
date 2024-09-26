@@ -2,6 +2,7 @@ package com.effortix.backend.controllers;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.effortix.backend.AIServices.GenerateHotTasks;
 import com.effortix.backend.models.Employee;
+import com.effortix.backend.models.EmployeeSkills;
 import com.effortix.backend.models.PrimePicks;
 import com.effortix.backend.models.Ticket;
 import com.effortix.backend.services.EmployeeService;
+import com.effortix.backend.services.EmployeeSkillsService;
 import com.effortix.backend.services.PrimePicksService;
 import com.effortix.backend.services.TicketService;
+import com.google.gson.Gson;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,6 +50,10 @@ public class PrimePicksController2 {
     private EmployeeService employeeService;
 
     
+    @Autowired
+    private EmployeeSkillsService employeeSkillsService;
+
+    
    
     // Display all active PrimePicks (tasks) on the page
     @GetMapping("/tasks/active")
@@ -67,4 +76,67 @@ public class PrimePicksController2 {
 
         return "redirect:/tickets/tickets/new";  // Redirect to ticket creation with pre-filled data
     }
+    
+	/*
+	 * @GetMapping("/generate-tasks/{employeeId}") public String
+	 * generateTasksForEmployee(@PathVariable Long employeeId, Model model) { //
+	 * Fetch employee skills List<EmployeeSkills> employeeSkills =
+	 * employeeSkillsService.getEmployeeSkillsByEId(employeeId); // Fetch active
+	 * PrimePicks List<PrimePicks> activePrimePicks =
+	 * primePicksService.getActivePrimePicks();
+	 * 
+	 * // Call AI to generate tasks (method can be implemented later) List<Ticket>
+	 * ticketList = callAIToGenerateTasks(employeeSkills, activePrimePicks);
+	 * 
+	 * 
+	 * model.addAttribute("employeeSkills", employeeSkills);
+	 * model.addAttribute("activePrimePicks", activePrimePicks);
+	 * 
+	 * return "primePicksUI/taskGenerationResult"; // Name of the view to display
+	 * the results }
+	 */
+    
+    @GetMapping("/generate-tasks/{employeeId}")
+    public String generateTasksForEmployee(@PathVariable Long employeeId, Model model) {
+        // Fetch employee skills
+        List<EmployeeSkills> employeeSkills = employeeSkillsService.getEmployeeSkillsByEId(employeeId);
+        
+        // Fetch active PrimePicks
+        List<PrimePicks> activePrimePicks = primePicksService.getActivePrimePicks();
+
+        // Call AI to generate tasks (implement this method)
+        List<Ticket> ticketList = callAIToGenerateTasks(employeeSkills, activePrimePicks);
+        Optional<Employee> employee = employeeService.getEmployeeById(employeeId);
+
+        // Add data to model
+        model.addAttribute("employeeSkills", employeeSkills);
+        model.addAttribute("activePrimePicks", activePrimePicks);
+        model.addAttribute("ticketList", ticketList);
+        
+        model.addAttribute("employee", employee.get()); // Add employee details for task assignment
+
+        return "primePicksUI/taskGenerationResult"; // Name of the view to display the results
+    }
+
+    
+    
+    @Autowired
+    GenerateHotTasks generateHotTasks;
+    private List<Ticket> callAIToGenerateTasks(List<EmployeeSkills> employeeSkills, List<PrimePicks> activePrimePicks) {
+       System.out.println("AI Called for Ticket Cretion");
+       Gson gson = new Gson();
+       String employeeSkill=gson.toJson(employeeSkills);
+       System.out.println("Employee Skill: " + employeeSkill);
+       
+       String primePicks=gson.toJson(activePrimePicks);
+       System.out.println("Active Prime Picks: " + primePicks);
+       
+       List<Ticket> ticketList =generateHotTasks.generateSuitableTasks(employeeSkill, primePicks);
+       for(Ticket ticket: ticketList) {
+    	   System.out.println(ticket.getTName()+ "  "+ticket.getTDescription());
+       }
+       return ticketList;
+       
+    }
+    
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Login</title>
+</head>
+<body>
+
+<h1>Login</h1>
+
+<form th:action="@{/login}" method="post">
+    <label for="eId">Employee ID:</label>
+    <input type="text" id="eId" name="eId" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <button type="submit">Login</button>
+
+    <div th:if="${param.error}" style="color: red;">
+        <p>Invalid Employee ID or Password.</p>
+    </div>
+
+    <div th:if="${param.logout}" style="color: green;">
+        <p>You have been logged out.</p>
+    </div>
+</form>
+
+</body>
+</html>
