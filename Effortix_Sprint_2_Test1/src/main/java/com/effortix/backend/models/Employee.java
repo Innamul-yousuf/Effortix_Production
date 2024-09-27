@@ -34,6 +34,34 @@ public class Employee {
 	private String eContact;
 	@Column(name = "eDesignation")
 	private String eDesignation;
+	
+	private Boolean eInBench;
+	private Boolean eISLead;
+	
+	
+	public Boolean geteInBench() {
+		return eInBench;
+	}
+
+
+
+	public void seteInBench(Boolean eInBench) {
+		this.eInBench = eInBench;
+	}
+
+
+
+	public Boolean geteISLead() {
+		return eISLead;
+	}
+
+
+
+	public void seteISLead(Boolean eISLead) {
+		this.eISLead = eISLead;
+	}
+
+
 
 	public Employee() {
 	}
@@ -115,6 +143,7 @@ public class Employee {
 	public void seteDesignation(String eDesignation) {
 		this.eDesignation = eDesignation;
 	}
+	
 
 	
 

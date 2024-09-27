@@ -3,7 +3,11 @@ package com.effortix.backend.controllers;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -18,14 +22,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.effortix.backend.AIServices.FindEmployyeeAI;
 import com.effortix.backend.EmailsUps.EmailService;
 import com.effortix.backend.models.Employee;
+import com.effortix.backend.models.EmployeeSkills;
 import com.effortix.backend.models.Project;
 import com.effortix.backend.models.Ticket;
 import com.effortix.backend.services.EmployeeService;
+import com.effortix.backend.services.EmployeeSkillsService;
 import com.effortix.backend.services.ProjectService;
 import com.effortix.backend.services.TicketService;
+import com.google.gson.Gson;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -76,7 +85,7 @@ public class TicketController {
 	
 	  // Save a new ticket
 	  
-	  @PostMapping("/save") public String saveTicket2(@ModelAttribute("ticket")Ticket ticket) {
+    @PostMapping("/save") public String saveTicket2(@ModelAttribute("ticket")Ticket ticket) {
 		  System.out.println("Ticket"+ticket.getTName()+" ");
 		  System.out.println("Ticket"+ticket.getToEmployee().geteEmail()+" ");
 		  
@@ -84,36 +93,50 @@ public class TicketController {
 		
 	  //sendEmailToResponsible(ticket);
 		 
-		  if (ticket.getCreatedDate() == null) {
-	            ticket.setCreatedDate(new Date()); // Set the current date
-	        }
-
-	        // Defaulting the project and fromEmployee if not set
-	        if (ticket.getProject() == null) {
-	            Optional<Project> aiProject = projectService.getProjectById(4L); // Fetch the AI_Project (you can use actual ID)
-	            if(aiProject.isEmpty()) {
-		            ticket.setProject(aiProject.get());
-
-	            }else{
-	            	System.out.println("not a Project");
-	
-	            }
-	        }
-
-	        if (ticket.getFromEmployee() == null) {
-	            Optional<Employee> aiEmployee = employeeService.getEmployeeById(654646546565L); // Fetch the AI employee (set this in the database)
-	            if(aiEmployee.isEmpty()) {
-	            	 ticket.setFromEmployee(aiEmployee.get());
-	            }else {
-	            	System.out.println("not a Employee");
-	            }
-	           
-	        }
 	        Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
 	        sendEmailToResponsible(ticket);
 	  System.out.println("saveTicket2"); 
 	  return "redirect:/tickets"; // Redirects//to the ticket list }
 	  }
+
+    
+    	
+    @PostMapping("/saveByAI")
+    public String saveTicketByAI(@ModelAttribute("ticket") Ticket ticket) { 
+        System.out.println("Ticket Name: " + ticket.getTName());
+        System.out.println("Assigned Employee: " + ticket.getToEmployee().geteEmail());
+
+        // Set the createdDate to the current date
+        ticket.setCreatedDate(new Date());
+
+        // Set the ticket status to "In Progress"
+        ticket.setTStatus("In Progress");
+
+        // Set default project and fromEmployee if not provided
+        // Assuming you have predefined values in your database for AI project and AI-assigned employee
+        Optional<Project> defaultProject = projectService.getProjectById(3L);
+        if (defaultProject.isPresent()) {
+            ticket.setProject(defaultProject.get());
+        } else {
+            throw new RuntimeException("Default AI Project not found");
+        }
+
+        Optional<Employee> aiAssignedEmployee = employeeService.getEmployeeById(152L);
+        if (aiAssignedEmployee.isPresent()) {
+            ticket.setFromEmployee(aiAssignedEmployee.get());
+        } else {
+            throw new RuntimeException("AI Assigned Employee not found");
+        }
+
+        // Save the ticket with all details
+        Ticket savedTicket = ticketService.saveOrUpdateTicket(ticket);
+
+        // Optionally send email notification to the responsible employee
+        sendEmailToResponsible(savedTicket);
+
+        System.out.println("Ticket saved successfully with Name: " + savedTicket.getTName());
+        return "redirect:/tickets"; // Redirects to the ticket list page or another view
+    }
 
     // View details of a single ticket
     @GetMapping("/{id}")
@@ -223,35 +246,7 @@ public class TicketController {
     
     
        
-       
-       /////////////////AI Tasks
-    // Show the ticket creation form, pre-filled with values from the PrimePicks
-		/*
-		 * @GetMapping("/tickets/tickets/new") public String showNewTicketForm(
-		 * 
-		 * @RequestParam(name = "topicName", required = false) String topicName,
-		 * 
-		 * @RequestParam(name = "activity", required = false) String activity, Model
-		 * model) {
-		 * 
-		 * // Create a new empty ticket object Ticket ticket = new Ticket();
-		 * 
-		 * // Pre-fill ticket fields with PrimePicks data if available
-		 * 
-		 * if (topicName != null) { ticket.setTName(topicName); } if (activity != null)
-		 * { ticket.setTDescription(activity); }
-		 * 
-		 * // Get employees and projects for the form List<Employee> employees =
-		 * employeeService.getAllEmployees(); List<Project> projects =
-		 * projectService.getAllProjects();
-		 * 
-		 * // Add attributes to the model model.addAttribute("ticket", ticket);
-		 * model.addAttribute("employees", employees); model.addAttribute("projects",
-		 * projects);
-		 * 
-		 * return "ticketUI/ticket_form"; // Return the Thymeleaf template for the form
-		 * }
-		 */
+    
        
        
        @GetMapping("/tickets/ticketsAI/new")
@@ -291,5 +286,45 @@ public class TicketController {
            return "ticketUI/ticket_form";  // Return the Thymeleaf template for the form
        }
        
+       
+
+       @Autowired
+       FindEmployyeeAI findEmployyeeAI;
+       @Autowired
+       EmployeeSkillsService employeeSkillsService;
+       //AI Suugestion Employees
+       @PostMapping("/tickets/getAiSuggestedEmployees")
+       @ResponseBody
+       public List<Employee> getAiSuggestedEmployees(@RequestBody Map<String, String> requestBody) {
+           String description = requestBody.get("description");
+          
+           Gson gson = new Gson();
+        	List<EmployeeSkills> employeeSkills= employeeSkillsService.getAllEmployeeSkills();
+        	String EmployeeSkillsJSON = gson.toJson(employeeSkills);
+            System.out.println("JSON output: " + EmployeeSkillsJSON);
+           // ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+            // Submit the task for asynchronous execution
+			/*
+			 * executorService.submit(() -> {
+			 * findEmployyeeAI.findEmployeeWithSkill(description, EmployeeSkillsJSON); });
+			 */
+            System.out.println("Continuing with other operations while finding employees with skill...");
+
+            // Shutdown the executor service after your tasks are complete
+            //executorService.shutdown();
+            
+            
+          
+           
+         
+           
+           // Call the method to get AI-suggested employees based on the description
+           List<Employee> suggestedEmployees = findEmployyeeAI.findEmployeeWithSkill(description, EmployeeSkillsJSON);
+           
+           // Filter out Optional.empty() and return the list of employees
+           return suggestedEmployees;
+       }
+
     
 }

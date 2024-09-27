@@ -35,7 +35,7 @@
                     <td th:text="${ticket.tType}"></td>
                     <td>
                         <!-- Form to claim the task -->
-                        <form th:action="@{/tickets/save}" method="post">
+                        <form th:action="@{/tickets/saveByAI}" method="post">
                             <input type="hidden" th:name="tName" th:value="${ticket.tName}">
                             <input type="hidden" th:name="tDescription" th:value="${ticket.tDescription}">
                             <input type="hidden" th:name="tFileLink" th:value="${ticket.tFileLink}">

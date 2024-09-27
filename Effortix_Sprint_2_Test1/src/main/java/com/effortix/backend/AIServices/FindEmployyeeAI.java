@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,7 +16,9 @@ import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.effortix.backend.models.Employee;
 import com.effortix.backend.models.EmployeeSkills;
+import com.effortix.backend.services.EmployeeService;
 import com.effortix.backend.services.EmployeeSkillsService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,7 +54,10 @@ public class FindEmployyeeAI {
          executorService.shutdown();
          
           }
-    public void findEmployeeWithSkill(String FindEmployeeQuery, String EmployeeSkillsTable) {
+    
+    @Autowired
+    EmployeeService employeeService;
+    public List<Employee> findEmployeeWithSkill(String ticketDescription, String EmployeeSkillsTable) {
         try {
             // Escape the EmployeeSkillsTable JSON string
             String escapedEmployeeSkillsTable = EmployeeSkillsTable.replace("\"", "\\\"");
@@ -71,9 +78,14 @@ public class FindEmployyeeAI {
 
             // Allow sending the request body
             connection.setDoOutput(true);
-
+            String SystemInstruciton= "You are an AI assistant responsible for finding the Eid of employees who match specific skills or work experiences."
+            		+ "The data may contain repetitive entries where the same employee Eid appears multiple times with different skills or work details. "
+            		+ "The term skill refers to a specific work area or task the employee has previously worked on. Only return the `Eid` of the matching employee. "
+            		+ "Do not include the skill or work detail in your response. If there are many employees with particular skill give only the top 3 employees suitable for the skill mentioned in description of the ticket. "
+            		+ "Find the employee who worked on or has accurate and prisice work or previous worked with the description of the ticket. The desciprion from the ticket is: "+ticketDescription +" from ";
             // JSON request payload
-            String jsonInputString = "{ \"contents\": [{ \"parts\": [{ \"text\": \"" + FindEmployeeQuery + "\" }, { \"text\": \"" + escapedEmployeeSkillsTable + "\" }] }] }";
+            String PostInstruction="Only give top 3 employees";
+            String jsonInputString = "{ \"contents\": [{ \"parts\": [{ \"text\": \""+SystemInstruciton+ "\" }, { \"text\": \"" + escapedEmployeeSkillsTable  +"\" }] }] }";
 
             // Write JSON input string to the request body
             try (OutputStream os = connection.getOutputStream()) {
@@ -107,19 +119,27 @@ public class FindEmployyeeAI {
 
                     // Use regex to find numbers
                     String[] numbers =text.split("[,\n]+");
-
+                    List<Employee> AISuggestedEmployee=new ArrayList<>();
                     // Print each number
                     System.out.println("Only Id:");
                     for (String number : numbers) {
                         number = number.trim(); // Trim whitespace
                         if (number.matches("\\d+")) { // Check if it is a digit
                             System.out.println(number);
+                            Optional<Employee> employee=employeeService.getEmployeeById(Long.parseLong(number));
+                            if(employee.isPresent()) {
+                                AISuggestedEmployee.add(employee.get());
+
+                            }else {
+                            	System.out.println("Employee Not Present...");
+                            }
+                        
                         }
                     }
                   
                     // Print the result
                     System.out.println();
-                    
+                    return AISuggestedEmployee;
                 }
             } else {
                 // Handle non-2xx response codes (error response)
@@ -136,8 +156,9 @@ public class FindEmployyeeAI {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+        return null;
 
+    }
 }
 
 	

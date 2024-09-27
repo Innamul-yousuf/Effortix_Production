@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.effortix.backend.EmailsUps.EmailService;
 import com.effortix.backend.models.Employee;
+import com.effortix.backend.models.EmployeeLeads;
 import com.effortix.backend.models.Ticket;
 import com.effortix.backend.repository.TicketRepository;
 
@@ -110,6 +111,9 @@ public class TicketService {
     
     @Autowired
    	private EmailService emailService;
+    
+    @Autowired
+    private EmployeeLeadsService employeeLeadsService;
        //Email
        private void sendEmailToResponsible(Ticket savedTicket) {
     	   long Eid = savedTicket.getToEmployee().geteId();
@@ -118,7 +122,10 @@ public class TicketService {
            
            // Retrieve the assigned employee's email
            String assignedEmployeeEmail = toEmployee.get().geteEmail(); 
-           System.out.println("assignedEmployeeEmail: "+assignedEmployeeEmail);
+           Optional<EmployeeLeads> LeadEmployee=employeeLeadsService.findEmployeeLeadsByEmployee(toEmployee.get());
+           String LeadEmailID=LeadEmployee.get().getLead().geteEmail();
+           
+           System.out.println("assignedEmployeeEmail: "+assignedEmployeeEmail+ "Lead Email: "+ LeadEmailID);
            // Prepare email details
            String subject = "New Ticket Assigned: " + toEmployee.get().geteName();
            String text = "Dear " + toEmployee.get().geteName() + ",\n\n"
@@ -129,7 +136,7 @@ public class TicketService {
                    + "Best regards,\nEffortix Team";
 
            // Send email notification to the assigned employee
-           emailService.sendSimpleMessage(assignedEmployeeEmail, subject, text);
+           emailService.sendSimpleMessage(LeadEmailID, subject, text);
 
        }
     

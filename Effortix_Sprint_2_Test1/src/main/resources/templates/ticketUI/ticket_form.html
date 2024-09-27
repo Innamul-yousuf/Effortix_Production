@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create/Edit Ticket</title>
+    <script src="/js/ticket_AI_SuggestionEmployees.js" th:src="@{/js/ticket_AI_SuggestionEmployees.js}"></script>
 </head>
 <body>
 <h1 th:text="${ticket.tId != null ? 'Edit Ticket' : 'Create New Ticket'}"></h1>
@@ -46,6 +47,15 @@
     <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
 </select><br/>
 
+<button type="button" id="askAISuggestions">Ask AI Suggestions</button>
+
+<!-- AI Suggested Employees Dropdown -->
+<label for="aiSuggestedEmployees">AI Suggested Employees:</label>
+<select id="aiSuggestedEmployees">
+    <option value="" disabled selected>Select an employee</option>
+    <!-- AI-suggested employees will be populated here -->
+</select><br/>
+
 <!-- Dropdown for To Employee -->
 <label for="tToEID">To Employee:</label>
 <select id="tToEID" th:field="*{toEmployee.eId}">
@@ -64,5 +74,45 @@
 </form>
 
 <a href="/tickets">Back to List</a>
+
+<script>
+    document.getElementById('askAISuggestions').addEventListener('click', function() {
+        // Get the ticket description
+        var description = document.getElementById('tDescription').value;
+        
+        // Make an AJAX request to the backend to get AI-suggested employees
+        fetch('getAiSuggestedEmployees', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ description: description })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Clear the dropdown
+            var aiSuggestedDropdown = document.getElementById('aiSuggestedEmployees');
+            aiSuggestedDropdown.innerHTML = '<option value="" disabled selected>Select an employee</option>';
+            
+            // Populate the dropdown with AI-suggested employees
+            data.forEach(function(employee) {
+                var option = document.createElement('option');
+                option.value = employee.eId;
+                option.text = employee.eName;
+                aiSuggestedDropdown.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    
+    document.getElementById('aiSuggestedEmployees').addEventListener('change', function() {
+        var selectedEmployeeId = this.value; // Get selected AI-suggested employee ID
+        var toEmployeeDropdown = document.getElementById('tToEID'); // To Employee dropdown
+        
+        // Set the selected employee in the To Employee dropdown
+        toEmployeeDropdown.value = selectedEmployeeId;
+    });
+</script>
+
 </body>
 </html>
