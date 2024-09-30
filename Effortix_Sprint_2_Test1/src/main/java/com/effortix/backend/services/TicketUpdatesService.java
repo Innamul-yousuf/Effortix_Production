@@ -4,7 +4,11 @@
   import org.springframework.beans.factory.annotation.Autowired; import
   org.springframework.stereotype.Service;
 
+import com.effortix.backend.AIServices.GenerateEmployeeSkillsAI;
+import com.effortix.backend.AIServices.GenerateTimeSheetsEntriesAI;
+import com.effortix.backend.EmailsUps.EmailService;
 import com.effortix.backend.models.Employee;
+import com.effortix.backend.models.EmployeeSkills;
 import com.effortix.backend.models.EmployeeTimesheetEntries;
 import com.effortix.backend.models.Project;
 import com.effortix.backend.models.ProjectEmployee;
@@ -14,11 +18,14 @@ import com.effortix.backend.repository.EmployeeRepository;
 import com.effortix.backend.repository.ProjectEmployeeRepository;
 import com.effortix.backend.repository.TicketRepository;
 import com.effortix.backend.repository.TicketUpdatesRepository;
+import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List; import java.util.Optional;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
   
 @Service
 public class TicketUpdatesService{
@@ -42,6 +49,8 @@ public class TicketUpdatesService{
         return ticketUpdatesRepository.findByEmployeeAndDateInRange(employeeId, currentDate);
     }
     
+    @Autowired
+    EmailService emailService;
    
     public TicketUpdates saveOrUpdateTicketUpdates(TicketUpdates ticketUpdates) {
         // Validate input
@@ -81,39 +90,109 @@ public class TicketUpdatesService{
            if (!existingEntries.isEmpty()) {
                // Update existing entry
                EmployeeTimesheetEntries existingEntry = existingEntries.get(0); // Assuming only one entry per day
-               String updatedActivity = existingEntry.getEtActivity() + ", " + savedTicketUpdates.gettUpdate() + " FROM AI";
+               String AIEntry=callTimeSheetAI(savedTicketUpdates.getTicket().getTId(), savedTicketUpdates);
+               String updatedActivity = existingEntry.getEtActivity() + ", " + AIEntry;
                existingEntry.setEtActivity(updatedActivity);
                
                // Save the updated entry
+               
                timesheetEntriesService.createTimesheetEntry(existingEntry);
+               
+               
            } else {
                // No existing entry, create a new one
                timesheetEntry.setEtActivity(savedTicketUpdates.gettUpdate() + " FROM AI");
                timesheetEntriesService.createTimesheetEntry(timesheetEntry);
+               
            }
+          
+            
+           
+           callReplyEmailMethod(savedTicketUpdates);
+           
+           callEmployeeSkillsAI(savedTicketUpdates.getTicket().getTId(), savedTicketUpdates);
+           
        }
        
-       
-       // Create a new timesheet entry
-//       public EmployeeTimesheetEntries createTimesheetEntry(EmployeeTimesheetEntries timesheetEntry) {
-//           return employeeTimesheetEntriesRepository.save(timesheetEntry);
-//       }
-       
-		/*
-		 * if(ticketUpdates2 != null) {
-		 * 
-		 * timesheetEntries.setEmployee(ticketUpdates2.getEmployee());
-		 * timesheetEntries.setDate(ticketUpdates2.getDateTime());
-		 * timesheetEntries.setEtActivity(ticketUpdates2.gettUpdate()+" FROM AI");
-		 * 
-		 * timesheetEntries.setTicket(ticketUpdates2.getTicket());
-		 * timesheetEntries.setProject(ticketUpdates2.getProject());
-		 * 
-		 * timesheetEntriesService.createTimesheetEntry(timesheetEntries); }
-		 */
+      
         return savedTicketUpdates;
     }
+    
+    @Autowired
+    TicketService ticketService;
+    @Autowired
+    EmployeeSkillsService employeeSkillsService;
+    @Autowired
+    GenerateEmployeeSkillsAI employeeSkillaI; // Assuming this class handles the API call
 
+    public void callEmployeeSkillsAI(Long ticketID, TicketUpdates ticketUpdates) {
+        Optional<Ticket> ticketOptional = ticketService.getTicketById(ticketID);
+        if (!ticketOptional.isPresent()) {
+            throw new IllegalArgumentException("Invalid ticket ID");
+        }
+        
+        Ticket ticket = ticketOptional.get();
+        String ticketDetailJson = new Gson().toJson(ticket);
+        String theUpdate = ticketUpdates.gettUpdate();
+        
+        // Call AI to get new skills and work experience
+        System.out.println("Before AI: "+theUpdate+" ticketDetailJson "+ ticketDetailJson);
+        Map<String, String> skillAndWorkExp = employeeSkillaI.generateSkillsAndUpdatePreviousWorks(ticketDetailJson, theUpdate);
+
+        // Fetch the employee skills for the current employee
+        List<EmployeeSkills> employeeSkillsList = employeeSkillsService.getEmployeeSkillsByEId(ticketUpdates.getEmployee().geteId());
+        
+        // Update each EmployeeSkills entry
+        for (EmployeeSkills employeeSkill : employeeSkillsList) {
+            // Append new skills and work experience to existing entries
+            String previousSkills = employeeSkill.getSkills();
+            String previousWorks = employeeSkill.getSkills_detail();
+            
+            // Append AI-generated skills and work experience
+            String newSkills = skillAndWorkExp.get("skills");
+            String newWorks = skillAndWorkExp.get("work_experience");
+            
+            
+            employeeSkill.setSkills(previousSkills + ", " + newSkills);
+            employeeSkill.setSkills_detail(previousWorks + ", " + newWorks);
+            
+            // Save updated employee skills
+            employeeSkillsService.saveOrUpdateEmployeeSkills(employeeSkill);
+            System.out.println("ESID: "+employeeSkill.getEsID());
+        }
+     
+        if(employeeSkillsList.size()==0) {
+        	   EmployeeSkills employeeSkills =new EmployeeSkills();
+        	 String newSkills = skillAndWorkExp.get("skills");
+             String newWorks = skillAndWorkExp.get("work_experience");
+             employeeSkills.setSkills( newSkills);
+             employeeSkills.setSkills_detail(newWorks);
+             employeeSkills.setEId(ticket.getToEmployee().geteId());
+             employeeSkillsService.saveOrUpdateEmployeeSkills(employeeSkills);
+             System.out.println("ESID: "+employeeSkills.getEsID());
+
+        }
+    }
+
+    @Autowired
+    GenerateTimeSheetsEntriesAI sheetsEntriesAI;
+    
+    public String callTimeSheetAI(Long ticketID, TicketUpdates ticketUpdates) {
+        Optional<Ticket> ticketOptional = ticketService.getTicketById(ticketID);
+        if (!ticketOptional.isPresent()) {
+            throw new IllegalArgumentException("Invalid ticket ID");
+        }
+        
+        Ticket ticket = ticketOptional.get();
+        String ticketDetailJson = new Gson().toJson(ticket);
+        String theUpdate = ticketUpdates.gettUpdate();
+        
+        // Call AI to get new skills and work experience
+        System.out.println("Before AI: "+theUpdate+" ticketDetailJson "+ ticketDetailJson);
+      String AIResponce= sheetsEntriesAI.generateTimeSheetEntries(ticketDetailJson, theUpdate);
+
+       return AIResponce;
+    }
     
     public Optional<TicketUpdates> getTicketUpdatesById(Long tuId) {
         return ticketUpdatesRepository.findById(tuId);
@@ -135,6 +214,23 @@ public class TicketUpdatesService{
             return ticketUpdatesRepository.findByTicketIdAndEmployeeIdAndProjectId(ticketId, employeeId, projectId);
         }
     
+        @Autowired
+        EmployeeService employeeService;
+        public void callReplyEmailMethod(TicketUpdates ticketUpdates) {
+        	 Optional<Ticket> ticketOptional = ticketService.getTicketById(ticketUpdates.getTicket().getTId());
+             if (ticketOptional.isPresent()) {
+          	 Long lFromEid=  ticketOptional.get().getFromEmployee().geteId();
+          	 Optional<Employee> fromEmployee = employeeService.getEmployeeById(lFromEid);
+          	Long lToEid=  ticketOptional.get().getToEmployee().geteId();
+         	 Optional<Employee> toEmployee = employeeService.getEmployeeById(lToEid);
+         	 
+          	 String sNewTicketUpdate="New update in Ticket: "+ticketOptional.get().getTId();
+          	 String Content="Hi "+fromEmployee.get().geteName()+","
+          	 		+ "There’s a new update on ticket "+ticketOptional.get().getTId()+": "+ticketOptional.get().getTName()+" :"
+          	 				+ "New Update: "+ticketUpdates.gettUpdate();
+          	   emailService.sendSimpleMessage(fromEmployee.get().geteEmail(), sNewTicketUpdate, Content);
+             }
+        }
 
     
 }

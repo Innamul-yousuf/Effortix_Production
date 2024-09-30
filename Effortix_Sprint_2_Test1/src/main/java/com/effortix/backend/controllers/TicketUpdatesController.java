@@ -80,7 +80,7 @@ public class TicketUpdatesController {
 
 		// Save the ticket update
 		ticketUpdatesService.saveOrUpdateTicketUpdates(ticketUpdates);
-
+		
 		return  "ticketUI/ticket_detail";
 	}
 
@@ -176,8 +176,8 @@ public class TicketUpdatesController {
 	        
 	        newUpdate.setEmployee(employeeService.getEmployeeById(employeeId).get()); // Assuming Employee entity
 	       newUpdate.setProject(projectService.getProjectById(projectId).get()); // Assuming Project entity
-		newUpdate.setDateTime(dateTime);
-		newUpdate.settUpdate(updateText);
+	       newUpdate.setDateTime(dateTime);
+	       newUpdate.settUpdate(updateText);
 
 		// Save the new update
 		ticketUpdatesService.saveOrUpdateTicketUpdates(newUpdate);
@@ -185,6 +185,35 @@ public class TicketUpdatesController {
 		// Redirect back to the ticket details page after submission
 		//return "ticketUI/ticket_detail";
 		return ResponseEntity.noContent().build();
+	}
+	
+	//Failed
+	@PostMapping("/ticketUpdates/dynamic")
+	public ResponseEntity<List<TicketUpdates>> submitUpdate(
+	        @RequestParam("ticketId") Long ticketId,
+	        @RequestParam("employeeId") Long employeeId,
+	        @RequestParam("projectId") Long projectId,
+	        @RequestParam("dateTime") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateTime,
+	        @RequestParam("tUpdate") String updateText) {
+
+	    // Create a new TicketUpdates object and set values from form inputs
+	    TicketUpdates newUpdate = new TicketUpdates();
+	    newUpdate.setTicket(ticketService.getTicketById(ticketId).get());
+	    newUpdate.setEmployee(employeeService.getEmployeeById(employeeId).get());
+	    newUpdate.setProject(projectService.getProjectById(projectId).get());
+	    newUpdate.setDateTime(dateTime);
+	    newUpdate.settUpdate(updateText);
+
+	    // Save the new update
+	    ticketUpdatesService.saveOrUpdateTicketUpdates(newUpdate);
+
+	    // Get updated list of previous updates for the ticket
+	    Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
+
+	    List<TicketUpdates> previousUpdates = ticketUpdatesService.getUpdatesByTicketEmployeeProject(ticketId, ticket.get().getToEmployee().geteId(), ticket.get().getProject().getpId());
+
+	    // Return the updated list as JSON
+	    return ResponseEntity.ok(previousUpdates);
 	}
 	
 	/*

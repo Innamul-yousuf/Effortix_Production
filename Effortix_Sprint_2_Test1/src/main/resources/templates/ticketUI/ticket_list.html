@@ -17,7 +17,7 @@
         <td th:text="${ticket.tName}"></td>
         <td>
             <a th:href="@{/ticketUpdates/ticket/{id}(id=${ticket.tId})}">View</a> |
-            <a th:href="@{/tickets/{id}/edit(id=${ticket.tId})}">Edit</a> |
+			<a th:href="@{tickets/tickets/edit/{tId}(tId=${ticket.tId})}">Edit</a>
             <form th:action="@{/tickets/{id}/delete(id=${ticket.tId})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>

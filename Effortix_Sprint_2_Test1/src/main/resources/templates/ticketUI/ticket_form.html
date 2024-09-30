@@ -11,10 +11,10 @@
     <input type="hidden" th:name="*{tId}" th:value="*{tId}"/>
 
     <label for="tName">Ticket Name:</label>
-    <input type="text" id="tName" th:field="*{tName}" /><br/>
+    <input type="text" id="tName" th:field="*{tName}" required/><br/>
 
     <label for="tDescription">Description:</label>
-    <textarea id="tDescription" th:field="*{tDescription}"></textarea><br/>
+    <textarea id="tDescription" th:field="*{tDescription}" required></textarea><br/>
 
     <label for="tFileLink">File Link:</label>
     <input type="text" id="tFileLink" th:field="*{tFileLink}" /><br/>
@@ -26,19 +26,19 @@
     <input type="number" id="tFlag" th:field="*{tFlag}" /><br/>
 
     <label for="deadline">Deadline:</label>
-    <input type="date" id="deadline" th:field="*{deadline}" placeholder="yyyy-MM-dd"/><br/>
+    <input type="date" id="deadline" th:field="*{deadline}" placeholder="yyyy-MM-dd" required/><br/>
 
     <label for="createdDate">Created Date:</label>
-    <input type="date" id="createdDate" th:field="*{createdDate}" placeholder="yyyy-MM-dd"/><br/>
+    <input type="date" id="createdDate" th:field="*{createdDate}" placeholder="yyyy-MM-dd" required/><br/>
 
     <label for="tType">Type:</label>
-    <input type="text" id="tType" th:field="*{tType}" /><br/>
+    <input type="text" id="tType" th:field="*{tType}" required/><br/>
 
     <label for="tStatus">Status:</label>
-    <input type="text" id="tStatus" th:field="*{tStatus}" /><br/>
+    <input type="text" id="tStatus" th:field="*{tStatus}" required/><br/>
 
-    <label for="eDesignation">Designation:</label>
-    <input type="text" id="eDesignation" th:field="*{eDesignation}" /><br/>
+    <!-- <label for="eDesignation">Designation:</label>
+    <input type="text" id="eDesignation" th:field="*{eDesignation}" /><br/> -->
 
   <!-- Dropdown for From Employee -->
 <label for="tFromEID">From Employee:</label>

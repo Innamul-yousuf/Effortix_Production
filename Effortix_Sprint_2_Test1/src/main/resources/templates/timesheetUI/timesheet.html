@@ -4,6 +4,8 @@
     <title>Timesheet</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  	<script src="/js/timesheet.js" th:src="@{/js/timesheet.js}"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+ 	
  	</head>
 <body>
     <h1>Timesheet Page</h1>
@@ -26,6 +28,10 @@
 
         <button type="submit">Get Timesheet</button>
     </form>
+    
+     <!-- Button to download as Excel -->
+    <button id="downloadExcel">Download Timesheet as Excel</button>
+    
 
     <!-- Render the timesheet entries -->
     <div id="timesheetEntriesContainer">

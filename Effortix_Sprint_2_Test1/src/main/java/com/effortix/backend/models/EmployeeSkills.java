@@ -29,10 +29,10 @@ public class EmployeeSkills {
     public EmployeeSkills() {
 	}
 
-	@Column(name = "skills")
+	@Column(name = "skills", length = 600000)
     private String skills;
 
-    @Column(name = "skillsDetail")
+    @Column(name = "skillsDetail", length = 600000)
     private String skills_detail;
 
 	public Long getEsID() {

@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.effortix.backend.AIServices.FindEmployyeeAI;
 import com.effortix.backend.EmailsUps.EmailService;
@@ -17,6 +18,7 @@ import com.effortix.backend.testers.ProjectEmployeeTester;
 import com.effortix.backend.testers.TicketTester;
 
 @SpringBootApplication
+@EnableScheduling
 public class EffortixSprint2Application {
 	@Autowired
 	private ProjectEmployeeTester projectEmployeeTester;

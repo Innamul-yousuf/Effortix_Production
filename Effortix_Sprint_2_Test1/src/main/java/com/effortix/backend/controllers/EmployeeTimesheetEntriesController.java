@@ -99,21 +99,41 @@ public class EmployeeTimesheetEntriesController {
 
     
     
+	/*
+	 * @GetMapping("/employee/{employeeId}/dates")
+	 * 
+	 * @ResponseBody // Ensure this is present if returning JSON public
+	 * List<EmployeeTimesheetEntries> getTimesheetEntriesByEmployeeIdAndDate(
+	 * 
+	 * @PathVariable Long employeeId,
+	 * 
+	 * @RequestParam("fromDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date
+	 * fromDate,
+	 * 
+	 * @RequestParam("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate)
+	 * { // Add error handling try { return
+	 * timesheetService.getTimesheetEntriesByEmployeeIdAndDate(employeeId, fromDate,
+	 * toDate); } catch (Exception e) { // Log the exception e.printStackTrace();
+	 * throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+	 * "An error occurred while fetching data."); } }
+	 */
+
     @GetMapping("/employee/{employeeId}/dates")
-    @ResponseBody // Ensure this is present if returning JSON
+    @ResponseBody
     public List<EmployeeTimesheetEntries> getTimesheetEntriesByEmployeeIdAndDate(
             @PathVariable Long employeeId,
             @RequestParam("fromDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
             @RequestParam("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
-        // Add error handling
+        // Error handling and data fetching logic
         try {
             return timesheetService.getTimesheetEntriesByEmployeeIdAndDate(employeeId, fromDate, toDate);
         } catch (Exception e) {
-            // Log the exception
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while fetching data.");
         }
     }
 
+    
+    
     
 }

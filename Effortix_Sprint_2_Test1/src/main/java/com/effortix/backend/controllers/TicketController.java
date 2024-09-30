@@ -155,8 +155,14 @@ public class TicketController {
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Optional<Ticket> ticket = ticketService.getTicketById(id);
+        Long fromEmployee=ticket.get().getFromEmployee().geteId();
+        Optional<Employee> FromEmployeeObj=employeeService.getEmployeeById(fromEmployee);
+        Long ToEmployee=ticket.get().getToEmployee().geteId();
+        Optional<Employee> ToEmployeeObj=employeeService.getEmployeeById(ToEmployee);
+
         if (ticket.isPresent()) {
             model.addAttribute("ticket", ticket.get());
+            model.addAttribute("er", FromEmployeeObj.get());
             return "ticketUI/ticket_form"; // Returns 'ticket_form.html'
         } else {
             model.addAttribute("errorMessage", "Ticket not found");
@@ -182,7 +188,7 @@ public class TicketController {
         model.addAttribute("employees", employees);
         model.addAttribute("projects", projects);
         
-        return "ticket-form"; // Thymeleaf template name
+        return "ticketUI/ticket_form"; // Thymeleaf template name
     }
 
     
@@ -215,7 +221,7 @@ public class TicketController {
 	  ticketService.saveOrUpdateTicket(ticket);
 	  System.out.println("ticket"+ticket.getTId()); 
 	  sendEmailToResponsible(ticket);
-	  System.out.println("saveTicket"); return "redirect:/tickets"; 
+	  System.out.println("saveTicket"); return "redirect:/tickets";
 	  
 	  }
 	  
@@ -327,4 +333,9 @@ public class TicketController {
        }
 
     
+       @GetMapping("/dashboard")
+       public String showDashboard(Model model) {
+           model.addAttribute("ticket", new Ticket());
+           return "pages/dashboard"; // Thymeleaf will look for dashboard.html
+       }
 }
