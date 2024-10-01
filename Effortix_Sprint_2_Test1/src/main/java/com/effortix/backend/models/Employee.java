@@ -2,12 +2,19 @@ package com.effortix.backend.models;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "Employee") // Maps to the 'employees' table in the database
@@ -30,6 +37,8 @@ public class Employee {
 	private int eFlag;
 	private String eRole;
 	
+	 @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date eJoinDate;
 	private String eContact;
 	@Column(name = "eDesignation")
@@ -38,6 +47,9 @@ public class Employee {
 	private Boolean eInBench;
 	private Boolean eISLead;
 	
+	 @ManyToOne(fetch = FetchType.LAZY)
+	 @JoinColumn(name = "lead_id", referencedColumnName = "eId", nullable = true)
+	 private Employee eLead;
 	
 	public Boolean geteInBench() {
 		return eInBench;
@@ -142,6 +154,18 @@ public class Employee {
 
 	public void seteDesignation(String eDesignation) {
 		this.eDesignation = eDesignation;
+	}
+
+
+
+	public Employee geteLead() {
+		return eLead;
+	}
+
+
+
+	public void seteLead(Employee eLead) {
+		this.eLead = eLead;
 	}
 	
 

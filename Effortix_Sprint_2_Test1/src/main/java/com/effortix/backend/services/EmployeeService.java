@@ -35,4 +35,29 @@ public class EmployeeService {
 	public Employee findByIdAndPassword(Long eId, String ePassword) {
         return employeeRepository.findByEIdAndEPassword(eId, ePassword);
     }
+	
+	 public List<Employee> getAllLeads() {
+	        return employeeRepository.findAllLeads();
+	    }
+	 
+	 
+	 // Get the count of employees where eInBench is true
+	    public long getBenchEmployeeCount() {
+	        return employeeRepository.countByEInBenchTrue();
+	    }
+
+	    // Get the count of employees where eInBench is false
+	    public long getNonBenchEmployeeCount() {
+	        return employeeRepository.countByEInBenchFalse();
+	    }
+
+	    // Get all employees where eInBench is true
+	    public List<Employee> getBenchEmployees() {
+	        return employeeRepository.findByEInBenchTrue();
+	    }
+
+	    // Get all employees where eInBench is false
+	    public List<Employee> getNonBenchEmployees() {
+	        return employeeRepository.findByEInBenchFalse();
+	    }
 }

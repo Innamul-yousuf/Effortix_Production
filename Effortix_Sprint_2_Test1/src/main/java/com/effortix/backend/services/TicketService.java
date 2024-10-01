@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.effortix.backend.AIServices.GenerateEmployeeCredits;
 import com.effortix.backend.EmailsUps.EmailService;
 import com.effortix.backend.models.Employee;
+import com.effortix.backend.models.EmployeeCredits;
 import com.effortix.backend.models.EmployeeLeads;
 import com.effortix.backend.models.Ticket;
+import com.effortix.backend.models.TicketUpdates;
 import com.effortix.backend.repository.TicketRepository;
+import com.google.gson.Gson;
 
 @Service
 public class TicketService {
@@ -23,8 +28,15 @@ public class TicketService {
     private EmployeeService employeeService;
     // Create or update a ticket
     public Ticket saveOrUpdateTicket(Ticket ticket) {
+    	Ticket existingTicket = ticketRepository.findById(ticket.getTId()).orElse(null);
+    	
         Ticket savedTicket= ticketRepository.save(ticket);
        
+     // Check if the ticket status is updated to "Closed"
+        if ( ticket.getTStatus().equals("Closed")) {
+        	calculateCredits(savedTicket); // Call the method when the status is closed
+        }
+        
         sendEmailToResponsible(ticket);
         return savedTicket;
     }
@@ -139,5 +151,67 @@ public class TicketService {
            emailService.sendSimpleMessage(LeadEmailID, subject, text);
 
        }
-    
+       
+       @Autowired
+       GenerateEmployeeCredits credits;
+
+       @Autowired
+       @Lazy
+       TicketUpdatesService ticketUpdatesService;
+
+       @Autowired
+       EmployeeCreditsService creditsService;
+
+       private void calculateCredits(Ticket ticket) {
+       System.out.println("Processing ticket for credit calculation...");
+
+       // Convert the ticket details to JSON
+       String ticketDetailJson = new Gson().toJson(ticket);
+
+       // Fetch ticket updates related to the employee and project
+       List<TicketUpdates> ticketUpdates = ticketUpdatesService.getUpdatesByTicketEmployeeProject(
+           ticket.getTId(), 
+           ticket.getToEmployee().geteId(), 
+           ticket.getProject().getpId()
+       );
+
+       // Convert ticket updates to JSON
+       String ticketUpdatesJson = new Gson().toJson(ticketUpdates);
+
+       // Calculate the credits based on ticket details and updates
+       String sCalculatedValues = credits.calculateCredits(ticketDetailJson, ticketUpdatesJson);
+
+       // Fetch the previous credits for the employee
+       List<EmployeeCredits> previousCreditList = creditsService.getEmployeeCreditsByEId(ticket.getToEmployee().geteId());
+       Double totalCredits = 0D;
+
+       // Sum up the previous credits if any
+       for (EmployeeCredits empCredits : previousCreditList) {
+           totalCredits += empCredits.getCredits();
+       }
+
+       // Parse the newly calculated credits
+       Double calculatedValueD = Double.parseDouble(sCalculatedValues);
+
+       // Add the new calculated value to total credits
+       totalCredits += calculatedValueD;
+
+       System.out.println("Calculated Value = " + calculatedValueD);
+       
+       
+       // If no previous credits exist, create a new EmployeeCredits entry
+       
+           EmployeeCredits newCredits = new EmployeeCredits();
+           newCredits.setEId(ticket.getToEmployee().geteId());
+           newCredits.setCredits(calculatedValueD);  // Set the new calculated credits
+           newCredits.setCreditType(ticket.getTType());  // Set appropriate credit type (adjust as needed)
+           newCredits.setCredits(calculatedValueD);
+           newCredits.setDate(new Date());
+           // Save the new credits in the database
+           creditsService.saveOrUpdateEmployeeCredits(newCredits);
+           System.out.println("New credits created and saved for the employee.");
+
+      
+
+       }
 }

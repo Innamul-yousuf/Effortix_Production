@@ -39,16 +39,44 @@ public class EmployeeController {
         return "employeeUI/employee_list"; // Thymeleaf template name (employee_list.html)
     }
 
-    @GetMapping("/new")
-    public String showEmployeeForm(Model model) {
-        model.addAttribute("employee", new Employee());
-        return "employeeUI/employee_form"; // Thymeleaf template name (employee_form.html)
-    }
+  
 
     @PostMapping("/save")
     public String saveEmployee(@ModelAttribute("employee") Employee employee) {
         employeeService.saveOrUpdateEmployee(employee);
         return "redirect:/employees";
+    }
+    
+    
+    
+    @GetMapping("/new")
+    public String showEmployeeForm(Model model) {
+        model.addAttribute("employee", new Employee());
+
+        // Assuming there's a method to fetch all leads (employees who are leads)
+        List<Employee> leads = employeeService.getAllLeads(); 
+        model.addAttribute("leads", leads); // Adding the list of leads to the model
+
+        return "employeeUI/employee_form"; // Thymeleaf template name (employee_form.html)
+    }
+    
+    @GetMapping
+    @RequestMapping("/charts")
+    public String listEmployeesForChart(Model model) {
+        // Get the list of all employees
+        List<Employee> employees = employeeService.getAllEmployees();
+
+        // Calculate the number of employees on bench and not on bench
+        long benchCount = employeeService.getBenchEmployeeCount();
+        long nonBenchCount = employeeService.getNonBenchEmployeeCount();
+
+        // Add the data to the model
+        model.addAttribute("benchCount", benchCount);
+        model.addAttribute("nonBenchCount", nonBenchCount);
+        model.addAttribute("employees", employees);
+
+        // Return the Thymeleaf template name (employee_list.html)
+        return "pages/employeeChart";
     }
 }
 

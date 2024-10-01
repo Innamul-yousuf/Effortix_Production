@@ -89,7 +89,12 @@ public class TicketController {
 		  System.out.println("Ticket"+ticket.getTName()+" ");
 		  System.out.println("Ticket"+ticket.getToEmployee().geteEmail()+" ");
 		  
-		 
+		  if (ticket.getTId() == null) {
+		        System.out.println("Ticket ID is null, indicating a new ticket");
+		        // Handle creating a new ticket if necessary
+		    } else {
+		        System.out.println("Updating existing ticket with ID: " + ticket.getTId());
+		    }
 		
 	  //sendEmailToResponsible(ticket);
 		 
@@ -98,7 +103,9 @@ public class TicketController {
 	  System.out.println("saveTicket2"); 
 	  return "redirect:/tickets"; // Redirects//to the ticket list }
 	  }
+   
 
+    
     
     	
     @PostMapping("/saveByAI")
@@ -180,15 +187,24 @@ public class TicketController {
     
     @GetMapping("/tickets/edit/{tId}")
     public String editTicket(@PathVariable("tId") Long tId, Model model) {
-        Optional<Ticket> ticket = ticketService.getTicketById(tId);
-        List<Employee> employees = employeeService.getAllEmployees(); // Fetch all employees
-        List<Project> projects = projectService.getAllProjects(); // Fetch all projects
-
-        model.addAttribute("ticket", ticket.get());
-        model.addAttribute("employees", employees);
-        model.addAttribute("projects", projects);
-        
-        return "ticketUI/ticket_form"; // Thymeleaf template name
+    	Optional<Ticket> ticketOptional = ticketService.getTicketById(tId);
+    	
+        if (ticketOptional.isPresent()) {
+            Ticket ticket = ticketOptional.get();
+            model.addAttribute("ticket", ticket);
+            // Populate employees and projects for dropdowns
+            List<Employee> employees = employeeService.getAllEmployees();
+            List<Project> projects = projectService.getAllProjects();
+          
+                model.addAttribute("tId", tId);
+           
+            model.addAttribute("employees", employees);
+            model.addAttribute("projects", projects);
+            return "ticketUI/ticket_form"; // Thymeleaf template name
+        } else {
+            // Handle the case where the ticket is not found
+            return "redirect:/tickets"; // or show an error message
+        }
     }
 
     
@@ -221,7 +237,8 @@ public class TicketController {
 	  ticketService.saveOrUpdateTicket(ticket);
 	  System.out.println("ticket"+ticket.getTId()); 
 	  sendEmailToResponsible(ticket);
-	  System.out.println("saveTicket"); return "redirect:/tickets";
+	  System.out.println("saveTicket"); 
+	  return "redirect:/tickets";
 	  
 	  }
 	  
@@ -338,4 +355,49 @@ public class TicketController {
            model.addAttribute("ticket", new Ticket());
            return "pages/dashboard"; // Thymeleaf will look for dashboard.html
        }
+       
+       @GetMapping("/sharePoint/{id}")
+      
+       public String showSharePoint(@PathVariable("id") Long id, Model model) {
+    	   Optional<Ticket> ticket = ticketService.getTicketById(id);
+           if (ticket.isPresent()) {
+               model.addAttribute("ticket", ticket.get());
+               return "pages/sharePointIntegrations";  // Returns 'ticket_detail.html'
+           } else {
+               model.addAttribute("errorMessage", "Ticket not found");
+               return "error"; // Returns 'error.html'
+           }
+       }
+       
+       
+       @PostMapping("tickets/save/{id}")
+       public String saveTicket2(@PathVariable("id") Long id, @ModelAttribute("ticket") Ticket ticket) {
+           // Retrieve the existing ticket if it's an update
+           if (ticket.getTId() == null) {
+               // Fetch the ticket from the service if it's not already set
+               Optional<Ticket> existingTicket = ticketService.getTicketById(id);
+               if (existingTicket != null) {
+                   // Update the ticket with the existing ticket data
+                   ticket.setTId(existingTicket.get().getTId()); // Ensure ticket ID is set
+                   ticket.setTName(existingTicket.get().getTName());
+                   ticket.setToEmployee(existingTicket.get().getToEmployee());
+                   // Add any other fields as necessary
+               } else {
+                   System.out.println("No existing ticket found for ID: " + id);
+                   return "redirect:/tickets"; // Redirect if the ticket does not exist
+               }
+           }
+
+           // Print ticket details for debugging
+           System.out.println("Ticket: " + ticket.getTName());
+           System.out.println("To Employee Email: " + ticket.getToEmployee().geteEmail());
+
+           // Handle the ticket saving logic
+           Ticket savedTicket = ticketService.saveOrUpdateTicket(ticket);
+           sendEmailToResponsible(ticket);
+           System.out.println("saveTicket2");
+           
+           return "redirect:/tickets"; // Redirect to the ticket list
+       }
+       
 }

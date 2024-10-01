@@ -38,8 +38,7 @@ public class EmailSchedulerCode {
           	 		+ "Please Update the Ticket: "+liveTicket.getTName()+ "from the link: http://localhost:8088/ticketUpdates/ticket/"+liveTicket.getTId();
           	   emailService.sendSimpleMessage(fromEmployee.get().geteEmail(), sNewTicketUpdate, Content);
 		}
-             
-			
+            
 		
     }
 	

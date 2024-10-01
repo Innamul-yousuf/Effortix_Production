@@ -43,4 +43,9 @@ public class EmployeeCreditsService {
     public void deleteEmployeeCreditsById(Long id) {
         employeeCreditsRepository.deleteById(id);
     }
+    
+    public List<EmployeeCredits> getEmployeeCreditsByEId(Long eId) {
+        return employeeCreditsRepository.findByEmployeeId(eId);
+    }
+    
 }

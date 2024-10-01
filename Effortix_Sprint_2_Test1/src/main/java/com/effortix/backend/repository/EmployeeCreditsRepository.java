@@ -19,4 +19,8 @@ public interface EmployeeCreditsRepository extends JpaRepository<EmployeeCredits
     List<EmployeeCredits> findByEmployeeAndDateBetween(@Param("eId") Long eId, 
                                                        @Param("startDate") Date startDate, 
                                                        @Param("endDate") Date endDate);
+    
+    
+    @Query("SELECT ec FROM EmployeeCredits ec WHERE ec.EId = :eId")
+    List<EmployeeCredits> findByEmployeeId(Long eId);
 }

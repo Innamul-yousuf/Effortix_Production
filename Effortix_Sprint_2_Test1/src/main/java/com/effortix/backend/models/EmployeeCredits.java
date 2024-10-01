@@ -22,7 +22,15 @@ public class EmployeeCredits {
     @Column(name = "ecID")
     private Long ecID;
 
-    @Column(name = "EId", nullable = false)
+    public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	@Column(name = "EId", nullable = false)
     private Long EId;
 
     @Column(name = "Date", nullable = false)
@@ -34,11 +42,7 @@ public class EmployeeCredits {
     @Column(name = "TimePeriod")
     private String timePeriod;
 
-    @Column(name = "IssueID")
-    private Long issueID;
-
-    @Column(name = "TId")
-    private Long TId;
+  
 
     @Column(name = "CreditType")
     private String creditType;
@@ -49,9 +53,7 @@ public class EmployeeCredits {
 
    
 
-    @ManyToOne
-    @JoinColumn(name = "TId", insertable = false, updatable = false)
-    private Ticket ticket;
+   
 
     // Getters and Setters
 
@@ -88,21 +90,7 @@ public class EmployeeCredits {
         this.timePeriod = timePeriod;
     }
 
-    public Long getIssueID() {
-        return issueID;
-    }
-
-    public void setIssueID(Long issueID) {
-        this.issueID = issueID;
-    }
-
-    public Long getTId() {
-        return TId;
-    }
-
-    public void setTId(Long TId) {
-        this.TId = TId;
-    }
+ 
 
     public String getCreditType() {
         return creditType;
@@ -122,11 +110,5 @@ public class EmployeeCredits {
 
     
 
-    public Ticket getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
+   
 }

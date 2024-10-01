@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee List</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Employee List</h1>
+
+    <!-- Display the Pie Chart -->
+    <canvas id="employeeBenchChart" width="400" height="400"></canvas>
+
+    <script>
+        // Get data from the Thymeleaf model
+        const benchCount = /*[[${benchCount}]]*/ 0;
+        const nonBenchCount = /*[[${nonBenchCount}]]*/ 0;
+
+        const ctx = document.getElementById('employeeBenchChart').getContext('2d');
+        const employeeBenchChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Bench', 'Non-Bench'],
+                datasets: [{
+                    label: 'Employee Bench Status',
+                    data: [benchCount, nonBenchCount],
+                    backgroundColor: ['#FF6384', '#36A2EB'],
+                    hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+    
+    <!-- Optional: You can also display the employee list as a table here -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Is Bench</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="employee : ${employees}">
+                <td th:text="${employee.eId}"></td>
+                <td th:text="${employee.eName}"></td>
+                <td th:text="${employee.eInBench}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

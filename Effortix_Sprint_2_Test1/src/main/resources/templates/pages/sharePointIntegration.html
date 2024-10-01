@@ -6,9 +6,10 @@
 </head>
 <body>
 <h1 th:text="${ticket.tId != null ? 'Edit Ticket' : 'Create New Ticket'}"></h1>
+
 <form th:action="@{/tickets/save}" th:object="${ticket}" method="post">
-     <input type="hidden" th:name="tId" th:value="*{tId}"/>
-    
+    <input type="hidden" th:name="*{tId}" th:value="*{tId}"/>
+
     <label for="tName">Ticket Name:</label>
     <input type="text" id="tName" th:field="*{tName}" required/><br/>
 

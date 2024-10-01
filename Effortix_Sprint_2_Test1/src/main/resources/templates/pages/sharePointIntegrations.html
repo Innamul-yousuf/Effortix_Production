@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ticket Details</title>
+</head>
+<body>
+<h1>Ticket Details</h1>
+
+<!-- Ticket Details -->
+<p><strong>ID:</strong> <span th:text="${ticket.tId}"></span></p>
+<p><strong>Name:</strong> <span th:text="${ticket.tName}"></span></p>
+<p><strong>Description:</strong> <span th:text="${ticket.tDescription}" id="ticketDescription"></span></p>
+<p><strong>File Link:</strong> <span th:text="${ticket.tFileLink}"></span></p>
+<p><strong>Location of File:</strong> <span th:text="${ticket.locationOfFile}"></span></p>
+<p><strong>Flag:</strong> <span th:text="${ticket.tFlag}"></span></p>
+<p><strong>Deadline:</strong> <span th:text="${#dates.format(ticket.deadline, 'yyyy-MM-dd')}"></span></p>
+<p><strong>Created Date:</strong> <span th:text="${#dates.format(ticket.createdDate, 'yyyy-MM-dd')}"></span></p>
+<p><strong>Assigned By:</strong> <span th:text="${ticket.fromEmployee.eName}"></span></p>
+<p><strong>Assigned To:</strong> <span th:text="${ticket.toEmployee.eName}"></span></p>
+<p><strong>Type:</strong> <span th:text="${ticket.tType}"></span></p>
+<p><strong>Status:</strong> <span th:text="${ticket.tStatus}"></span></p>
+<p><strong>Designation:</strong> <span th:text="${ticket.eDesignation}"></span></p>
+
+<!-- Direct Link to SharePoint -->
+<h2>Search in SharePoint</h2>
+<a th:href="@{https://iz.sharepoint.com/_layouts/15/sharepoint.aspx?query=${solution variants}}" target="_blank">
+    Search for "{{ticket.tDescription}}" in SharePoint
+</a>
+
+<!-- Form to Add a New Update -->
+<h2>Add Update</h2>
+<form th:action="@{/ticketUpdates/ticketUpdates}" method="post">
+    <input type="hidden" th:value="${ticket.tId}" name="ticketId"/>
+    <input type="hidden" th:value="${#dates.format(ticket.createdDate, 'yyyy-MM-dd')}" name="dateTime"/>
+
+    <!-- Employee selection -->
+    <label for="employee">Employee:</label>
+    <input type="text" id="employee" th:value="${ticket.toEmployee.eId}" name="employeeId" readonly/><br/>
+
+    <!-- Project selection -->
+    <label for="project">Project:</label>
+    <input type="text" id="project" th:value="${ticket.project.pId}" name="projectId" readonly/><br/>
+
+    <!-- Update Text Box -->
+    <label for="tUpdate">Update:</label>
+    <textarea id="tUpdate" name="tUpdate"></textarea><br/>
+
+    <button type="submit">Submit Update</button>
+</form>
+
+<!-- Display Previous Updates -->
+<h2>Previous Updates</h2>
+<ul>
+    <li th:each="update : ${previousUpdates}">
+        <p><strong>Date:</strong> <span th:text="${#dates.format(update.dateTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+        <p><strong>Employee:</strong> <span th:text="${update.employee.eName}"></span></p>
+        <p><strong>Project:</strong> <span th:text="${update.project.pName}"></span></p>
+        <p><strong>Update:</strong> <span th:text="${update.tUpdate}"></span></p>
+        <p><strong>File Link:</strong> <span th:text="${update.fileLink}"></span></p>
+    </li>
+    <li th:if="${#lists.isEmpty(previousUpdates)}">No updates available.</li>
+</ul>
+
+<a href="/tickets">Back to List</a>
+<a th:href="@{/tickets/{id}/edit(id=${ticket.tId})}">Edit</a>
+</body>
+</html>

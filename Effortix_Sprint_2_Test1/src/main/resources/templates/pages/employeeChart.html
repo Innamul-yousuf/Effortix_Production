@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Style for the chart container */
+        #chartContainer {
+            width: 30%; /* Adjust as needed for medium size */
+            margin: auto; /* Center the chart */
+        }
+
+        /* Set the height for the chart */
+        canvas {
+            height: 400px; /* Adjust height for medium size */
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Employee Status Pie Chart</h1>
+    <div id="chartContainer">
+        <canvas id="employeeChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('employeeChart').getContext('2d');
+        const employeeChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['On Bench', 'Not on Bench'],
+                datasets: [{
+                    label: 'Employee Status',
+                    
+                    data: [
+                    	
+                    	 /* /*  [[${benchCount}]],  // Data for On Bench
+                          [[${nonBenchCount}]]  */ // Data for Not on Bench */
+                    ].map(Number),
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Employee Status Distribution Comment out'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
