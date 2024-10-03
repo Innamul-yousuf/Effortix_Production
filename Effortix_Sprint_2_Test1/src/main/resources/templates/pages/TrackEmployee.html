@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Select an Employee to View Details</h1>
+
+    <!-- Dropdown for employees -->
+    <select id="employeeDropdown">
+        <option value="" disabled selected>Select an employee</option>
+        <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
+    </select>
+
+    <!-- Area to display employee details dynamically -->
+    <div id="employeeDetails" style="margin-top: 20px;">
+        <h2>Employee Details</h2>
+        <p><strong>ID: </strong><span id="empId"></span></p>
+        <p><strong>Name: </strong><span id="empName"></span></p>
+        <p><strong>Email: </strong><span id="empEmail"></span></p>
+        <p><strong>Designation: </strong><span id="empDesignation"></span></p>
+        <p><strong>Contact: </strong><span id="empContact"></span></p>
+        <p><strong>Lead: </strong><span id="empLead"></span></p>
+    </div>
+
+    <!-- Area to display ticket details dynamically -->
+    <div id="ticketDetails" style="margin-top: 20px;">
+        <h2>Tickets Assigned to Employee</h2>
+        <table id="ticketTable" border="1">
+            <thead>
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>Ticket Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Ticket rows will be added dynamically via AJAX -->
+            </tbody>
+        </table>
+    </div>
+
+
+<!-- Table to display projects -->
+    <h2>Employee Projects</h2>
+    <table id="projectTable">
+        <thead>
+            <tr>
+                <th>Project ID</th>
+                <th>Project Name</th>
+				<th>End Date</th>
+                <th>Priority Level</th>
+                
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Projects will be dynamically added here via AJAX -->
+        </tbody>
+    </table>
+    
+    
+    
+    
+    <!-- AJAX to fetch and update ticket details -->
+    <script>
+        $(document).ready(function () {
+            // When the employee dropdown changes
+            $('#employeeDropdown').change(function () {
+                var employeeId = $(this).val();
+                
+                if (employeeId) {
+                    // AJAX call to fetch tickets for the selected employee
+                    $.ajax({
+                        url: '/ticketsREST/flag?employeeId=' + employeeId,  // Send employeeId to the backend
+                        type: 'GET',
+                        success: function (data) {
+                            // Clear the existing ticket rows
+                            $('#ticketTable tbody').empty();
+
+                            // Loop through the tickets and create rows for each
+                            data.forEach(function(ticket) {
+                                var row = '<tr>' +
+                                    '<td>' + ticket.tid + '</td>' +
+                                    '<td>' + ticket.tname + '</td>' +
+                                    '<td>' +
+                                        '<a href="/ticketUpdates/ticket/' + ticket.tid + '">View</a> | ' +
+                                        '<a href="/tickets/tickets/edit/' + ticket.tid + '">Edit</a> | ' +
+                                        '<form action="/tickets/' + ticket.tid + '/delete" method="post" style="display:inline;">' +
+                                            '<button type="submit">Delete</button>' +
+                                        '</form>' +
+                                    '</td>' +
+                                '</tr>';
+                                
+                                // Append the row to the table
+                                $('#ticketTable tbody').append(row);
+                            });
+                        },
+                        error: function () {
+                            alert('Failed to fetch tickets!');
+                        }
+                    });
+             
+        
+        
+        $.ajax({
+            url: '/empProject/projects/' + employeeId,  // Add the endpoint to fetch projects
+            type: 'GET',
+            success: function (data) {
+                // Clear the existing project rows
+                $('#projectTable tbody').empty();
+
+                // Loop through the projects and create rows for each
+                data.forEach(function(project) {
+                    var row = '<tr>' +
+                        '<td>' + project.pId + '</td>' +
+                        '<td>' + project.pName + '</td>' +
+                        '<td>' + project.pEndDate + '</td>' +
+                        '<td>' + project.pPriority + '</td>' +
+
+                        '<td>' +
+                            '<a href="/projects/' + project.pId + '">View</a>' +
+                        '</td>' +
+                    '</tr>';
+                    
+                    // Append the row to the table
+                    $('#projectTable tbody').append(row);
+                });
+            },
+            error: function () {
+                alert('Failed to fetch projects!');
+            }
+        });
+   
+     
+            }
+        });
+        });
+    </script>
+    
+</body>
+</html>

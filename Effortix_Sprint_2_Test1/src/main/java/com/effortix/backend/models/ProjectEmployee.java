@@ -33,27 +33,29 @@ public class ProjectEmployee {
 
     public ProjectEmployee() {}
 
-    public Long getPeID() {
-        return peID;
-    }
+	public Long getPeID() {
+		return peID;
+	}
 
-    public void setPeID(Long peID) {
-        this.peID = peID;
-    }
+	public void setPeID(Long peID) {
+		this.peID = peID;
+	}
 
-    public Project getProject() {
-        return project;
-    }
+	public Project getProject() {
+		return project;
+	}
 
-    public void setProject(Project project) {
-        this.project = project;
-    }
+	public void setProject(Project project) {
+		this.project = project;
+	}
 
-    public Employee getEmployee() {
-        return employee;
-    }
+	public Employee getEmployee() {
+		return employee;
+	}
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
+   
 }

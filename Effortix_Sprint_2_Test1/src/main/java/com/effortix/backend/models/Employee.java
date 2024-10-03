@@ -47,9 +47,8 @@ public class Employee {
 	private Boolean eInBench;
 	private Boolean eISLead;
 	
-	 @ManyToOne(fetch = FetchType.LAZY)
-	 @JoinColumn(name = "lead_id", referencedColumnName = "eId", nullable = true)
-	 private Employee eLead;
+	
+	 private Long eLead;
 	
 	public Boolean geteInBench() {
 		return eInBench;
@@ -158,15 +157,18 @@ public class Employee {
 
 
 
-	public Employee geteLead() {
+	public Long geteLead() {
 		return eLead;
 	}
 
 
 
-	public void seteLead(Employee eLead) {
+	public void seteLead(Long eLead) {
 		this.eLead = eLead;
 	}
+
+
+
 	
 
 	

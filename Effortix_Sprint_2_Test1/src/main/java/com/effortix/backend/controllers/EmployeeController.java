@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.effortix.backend.models.Employee;
 import com.effortix.backend.services.EmployeeService;
@@ -78,5 +80,32 @@ public class EmployeeController {
         // Return the Thymeleaf template name (employee_list.html)
         return "pages/employeeChart";
     }
+    
+
+    @GetMapping("/track_Employee")
+    public String showEmployeeDetailsPage(Model model) {
+        // Fetch all employees from the service
+        List<Employee> employees = employeeService.getAllEmployees();
+        
+        // Add the list of employees to the model
+        model.addAttribute("employees", employees);
+        
+        return "pages/TrackEmployee"; // Return the Thymeleaf view name for the employee details page
+    }
 }
 
+
+
+@RestController
+@RequestMapping("/employees")
+class EmployeeRESTController {
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    // Endpoint to fetch employee details by id (called by AJAX)
+    @GetMapping("/details/{id}")
+    public Employee getEmployeeDetails(@PathVariable("id") Long id) {
+        return employeeService.getEmployeeById(id).orElse(null); // Fetch the employee by ID
+    }
+}

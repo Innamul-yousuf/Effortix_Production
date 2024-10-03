@@ -4,6 +4,7 @@
   import org.springframework.beans.factory.annotation.Autowired; import
   org.springframework.stereotype.Service;
 
+import com.effortix.backend.models.Project;
 import com.effortix.backend.models.ProjectEmployee;
 import com.effortix.backend.repository.ProjectEmployeeRepository;
 
@@ -28,6 +29,12 @@ import java.util.List; import java.util.Optional;
   // Delete ProjectEmployee by ID 
   public void deleteProjectEmployee(Long peID){ 
 	  projectEmployeeRepository.deleteById(peID); } 
+  
+  public List<Project> getProjectsByEmployeeId(Long employeeId) {
+      return projectEmployeeRepository.findProjectsByEmployeeId(employeeId);
+  }
+  
+  
   }
  
 

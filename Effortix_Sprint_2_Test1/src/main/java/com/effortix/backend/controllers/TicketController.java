@@ -110,6 +110,7 @@ public class TicketController {
     	
     @PostMapping("/saveByAI")
     public String saveTicketByAI(@ModelAttribute("ticket") Ticket ticket) { 
+    	System.out.println("ticket id: "+ticket.getTId());
         System.out.println("Ticket Name: " + ticket.getTName());
         System.out.println("Assigned Employee: " + ticket.getToEmployee().geteEmail());
 
@@ -400,4 +401,20 @@ public class TicketController {
            return "redirect:/tickets"; // Redirect to the ticket list
        }
        
+}
+
+
+@Controller
+@RequestMapping("/ticketsREST")
+class TicketRESTController {
+
+    @Autowired
+    private TicketService ticketService;
+
+    // Endpoint to fetch tickets for the selected employee and flag = 0
+    @GetMapping("/flag")
+    @ResponseBody  // Returns the response as JSON
+    public List<Ticket> getTicketsByEmployeeAndFlag(@RequestParam("employeeId") Long employeeId) {
+        return ticketService.getTicketsByEmployeeIdAndFlag(employeeId);  // Flag = 0 for filtering tickets
+    }
 }

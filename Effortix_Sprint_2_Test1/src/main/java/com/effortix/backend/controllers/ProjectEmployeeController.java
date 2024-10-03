@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.effortix.backend.models.Project;
 import com.effortix.backend.models.ProjectEmployee;
 import com.effortix.backend.services.ProjectEmployeeService;
 
@@ -50,5 +52,21 @@ public class ProjectEmployeeController {
     public String saveProjectEmployee(@ModelAttribute ProjectEmployee projectEmployee) {
         projectEmployeeService.saveOrUpdateProjectEmployee(projectEmployee);
         return "redirect:/project-employee/all";
+    }
+}
+
+
+@Controller
+@RequestMapping("/empProject")
+ class EmployeeControllerREST {
+
+    @Autowired
+    private ProjectEmployeeService projectEmployeeService;
+
+    // Endpoint to get projects by employee ID
+    @GetMapping("/projects/{employeeId}")
+    @ResponseBody
+    public List<Project> getProjectsByEmployeeId(@PathVariable("employeeId") Long employeeId) {
+        return projectEmployeeService.getProjectsByEmployeeId(employeeId);
     }
 }

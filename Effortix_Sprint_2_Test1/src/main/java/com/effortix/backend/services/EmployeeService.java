@@ -60,4 +60,18 @@ public class EmployeeService {
 	    public List<Employee> getNonBenchEmployees() {
 	        return employeeRepository.findByEInBenchFalse();
 	    }
+	    
+	    public Employee authenticateEmployee(Long eId, String ePassword) {
+	        Optional<Employee> employeeOptional = getEmployeeById(eId);
+	        if (employeeOptional.isPresent()) {
+	            Employee employee = employeeOptional.get();
+	            
+	            // Compare the provided password with the stored password using BCrypt
+	            if (employee != null && employee.getePassword().equals(ePassword)) {
+	                return employee; // Return employee if authentication is successful
+	            }
+	        }
+	       
+	        return null; // Return null if authentication fails
+	    }
 }
