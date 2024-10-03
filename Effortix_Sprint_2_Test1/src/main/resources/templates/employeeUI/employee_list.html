@@ -2,27 +2,71 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Employee List</title>
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            padding: 40px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .table-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            margin-bottom: 20px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <h1>Employee List</h1>
-    <a href="/employees/new">Add New Employee</a>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Contact</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="employee : ${employees}">
-                <td th:text="${employee.eId}"></td>
-                <td th:text="${employee.eName}"></td>
-                <td th:text="${employee.eEmail}"></td>
-                <td th:text="${employee.eContact}"></td>
-            </tr>
-        </tbody>
-    </table>
+
+<div class="container">
+    <div class="table-container">
+        <h1>Employee List</h1>
+        
+        <!-- Add New Employee Button -->
+        <a href="/employees/new" class="btn btn-primary">Add New Employee</a>
+        
+        <!-- Employee Table -->
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="employee : ${employees}">
+                    <td th:text="${employee.eId}"></td>
+                    <td th:text="${employee.eName}"></td>
+                    <td th:text="${employee.eEmail}"></td>
+                    <td th:text="${employee.eContact}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JS (for future use if you need interactions) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

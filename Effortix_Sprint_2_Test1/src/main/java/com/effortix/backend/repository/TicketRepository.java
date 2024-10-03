@@ -21,5 +21,7 @@ interface TicketRepository extends JpaRepository<Ticket, Long> {
     
     @Query("SELECT t FROM Ticket t WHERE t.toEmployee.eId = :employeeId AND t.tFlag = :flag")
     List<Ticket> findByEmployeeIdAndFlag(@Param("employeeId") Long employeeId, @Param("flag") int flag);
-
+    
+    @Query("SELECT t FROM Ticket t WHERE t.tType = :type AND t.tFlag = :flag")
+    List<Ticket> findByTypeAndTFlag(String type, int flag);
 }

@@ -2,11 +2,169 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Ticket Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f9fa;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .ticket-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 65%; /* Main ticket details section */
+        }
+        .updates-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 30%; /* Sidebar for previous updates */
+            max-height: 600px; /* Fixed height for the updates section */
+            overflow-y: auto; /* Scrollable */
+        }
+        h1, h2 {
+            text-align: center;
+            color: #007bff;
+        }
+        .ticket-info p {
+            font-size: 16px;
+        }
+        .form-group textarea {
+            width: 100%;
+        }
+        .submit-button {
+            text-align: center;
+        }
+        .previous-updates {
+            list-style-type: none;
+            padding: 0;
+        }
+        .previous-updates li {
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-left: 4px solid #007bff;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="ticket-container">
+        <h1>Ticket Details</h1>
+        
+        <div class="ticket-info">
+            <p><strong>ID:</strong> <span th:text="${ticket.tId}"></span></p>
+            <p><strong>Name:</strong> <span th:text="${ticket.tName}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${ticket.tDescription}"></span></p>
+            <p><strong>File Link:</strong> <a th:href="${ticket.tFileLink}" th:text="${ticket.tFileLink}"></a></p>
+            <p><strong>Location of File:</strong> <span th:text="${ticket.locationOfFile}"></span></p>
+            <p><strong>Flag:</strong> <span th:text="${ticket.tFlag}"></span></p>
+            <p><strong>Deadline:</strong> <span th:text="${#dates.format(ticket.deadline, 'yyyy-MM-dd')}"></span></p>
+            <p><strong>Created Date:</strong> <span th:text="${#dates.format(ticket.createdDate, 'yyyy-MM-dd')}"></span></p>
+            <p><strong>Assigned By:</strong> <span th:text="${ticket.fromEmployee.eName}"></span></p>
+            <p><strong>Assigned To:</strong> <span th:text="${ticket.toEmployee.eName}"></span></p>
+            <p><strong>Type:</strong> <span th:text="${ticket.tType}"></span></p>
+            <p><strong>Status:</strong> <span th:text="${ticket.tStatus}"></span></p>
+            <p><strong>Designation:</strong> <span th:text="${ticket.eDesignation}"></span></p>
+        </div>
+
+        Form to Add a New Update
+        <h2>Add Update</h2>
+        <form id="updateForm" th:action="@{/ticketUpdates/ticketUpdates}" method="post">
+            <input type="hidden" th:value="${ticket.tId}" name="ticketId"/>
+            <input type="hidden" th:value="${#dates.format(ticket.createdDate, 'yyyy-MM-dd')}" name="dateTime"/>
+            
+            <div class="form-group">
+                <label for="employee">Employee:</label>
+                <input type="text" class="form-control" id="employee" th:value="${ticket.toEmployee.eId}" name="employeeId" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="project">Project:</label>
+                <input type="text" class="form-control" id="project" th:value="${ticket.project.pId}" name="projectId" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="tUpdate">Update:</label>
+                <textarea id="tUpdate" class="form-control" name="tUpdate" rows="3" required></textarea>
+            </div>
+
+            <div class="submit-button">
+                <button type="submit" class="btn btn-primary" id="submitButton" disabled>Submit Update</button>
+            </div>
+        </form>
+
+        <div class="btn-container">
+            <a href="/tickets" class="btn btn-secondary">Back to List</a>
+            <a th:href="@{/tickets/{id}/edit(id=${ticket.tId})}" class="btn btn-info">Edit Ticket</a>
+        </div>
+    </div>
+
+    
+    <div class="updates-container">
+        <h2>Previous Updates</h2>
+        <ul class="previous-updates d-flex flex-column-reverse">
+            <li th:each="update : ${previousUpdates}">
+                <p><strong>Date:</strong> <span th:text="${#dates.format(update.dateTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+                <p><strong>Employee:</strong> <span th:text="${update.employee.eName}"></span></p>
+                <p><strong>Project:</strong> <span th:text="${update.project.pName}"></span></p>
+                <p><strong>Update:</strong> <span th:text="${update.tUpdate}"></span></p>
+            </li>
+            <li th:if="${#lists.isEmpty(previousUpdates)}">No updates available.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('tUpdate');
+        const submitButton = document.getElementById('submitButton');
+
+        // Disable the submit button initially
+        submitButton.disabled = true;
+
+        // Enable or disable the submit button based on textarea content
+        textarea.addEventListener('input', function() {
+            submitButton.disabled = !textarea.value.trim(); // Enable if not empty
+        });
+    });
+    
+    // Optional: Add a simple reload to the page after form submission
+    document.getElementById('updateForm').onsubmit = function() {
+        setTimeout(function() {
+            window.location.reload();
+        }, 100); // Optional delay for user feedback
+    };
+
+</script>
+
+</body>
+</html>
+
+<!-- 
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ticket Details</title>
 </head>
 <body>
 <h1>Ticket Details</h1>
 
-<!-- Ticket Details -->
+Ticket Details
 <p><strong>ID:</strong> <span th:text="${ticket.tId}"></span></p>
 <p><strong>Name:</strong> <span th:text="${ticket.tName}"></span></p>
 <p><strong>Description:</strong> <span th:text="${ticket.tDescription}"></span></p>
@@ -21,28 +179,28 @@
 <p><strong>Status:</strong> <span th:text="${ticket.tStatus}"></span></p>
 <p><strong>Designation:</strong> <span th:text="${ticket.eDesignation}"></span></p>
 
-<!-- Form to Add a New Update -->
+Form to Add a New Update
 <h2>Add Update</h2>
 <form th:action="@{/ticketUpdates/ticketUpdates}" method="post">
     <input type="hidden" th:value="${ticket.tId}" name="ticketId"/>
     <input type="hidden" th:value="${#dates.format(ticket.createdDate, 'yyyy-MM-dd')}" name="dateTime"/>
     
-    <!-- Employee selection -->
+    Employee selection
     <label for="employee">Employee:</label>
     <input type="text" id="employee" th:value="${ticket.toEmployee.eId}" name="employeeId" readonly/><br/>
 
-    <!-- Project selection -->
+    Project selection
     <label for="project">Project:</label>
     <input type="text" id="project" th:value="${ticket.project.pId}" name="projectId" readonly/><br/>
 
-    <!-- Update Text Box -->
+    Update Text Box
     <label for="tUpdate">Update:</label>
     <textarea id="tUpdate" name="tUpdate"></textarea><br/>
 
     <button type="submit">Submit Update</button>
 </form>
 
-<!-- Display Previous Updates -->
+Display Previous Updates
 <h2>Previous Updates</h2>
 <ul>
     <li th:each="update : ${previousUpdates}">
@@ -59,3 +217,4 @@
 <a th:href="@{/tickets/{id}/edit(id=${ticket.tId})}">Edit</a>
 </body>
 </html>
+ -->

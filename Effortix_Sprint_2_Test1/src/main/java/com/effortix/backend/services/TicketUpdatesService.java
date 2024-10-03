@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
   
 @Service
 public class TicketUpdatesService{
@@ -52,69 +54,140 @@ public class TicketUpdatesService{
     @Autowired
     EmailService emailService;
    
+	/*
+	 * public TicketUpdates saveOrUpdateTicketUpdates(TicketUpdates ticketUpdates) {
+	 * // Validate input
+	 * 
+	 * 
+	 * System.out.println("TU___---______:"+ticketUpdates.getTuId()+
+	 * ticketUpdates.gettUpdate()); TicketUpdates savedTicketUpdates
+	 * =ticketUpdatesRepository.save(ticketUpdates); Date currentDate = new Date();
+	 * if (savedTicketUpdates != null) { // Fetch existing timesheet entries for the
+	 * employee on the given date // Date entryDate2 = ; // Assuming this is the
+	 * date for the timesheet entry
+	 * 
+	 * SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	 * 
+	 * // Get the current date String currentDateString = dateFormat.format(new
+	 * Date());
+	 * 
+	 * // Convert the string to a Date object try { currentDate =
+	 * dateFormat.parse(currentDateString); System.out.println("Current Date: " +
+	 * currentDate); } catch (ParseException e) { e.printStackTrace(); } Date
+	 * entryDate = currentDate; // Assuming this is the date for the timesheet entry
+	 * 
+	 * Long employeeId = savedTicketUpdates.getEmployee().geteId(); // Get the
+	 * employee ID
+	 * 
+	 * List<EmployeeTimesheetEntries> existingEntries =
+	 * timesheetEntriesService.findByEmployeeIdAndDate(employeeId, entryDate);
+	 * 
+	 * EmployeeTimesheetEntries timesheetEntry = new EmployeeTimesheetEntries();
+	 * timesheetEntry.setEmployee(savedTicketUpdates.getEmployee());
+	 * timesheetEntry.setDate(entryDate);
+	 * timesheetEntry.setTicket(savedTicketUpdates.getTicket());
+	 * timesheetEntry.setProject(savedTicketUpdates.getProject());
+	 * 
+	 * if (!existingEntries.isEmpty()) { // Update existing entry
+	 * EmployeeTimesheetEntries existingEntry = existingEntries.get(0); // Assuming
+	 * only one entry per day String
+	 * AIEntry=callTimeSheetAI(savedTicketUpdates.getTicket().getTId(),
+	 * savedTicketUpdates); String updatedActivity = existingEntry.getEtActivity() +
+	 * ", " + AIEntry; existingEntry.setEtActivity(updatedActivity);
+	 * 
+	 * // Save the updated entry
+	 * 
+	 * timesheetEntriesService.createTimesheetEntry(existingEntry);
+	 * 
+	 * 
+	 * } else { // No existing entry, create a new one
+	 * timesheetEntry.setEtActivity(savedTicketUpdates.gettUpdate() + " FROM AI");
+	 * timesheetEntriesService.createTimesheetEntry(timesheetEntry);
+	 * 
+	 * }
+	 * 
+	 * 
+	 * 
+	 * callReplyEmailMethod(savedTicketUpdates);
+	 * 
+	 * ExecutorService executorService = Executors.newSingleThreadExecutor();
+	 * 
+	 * // Submit the task for asynchronous execution executorService.submit(() -> {
+	 * callEmployeeSkillsAI(savedTicketUpdates.getTicket().getTId(),
+	 * savedTicketUpdates); });
+	 * 
+	 * 
+	 * }
+	 * 
+	 * 
+	 * return savedTicketUpdates; }
+	 */
+    
+    
     public TicketUpdates saveOrUpdateTicketUpdates(TicketUpdates ticketUpdates) {
         // Validate input
-     
-     
-       System.out.println("TU___---______:"+ticketUpdates.getTuId()+ ticketUpdates.gettUpdate());
-       TicketUpdates savedTicketUpdates =ticketUpdatesRepository.save(ticketUpdates);
-       Date currentDate = new Date();
-       if (savedTicketUpdates != null) {
-           // Fetch existing timesheet entries for the employee on the given date
-          // Date entryDate2 = ; // Assuming this is the date for the timesheet entry
-        		   
-        		   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println("TU___---______:" + ticketUpdates.getTuId() + ticketUpdates.gettUpdate());
+        
+        TicketUpdates savedTicketUpdates = ticketUpdatesRepository.save(ticketUpdates);
+        Date currentDate = new Date();
 
-           // Get the current date
-           String currentDateString = dateFormat.format(new Date());
-
-           // Convert the string to a Date object
-           try {
-               currentDate = dateFormat.parse(currentDateString);
-               System.out.println("Current Date: " + currentDate);
-           } catch (ParseException e) {
-               e.printStackTrace();
-           }
-           Date entryDate = currentDate; // Assuming this is the date for the timesheet entry
-
-           Long employeeId = savedTicketUpdates.getEmployee().geteId(); // Get the employee ID
-           
-           List<EmployeeTimesheetEntries> existingEntries = timesheetEntriesService.findByEmployeeIdAndDate(employeeId, entryDate);
-           
-           EmployeeTimesheetEntries timesheetEntry = new EmployeeTimesheetEntries();
-           timesheetEntry.setEmployee(savedTicketUpdates.getEmployee());
-           timesheetEntry.setDate(entryDate);
-           timesheetEntry.setTicket(savedTicketUpdates.getTicket());
-           timesheetEntry.setProject(savedTicketUpdates.getProject());
-           
-           if (!existingEntries.isEmpty()) {
-               // Update existing entry
-               EmployeeTimesheetEntries existingEntry = existingEntries.get(0); // Assuming only one entry per day
-               String AIEntry=callTimeSheetAI(savedTicketUpdates.getTicket().getTId(), savedTicketUpdates);
-               String updatedActivity = existingEntry.getEtActivity() + ", " + AIEntry;
-               existingEntry.setEtActivity(updatedActivity);
-               
-               // Save the updated entry
-               
-               timesheetEntriesService.createTimesheetEntry(existingEntry);
-               
-               
-           } else {
-               // No existing entry, create a new one
-               timesheetEntry.setEtActivity(savedTicketUpdates.gettUpdate() + " FROM AI");
-               timesheetEntriesService.createTimesheetEntry(timesheetEntry);
-               
-           }
-          
+        if (savedTicketUpdates != null) {
+            // Convert the current date to string and parse it
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDateString = dateFormat.format(new Date());
+            try {
+                currentDate = dateFormat.parse(currentDateString);
+                System.out.println("Current Date: " + currentDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             
-           
-           callReplyEmailMethod(savedTicketUpdates);
-           
-           callEmployeeSkillsAI(savedTicketUpdates.getTicket().getTId(), savedTicketUpdates);
-           
-       }
-       
-      
+            Date entryDate = currentDate; // Assuming this is the date for the timesheet entry
+            Long employeeId = savedTicketUpdates.getEmployee().geteId(); // Get the employee ID
+            
+            // Use ExecutorService to parallelize tasks
+            ExecutorService executorService = Executors.newFixedThreadPool(4); // Using a thread pool for efficiency
+
+            // Task 1: Fetch existing timesheet entries (this can be done concurrently)
+            executorService.submit(() -> {
+                List<EmployeeTimesheetEntries> existingEntries = timesheetEntriesService.findByEmployeeIdAndDate(employeeId, entryDate);
+                
+                EmployeeTimesheetEntries timesheetEntry = new EmployeeTimesheetEntries();
+                timesheetEntry.setEmployee(savedTicketUpdates.getEmployee());
+                timesheetEntry.setDate(entryDate);
+                timesheetEntry.setTicket(savedTicketUpdates.getTicket());
+                timesheetEntry.setProject(savedTicketUpdates.getProject());
+                
+                if (!existingEntries.isEmpty()) {
+                    // Update existing entry
+                    EmployeeTimesheetEntries existingEntry = existingEntries.get(0); // Assuming only one entry per day
+                    String AIEntry = callTimeSheetAI(savedTicketUpdates.getTicket().getTId(), savedTicketUpdates);
+                    String updatedActivity = existingEntry.getEtActivity() + ", " + AIEntry;
+                    existingEntry.setEtActivity(updatedActivity);
+                    
+                    // Save the updated entry
+                    timesheetEntriesService.createTimesheetEntry(existingEntry);
+                } else {
+                    // No existing entry, create a new one
+                    timesheetEntry.setEtActivity(savedTicketUpdates.gettUpdate() + " FROM AI");
+                    timesheetEntriesService.createTimesheetEntry(timesheetEntry);
+                }
+            });
+
+            // Task 2: Call Reply Email Method (asynchronous, independent of other tasks)
+            executorService.submit(() -> {
+                callReplyEmailMethod(savedTicketUpdates);
+            });
+            
+            // Task 3: Call Employee Skills AI (asynchronous, independent of other tasks)
+            executorService.submit(() -> {
+                callEmployeeSkillsAI(savedTicketUpdates.getTicket().getTId(), savedTicketUpdates);
+            });
+
+            // Shut down the executor after submitting tasks
+            executorService.shutdown();
+        }
+
         return savedTicketUpdates;
     }
     
@@ -137,6 +210,7 @@ public class TicketUpdatesService{
         
         // Call AI to get new skills and work experience
         System.out.println("Before AI: "+theUpdate+" ticketDetailJson "+ ticketDetailJson);
+        
         Map<String, String> skillAndWorkExp = employeeSkillaI.generateSkillsAndUpdatePreviousWorks(ticketDetailJson, theUpdate);
 
         // Fetch the employee skills for the current employee

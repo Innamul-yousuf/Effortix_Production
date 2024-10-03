@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -36,6 +37,8 @@ import com.effortix.backend.services.EmployeeSkillsService;
 import com.effortix.backend.services.ProjectService;
 import com.effortix.backend.services.TicketService;
 import com.google.gson.Gson;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -353,6 +356,26 @@ public class TicketController {
            return suggestedEmployees;
        }
 
+       
+      
+       @PostMapping("/tickets/edit/getAiSuggestedEmployees")
+       @ResponseBody
+       public List<Employee> getAiSuggestedEmployeesForFormEdit(@RequestBody Map<String, String> requestBody) {
+           String description = requestBody.get("description");
+          
+           Gson gson = new Gson();
+        	List<EmployeeSkills> employeeSkills= employeeSkillsService.getAllEmployeeSkills();
+        	String EmployeeSkillsJSON = gson.toJson(employeeSkills);
+            System.out.println("JSON output: " + EmployeeSkillsJSON);
+          
+            System.out.println("Continuing with other operations while finding employees with skill...");
+
+            
+           List<Employee> suggestedEmployees = findEmployyeeAI.findEmployeeWithSkill(description, EmployeeSkillsJSON);
+           
+          
+           return suggestedEmployees;
+       }
     
        @GetMapping("/dashboard")
        public String showDashboard(Model model) {
@@ -404,12 +427,50 @@ public class TicketController {
            return "redirect:/tickets"; // Redirect to the ticket list
        }
        
+       
+       @GetMapping("/tickets/claim/{ticketId}")
+       public String showTicketForm(@PathVariable Long ticketId, Model model, HttpSession session) {
+           // Fetch ticket by ID
+           Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
+           if (ticket == null) {
+               return "redirect:/tickets/issues"; // Redirect to issue list if ticket not found
+           }
+
+           // Prefill the ticket form with ticket details
+           model.addAttribute("ticket", ticket.get());
+
+           // Fetch employee info from session to prefill employee info
+           Employee employee = (Employee) session.getAttribute("employee");
+           model.addAttribute("employee", employee);
+
+           return "ticketUI/ticket_form"; // Ticket form view
+       }
+       
+       @GetMapping("/tickets/claim/{id}")
+       public String claimTicket(@PathVariable("id") Long ticketId, Model model, HttpSession session) {
+           // Fetch the ticket by ID
+           Optional<Ticket> ticket = ticketService.getTicketById(ticketId);
+           
+           // Get the logged-in user from the session
+           Employee loggedInEmployee = (Employee) session.getAttribute("loggedInEmployee");
+           
+           // Prefill the `toEmployee` with the logged-in user
+           ticket.get().setToEmployee(loggedInEmployee);
+           
+           // Add the ticket and required lists (employees, projects) to the model
+           model.addAttribute("ticket", ticket);
+//           model.addAttribute("employees", employeeService.findAll());
+//           model.addAttribute("projects", projectService.findAll());
+           
+           return "ticketUI/ticket_form";  // Return the Thymeleaf template for ticket form
+       }
+       
 }
 
 
 @Controller
 @RequestMapping("/ticketsREST")
-class TicketRESTController {
+class TicketRESTController { 
 
     @Autowired
     private TicketService ticketService;
@@ -420,4 +481,14 @@ class TicketRESTController {
     public List<Ticket> getTicketsByEmployeeAndFlag(@RequestParam("employeeId") Long employeeId) {
         return ticketService.getTicketsByEmployeeIdAndFlag(employeeId);  // Flag = 0 for filtering tickets
     }
+    
+    @GetMapping("/tickets/issues")
+    public ResponseEntity<List<Ticket>> getTicketsByType(HttpSession session) {
+        // Fetch all tickets with type "Issue" and t_flag = 0
+        List<Ticket> tickets = ticketService.getTicketsByTypeAndFlag("Issue", 0);
+
+        // Return the list of tickets as JSON
+        return ResponseEntity.ok(tickets);
+    }
+    
 }

@@ -35,6 +35,7 @@ public class GenerateEmployeeSkillsAI {
 	
 
 	public Map<String, String> generateSkillsAndUpdatePreviousWorks(String ticketDetails, String theUpdate) {
+		
 		Map<String, String> skillAndWorkExp = new HashMap();
 		try {
 			// Escape the EmployeeSkillsTable JSON string
@@ -57,7 +58,7 @@ public class GenerateEmployeeSkillsAI {
 
 			// Allow sending the request body
 			connection.setDoOutput(true);
-			String systemInstruction="You are an AI assistant responsible for generating very short content to be added to the Skills and Previous Works columns in an employee's record by analyzing the updates provided in a ticket. You will receive a new ticket update, which includes the details of the task completed by the employee. Your task is to read the update, identify any new skills or work experiences, and generate a brief, concise description of the skills or tasks learned from the ticket update.";
+			String systemInstruction="You are an AI assistant responsible for generating a short Skill(very short) to be added in work experience columns in an employee's record by analyzing the updates provided in a ticket. You will receive a new ticket update, which includes the details of the task completed by the employee. Your task is to read the update, identify any new skills or work experiences, and generate a brief, concise description of the skills or tasks learned from the ticket update. Give it as plain text and don't inculde other detalils in your responce. Give it in json format skills in Skills and previous works in Previous Works: Try to find the skill from teh ticket update.";
 			// JSON request payload
 			String jsonInputString = "{"
 				    + "\"contents\": ["
@@ -90,7 +91,7 @@ public class GenerateEmployeeSkillsAI {
 						response.append(responseLine.trim());
 					}
 					System.out.println("Response Body: " + response.toString());
-					System.out.println("============AI Sugested Employees===========");
+					System.out.println("============AI Sugested SKILLS===========");
 					System.out.println(response.toString());
 
 					JSONObject jsonObject = new JSONObject(response.toString());

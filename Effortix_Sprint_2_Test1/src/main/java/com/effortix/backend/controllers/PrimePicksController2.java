@@ -20,6 +20,7 @@ import com.effortix.backend.models.Employee;
 import com.effortix.backend.models.EmployeeSkills;
 import com.effortix.backend.models.PrimePicks;
 import com.effortix.backend.models.Ticket;
+import com.effortix.backend.repository.PrimePicksRepository;
 import com.effortix.backend.services.EmployeeService;
 import com.effortix.backend.services.EmployeeSkillsService;
 import com.effortix.backend.services.PrimePicksService;
@@ -139,4 +140,39 @@ public class PrimePicksController2 {
        
     }
     
+    @GetMapping("/primepicks/active") public String getActivePrimePicks(Model model) { 
+    	model.addAttribute("primePicksList",
+    	 primePicksService.getActivePrimePicks()); return "primepicks/active";
+    	 
+    }
+    	
+
+    	    // Endpoint to show the creation form
+    	    @GetMapping("/primepicks/create")
+    	    public String showCreateForm(Model model) {
+    	        PrimePicks primePicks = new PrimePicks();
+    	        model.addAttribute("primePicks", primePicks);
+    	        return "primePicksUI/create";  // Render the Thymeleaf form
+    	    }
+    	    
+    	    @PostMapping("/createPrimePick")
+    	    public String savePrimePick(PrimePicks primePick) {
+    	        primePicksRepository.save(primePick);
+    	        return "redirect:/activePrimePicks";
+    	    }
+    	    
+    	    @GetMapping("/createPrimePick")
+    	    public String createPrimePick(Model model) {
+    	        model.addAttribute("primePick", new PrimePicks());
+    	        return "primePicksUI/create2";
+    	    }
+    	    @Autowired
+    	    private PrimePicksRepository primePicksRepository;
+    	    
+    	    @GetMapping("/activePrimePicks")
+    	    public String getActivePrimePicks2(Model model) {
+    	        List<PrimePicks> activePrimePicks = primePicksRepository.findByStatus("Active");
+    	        model.addAttribute("primePicks", activePrimePicks);
+    	        return "primePicksUI/primePicksList"; // Corresponds to the Thymeleaf template name
+    	    }
 }

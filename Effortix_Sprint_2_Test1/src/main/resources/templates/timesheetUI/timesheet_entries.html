@@ -2,6 +2,69 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Timesheet Entries</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        .entry-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .back-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Timesheet Entries</h1>
+
+        <div id="timesheetEntriesContainer" th:if="${timesheetEntries != null}">
+            <div class="entry-card" th:each="entry : ${timesheetEntries}">
+                <p><strong>Date:</strong> <span th:text="${#dates.format(entry.date, 'yyyy-MM-dd')}"></span></p>
+                <p><strong>Activity:</strong> <span th:text="${entry.etActivity}"></span></p>
+                <p><strong>Worked by:</strong> <span th:text="${entry.employee.eName}"></span></p>
+                <p><strong>Designation:</strong> <span th:text="${entry.employee.eDesignation}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${entry.employee.eEmail}"></span></p>
+                <p><strong>Contact:</strong> <span th:text="${entry.employee.eContact}"></span></p>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a th:href="@{/timesheet}" class="btn btn-secondary">Back to Timesheet</a>
+        </div>
+
+        <div class="text-center mt-4">
+            <button id="downloadExcel" class="btn btn-primary">Download Timesheet as Excel</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="/js/timesheet.js" th:src="@{/js/timesheet.js}"></script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Timesheet Entries</title>
 </head>
 <body>
     <h1>Timesheet Entries</h1>
@@ -22,3 +85,4 @@
     <a th:href="@{/timesheet}">Back to Timesheet</a>
 </body>
 </html>
+ -->

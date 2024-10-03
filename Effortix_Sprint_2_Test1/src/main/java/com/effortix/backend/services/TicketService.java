@@ -92,6 +92,9 @@ public class TicketService {
     public List<Ticket> getTicketsByType(String type) {
         return ticketRepository.findBytType(type);
     }
+    public List<Ticket> getTicketsByTypeAndFlag(String type, int flag) {
+        return ticketRepository.findByTypeAndTFlag(type, flag);
+    }
 
     // Update ticket status
     public Ticket updateTicketStatus(Long tId, String newStatus) {

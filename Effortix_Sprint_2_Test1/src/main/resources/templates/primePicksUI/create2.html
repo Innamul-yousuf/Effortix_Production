@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create PrimePick</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Create New PrimePick</h1>
+
+    <form th:action="@{/primepicks/createPrimePick}" th:object="${primePick}" method="post" class="form-group">
+        <div class="form-group">
+            <label for="topicName">Topic Name</label>
+            <input type="text" th:field="*{topicName}" class="form-control" id="topicName" placeholder="Enter topic name" required>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select th:field="*{status}" class="form-control" id="status" required>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="activity">Activity</label>
+            <textarea th:field="*{activity}" class="form-control" id="activity" rows="3" placeholder="Enter activity details"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/activePrimePicks" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
