@@ -48,7 +48,6 @@ public class Employee {
 	private Boolean eISLead;
 	
 	
-	 private Long eLead;
 	
 	public Boolean geteInBench() {
 		return eInBench;
@@ -157,16 +156,7 @@ public class Employee {
 
 
 
-	public Long geteLead() {
-		return eLead;
-	}
-
-
-
-	public void seteLead(Long eLead) {
-		this.eLead = eLead;
-	}
-
+	
 
 
 	

@@ -37,12 +37,7 @@
         <label for="eISLead">Is Lead:</label>
         <input type="checkbox" id="eISLead" th:field="*{eISLead}"/><br/><br/>
 
-        <!-- Lead Selection Dropdown -->
-        <label for="eLead">Select Lead:</label>
-        <select id="eLead" th:field="*{eLead.eId}">
-            <option value="" disabled selected>Select a Lead</option>
-            <option th:each="lead : ${leads}" th:value="${lead.eId}" th:text="${lead.eName}"></option>
-        </select><br/><br/>
+
 
         <button type="submit">Save Employee</button>
     </form>

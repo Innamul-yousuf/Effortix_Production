@@ -30,6 +30,7 @@ import com.effortix.backend.models.Employee;
 import com.effortix.backend.models.EmployeeSkills;
 import com.effortix.backend.models.Project;
 import com.effortix.backend.models.Ticket;
+import com.effortix.backend.repository.TicketRepository;
 import com.effortix.backend.services.EmployeeService;
 import com.effortix.backend.services.EmployeeSkillsService;
 import com.effortix.backend.services.ProjectService;
@@ -84,7 +85,8 @@ public class TicketController {
 
 	
 	  // Save a new ticket
-	  
+	  @Autowired
+	  TicketRepository Ticrepository;
     @PostMapping("/save") public String saveTicket2(@ModelAttribute("ticket")Ticket ticket) {
 		  System.out.println("Ticket"+ticket.getTName()+" ");
 		  System.out.println("Ticket"+ticket.getToEmployee().geteEmail()+" ");
@@ -97,8 +99,9 @@ public class TicketController {
 		    }
 		
 	  //sendEmailToResponsible(ticket);
-		 
-	        Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
+	        //Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
+
+	        Ticket savedTicket=Ticrepository.save(ticket);
 	        sendEmailToResponsible(ticket);
 	  System.out.println("saveTicket2"); 
 	  return "redirect:/tickets"; // Redirects//to the ticket list }
@@ -110,7 +113,7 @@ public class TicketController {
     	
     @PostMapping("/saveByAI")
     public String saveTicketByAI(@ModelAttribute("ticket") Ticket ticket) { 
-    	System.out.println("ticket id: "+ticket.getTId());
+    	System.out.println("ticket id: "+ticket);
         System.out.println("Ticket Name: " + ticket.getTName());
         System.out.println("Assigned Employee: " + ticket.getToEmployee().geteEmail());
 

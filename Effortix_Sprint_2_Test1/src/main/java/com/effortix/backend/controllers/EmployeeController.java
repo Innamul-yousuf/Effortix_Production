@@ -1,6 +1,7 @@
 package com.effortix.backend.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,10 +44,18 @@ public class EmployeeController {
 
   
 
-    @PostMapping("/save")
-    public String saveEmployee(@ModelAttribute("employee") Employee employee) {
+    @PostMapping("/saveOld")
+    public String saveEmployeeOld(@ModelAttribute("employee") Employee employee) {
         employeeService.saveOrUpdateEmployee(employee);
         return "redirect:/employees";
+    }
+    
+    @PostMapping("/save")
+    public String saveEmployee(@ModelAttribute("employee") Employee employee) {
+    	
+    	 employeeService.saveOrUpdateEmployee(employee);
+    	    
+    	    return "redirect:/employees";
     }
     
     

@@ -28,9 +28,5 @@ public class EmployeeLeadsService {
         return employeeLeadsRepository.findByEmployee(employee);
     }
 
-    public List<EmployeeLeads> findEmployeeLeadsByLead(Employee lead) {
-        return employeeLeadsRepository.findByLead(lead);
-    }
-
-    // Other EmployeeLeads-related methods
+    
 }

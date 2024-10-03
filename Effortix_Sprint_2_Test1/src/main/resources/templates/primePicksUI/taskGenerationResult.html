@@ -34,19 +34,10 @@
                     <td th:text="${ticket.tStatus}"></td>
                     <td th:text="${ticket.tType}"></td>
                     <td>
-                        <!-- Form to claim the task -->
-                        <form th:action="@{/tickets/saveByAI}" method="post">
-                            <input type="hidden" th:name="tName" th:value="${ticket.tName}">
-                            <input type="hidden" th:name="tDescription" th:value="${ticket.tDescription}">
-                            <input type="hidden" th:name="tFileLink" th:value="${ticket.tFileLink}">
-                            <input type="hidden" th:name="locationOfFile" th:value="${ticket.locationOfFile}">
-                            <input type="hidden" th:name="tStatus" value="In Progress">
-                            <input type="hidden" th:name="tType" th:value="${ticket.tType}">
-                            <!-- Assuming the employee information is available and set by the controller -->
-                            <input type="hidden" th:name="toEmployee.eId" th:value="${employee.eId}">
-                            
-                            <button type="submit" class="btn btn-primary">Claim Task</button>
-                        </form>
+                        <!-- Redirect to the ticket creation page with pre-filled task data -->
+                        <a th:href="@{/tickets/tickets/ticketsAI/new(topicName=${ticket.tName}, activity=${ticket.tDescription})}" class="btn btn-primary">
+                            Claim Task
+                        </a>
                     </td>
                 </tr>
             </tbody>

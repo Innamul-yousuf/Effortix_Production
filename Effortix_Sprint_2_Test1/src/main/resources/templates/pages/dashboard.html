@@ -13,6 +13,13 @@
 	<p th:if="${session.employee != null}">
         <a th:href="@{employees/track_Employee}">View Employee Details</a>
     </p>
+    
+    <!-- Dynamically generate the tasks link using employee ID -->
+    <p th:if="${session.employee != null}">
+        <a th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}" class="btn btn-primary">
+            Generate Tasks
+        </a>
+    </p>
     <!-- Logout link -->	
     <a th:href="@{/logout}">Logout</a>
 </body>
