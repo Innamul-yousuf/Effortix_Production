@@ -3,6 +3,8 @@ package com.effortix.backend.controllers;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,6 +57,31 @@ public class PrimePicksController2 {
     private EmployeeSkillsService employeeSkillsService;
 
     
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        PrimePicks primePicks = new PrimePicks();
+        model.addAttribute("primePicks", primePicks);
+        return "primePicksUI/create-primepicks";
+    }
+    @Autowired
+    private PrimePicksRepository primePicksRepository;
+
+
+    // Handle the form submission for creating a new PrimePick
+    @PostMapping("primepicks/create")
+    public String createPrimePicks(@ModelAttribute("primePicks") PrimePicks primePicks) {
+        primePicksRepository.save(primePicks);
+        return "redirect:/primepicks/active";
+    }
+
+    // Display list of active PrimePicks
+    @GetMapping("/active")
+    public String showActivePrimePicksInForm(Model model) {
+        List<PrimePicks> activePrimePicks = primePicksRepository.findByStatus("Active");
+        model.addAttribute("activePrimePicks", activePrimePicks);
+        return "primePicksUI/active-primepicks";
+    }
+    
    
     // Display all active PrimePicks (tasks) on the page
     @GetMapping("/tasks/active")
@@ -78,24 +105,25 @@ public class PrimePicksController2 {
         return "redirect:/tickets/tickets/new";  // Redirect to ticket creation with pre-filled data
     }
     
-	/*
-	 * @GetMapping("/generate-tasks/{employeeId}") public String
-	 * generateTasksForEmployee(@PathVariable Long employeeId, Model model) { //
-	 * Fetch employee skills List<EmployeeSkills> employeeSkills =
-	 * employeeSkillsService.getEmployeeSkillsByEId(employeeId); // Fetch active
-	 * PrimePicks List<PrimePicks> activePrimePicks =
-	 * primePicksService.getActivePrimePicks();
-	 * 
-	 * // Call AI to generate tasks (method can be implemented later) List<Ticket>
-	 * ticketList = callAIToGenerateTasks(employeeSkills, activePrimePicks);
-	 * 
-	 * 
-	 * model.addAttribute("employeeSkills", employeeSkills);
-	 * model.addAttribute("activePrimePicks", activePrimePicks);
-	 * 
-	 * return "primePicksUI/taskGenerationResult"; // Name of the view to display
-	 * the results }
-	 */
+    
+    @GetMapping("/edit/{ppID}")
+    public String editPrimePicksStatus(@PathVariable("ppID") Long ppID) {
+        PrimePicks primePicks = primePicksRepository.findById(ppID)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid PrimePick ID:" + ppID));
+
+        // Toggle status
+        if ("Active".equals(primePicks.getStatus())) {
+            primePicks.setStatus("Inactive");
+        } else {
+            primePicks.setStatus("Active");
+        }
+
+        // Save the updated PrimePicks
+        primePicksRepository.save(primePicks);
+
+        // Redirect back to the active PrimePicks list
+        return "redirect:/primepicks/active";
+    }
     
     @GetMapping("/generate-tasks/{employeeId}")
     public String generateTasksForEmployee(@PathVariable Long employeeId, Model model) {
@@ -120,11 +148,15 @@ public class PrimePicksController2 {
     }
 
     
-    
+    private ExecutorService executorService = Executors.newSingleThreadExecutor(); // Create a single-thread executor
+
     @Autowired
     GenerateHotTasks generateHotTasks;
+    
     private List<Ticket> callAIToGenerateTasks(List<EmployeeSkills> employeeSkills, List<PrimePicks> activePrimePicks) {
        System.out.println("AI Called for Ticket Cretion");
+       
+      
        Gson gson = new Gson();
        String employeeSkill=gson.toJson(employeeSkills);
        System.out.println("Employee Skill: " + employeeSkill);
@@ -137,42 +169,11 @@ public class PrimePicksController2 {
     	   System.out.println(ticket.getTName()+ "  "+ticket.getTDescription());
        }
        return ticketList;
-       
+     
     }
     
-    @GetMapping("/primepicks/active") public String getActivePrimePicks(Model model) { 
-    	model.addAttribute("primePicksList",
-    	 primePicksService.getActivePrimePicks()); return "primepicks/active";
-    	 
-    }
+   
     	
 
-    	    // Endpoint to show the creation form
-    	    @GetMapping("/primepicks/create")
-    	    public String showCreateForm(Model model) {
-    	        PrimePicks primePicks = new PrimePicks();
-    	        model.addAttribute("primePicks", primePicks);
-    	        return "primePicksUI/create";  // Render the Thymeleaf form
-    	    }
-    	    
-    	    @PostMapping("/createPrimePick")
-    	    public String savePrimePick(PrimePicks primePick) {
-    	        primePicksRepository.save(primePick);
-    	        return "redirect:/activePrimePicks";
-    	    }
-    	    
-    	    @GetMapping("/createPrimePick")
-    	    public String createPrimePick(Model model) {
-    	        model.addAttribute("primePick", new PrimePicks());
-    	        return "primePicksUI/create2";
-    	    }
-    	    @Autowired
-    	    private PrimePicksRepository primePicksRepository;
-    	    
-    	    @GetMapping("/activePrimePicks")
-    	    public String getActivePrimePicks2(Model model) {
-    	        List<PrimePicks> activePrimePicks = primePicksRepository.findByStatus("Active");
-    	        model.addAttribute("primePicks", activePrimePicks);
-    	        return "primePicksUI/primePicksList"; // Corresponds to the Thymeleaf template name
-    	    }
+    	   
 }

@@ -491,4 +491,12 @@ class TicketRESTController {
         return ResponseEntity.ok(tickets);
     }
     
+    
+    @GetMapping("/created")
+    @ResponseBody  // Returns the response as JSON
+    public List<Ticket> getTicketsCreatedByEmployee(@RequestParam("employeeId") Long employeeId) {
+        return ticketService.getTicketsByFromEmployeeId(employeeId);
+    }
+    
+    
 }

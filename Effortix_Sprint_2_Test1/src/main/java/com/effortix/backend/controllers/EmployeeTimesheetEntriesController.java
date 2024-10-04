@@ -94,7 +94,7 @@ public class EmployeeTimesheetEntriesController {
         model.addAttribute("selectedEmployeeId", null);
         model.addAttribute("selectedMonth", null);
         model.addAttribute("timesheetEntries", new ArrayList<>());
-        return "timesheetUI/timesheet";
+        return "timesheetUI/timesheetUser";
     }
 
     

@@ -58,7 +58,10 @@ public class GenerateEmployeeSkillsAI {
 
 			// Allow sending the request body
 			connection.setDoOutput(true);
-			String systemInstruction="You are an AI assistant responsible for generating a short Skill(very short) to be added in work experience columns in an employee's record by analyzing the updates provided in a ticket. You will receive a new ticket update, which includes the details of the task completed by the employee. Your task is to read the update, identify any new skills or work experiences, and generate a brief, concise description of the skills or tasks learned from the ticket update. Give it as plain text and don't inculde other detalils in your responce. Give it in json format skills in Skills and previous works in Previous Works: Try to find the skill from teh ticket update.";
+			String systemInstruction="You are an AI assistant responsible for generating a short Skill(very short) to be added in work experience columns in an employee's record by analyzing the updates provided in a ticket. "
+					+ "You will receive a new ticket update, which includes the details of the task completed by the employee. "
+					+ "Your task is to read the update, identify any new skills or work experiences, and generate a brief, concise description of the skills or tasks learned from the ticket update. Give it as plain text and don't inculde other detalils in your responce. "
+					+ "Give it in json format skills in Skills and previous works in Previous Works: Try to find the skill from the ticket update. Give it as plain text. If no skill or previous work is gained then just give the responce with a blank space";
 			// JSON request payload
 			String jsonInputString = "{"
 				    + "\"contents\": ["
@@ -104,7 +107,10 @@ public class GenerateEmployeeSkillsAI {
 			        String jsonText = text.replace("```json", "").replace("```", "").trim();
 			        String[] sections = text.split("## Previous Works:");
 			        String skillsSection = sections[0].replace("## Skills:\n\n", "").trim();
+			        skillsSection = skillsSection.replaceAll("[^a-zA-Z0-9\\s]", "");;
+
 			        String workExperienceSection = (sections.length > 1) ? sections[1].trim() : "";
+			        workExperienceSection= workExperienceSection.replaceAll("[^a-zA-Z0-9\\s]", "");
 			        skillAndWorkExp.put("skills", skillsSection);
 			        skillAndWorkExp.put("work_experience", workExperienceSection);
 

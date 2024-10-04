@@ -27,7 +27,7 @@ public class Ticket {
     @Column(name = "tName", nullable = false, length = 100)
     private String tName;
 
-    @Column(name = "tDescription")
+    @Column(name = "tDescription", length = 600000)
     private String tDescription;
 
     @Column(name = "tFileLink")

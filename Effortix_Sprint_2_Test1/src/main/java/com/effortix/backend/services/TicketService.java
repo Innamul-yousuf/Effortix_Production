@@ -221,4 +221,6 @@ public class TicketService {
        public List<Ticket> getTicketsByEmployeeIdAndFlag(Long employeeId) {
            return ticketRepository.findByEmployeeIdAndFlag(employeeId, 0);
        }
+       
+      
 }
