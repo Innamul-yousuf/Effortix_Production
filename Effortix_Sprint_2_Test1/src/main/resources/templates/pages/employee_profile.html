@@ -19,44 +19,14 @@
         .table tbody tr:hover {
             background-color: #f1f1f1;
         }
-        .nav-link {
-            color: #007bff !important;
-        }
-        .nav-link:hover {
-            color: #0056b3 !important;
-        }
+       
         h2, h5 {
             color: #343a40;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">EFFORTIX</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="api/timesheet/timesheet">Timesheet</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/tickets">Tickets</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}">Generate AI Task</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <div th:replace="fragments/navbar"></div>
 
     <div class="container mt-4">
         <h2 class="text-center">Employee Profile</h2>
@@ -97,9 +67,7 @@
         </table>
 
         <!-- Back Button -->
-        <div class="text-center">
-            <a href="/employees" class="btn btn-secondary">Back to Employee List</a>
-        </div>
+       
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

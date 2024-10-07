@@ -61,7 +61,7 @@
     </style>
 </head>
 <body>
-
+ <div th:replace="fragments/navbar"></div>
 <div class="container">
     <div class="ticket-container">
         <h1>Ticket Details</h1>
@@ -109,7 +109,7 @@
         </form>
 
         <div class="btn-container">
-            <a href="/tickets" class="btn btn-secondary">Back to List</a>
+         <!--    <a href="/tickets" class="btn btn-secondary">Back to List</a> -->
             <a th:href="@{/tickets/{id}/edit(id=${ticket.tId})}" class="btn btn-info">Edit Ticket</a>
         </div>
     </div>

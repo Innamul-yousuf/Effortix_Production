@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create/Edit Ticket</title>
     <script src="/js/ticket_AI_SuggestionEmployees.js" th:src="@{/js/ticket_AI_SuggestionEmployees.js}"></script>
-    Bootstrap CDN for Styling
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -18,124 +15,180 @@
         .form-group {
             margin-bottom: 15px;
         }
+        /* Styling for AI Suggestions Button */
+        #askAISuggestions {
+            background-color: transparent;
+            border: 2px solid transparent;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            outline: none;
+            overflow: hidden;
+            transition: color 0.4s;
+        }
+        
+        /* Animated Gradient Border */
+        #askAISuggestions::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe);
+            z-index: -1;
+            transition: all 0.4s;
+            border-radius: 10px;
+            padding: 2px;
+        }
+
+        /* Transparent inner with animated border */
+        #askAISuggestions::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background-color: transparent;
+            z-index: -2;
+            border-radius: 8px;
+        }
+
+        /* Hover effect */
+        #askAISuggestions:hover {
+            color: #ffffff;
+        }
+        #askAISuggestions:hover::before {
+            background: linear-gradient(270deg, #ffafbd, #ffc3a0, #ff9a8b);
+        }
+        #askAISuggestions:hover::after {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Hide the flag and designation fields */
+        #tFlag, #eDesignation {
+            display: none;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1 th:text="${ticket.tId != null ? 'Edit Ticket' : 'Create New Ticket'}"></h1>
+    <div th:replace="fragments/navbar"></div>
+    <div class="container">
+        <h1 th:text="${ticket.tId != null ? 'Edit Ticket' : 'Create Ticket'}"></h1>
 
-    <form th:action="@{/tickets/save}" th:object="${ticket}" method="post" id="ticketForm">
-        <input type="hidden" th:name="*{tId}" th:value="*{tId}"/>
+        <form th:action="@{/tickets/save}" th:object="${ticket}" method="post" id="ticketForm">
+            <input type="hidden" th:name="*{tId}" th:value="*{tId}"/>
+            
+            <!-- Ticket Name -->
+            <div class="form-group">
+                <label for="tName">Ticket Name:</label>
+                <input type="text" id="tName" th:field="*{tName}" class="form-control" required />
+            </div>
 
-        <div class="form-group">
-            <label for="tName">Ticket Name:</label>
-            <input type="text" id="tName" th:field="*{tName}" class="form-control" required />
-        </div>
+            <!-- Description -->
+            <div class="form-group">
+                <label for="tDescription">Description:</label>
+                <textarea id="tDescription" th:field="*{tDescription}" class="form-control" required></textarea>
+            </div>
 
-        <div class="form-group">
-            <label for="tDescription">Description:</label>
-            <textarea id="tDescription" th:field="*{tDescription}" class="form-control" required></textarea>
-        </div>
+            <!-- File Link -->
+            <div class="form-group">
+                <label for="tFileLink">File Link:</label>
+                <input type="text" id="tFileLink" th:field="*{tFileLink}" class="form-control" />
+            </div>
 
-        <div class="form-group">
-            <label for="tFileLink">File Link:</label>
-            <input type="text" id="tFileLink" th:field="*{tFileLink}" class="form-control" />
-        </div>
+            <!-- Location of File -->
+            <div class="form-group">
+                <label for="locationOfFile">Location of File:</label>
+                <input type="text" id="locationOfFile" th:field="*{locationOfFile}" class="form-control" />
+            </div>
 
-        <div class="form-group">
-            <label for="locationOfFile">Location of File:</label>
-            <input type="text" id="locationOfFile" th:field="*{locationOfFile}" class="form-control" />
-        </div>
+            <!-- Flag (Hidden Field) -->
+            <input type="hidden" id="tFlag" th:field="*{tFlag}" th:value="0"/>
 
-        <div class="form-group">
-            <label for="tFlag">Flag:</label>
-            <input type="number" id="tFlag" th:field="*{tFlag}" class="form-control" />
-        </div>
+            <!-- Created Date -->
+            <div class="form-group">
+                <label for="createdDate">Created Date:</label>
+                 <input type="date" id="createdDate" th:field="*{createdDate}" placeholder="yyyy-MM-dd" required class="form-control"/><br/>
+            </div>
+            <!-- Deadline -->
+            <div class="form-group">
+                <label for="deadline">Deadline:</label>
+                <input type="date" id="deadline" th:field="*{deadline}" class="form-control" required />
+            </div>
 
-        <div class="form-group">
-            <label for="createdDate">Created Date:</label>
-            <input type="date" id="createdDate" th:field="*{createdDate}" class="form-control" />
-        </div>
+            <!-- Type -->
+            <div class="form-group">
+                <label for="tType">Type:</label>
+                <select id="tType" th:field="*{tType}" class="form-control" required>
+                    <option value="" disabled selected>Select Type</option>
+                    <option value="Client Project">Client Project</option>
+                    <option value="Internal Project">Internal Project</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="deadline">Deadline:</label>
-            <input type="date" id="deadline" th:field="*{deadline}" class="form-control" required />
-        </div>
+            <!-- Status -->
+            <div class="form-group">
+                <label for="tStatus">Status:</label>
+                <select id="tStatus" th:field="*{tStatus}" class="form-control" required>
+                    <option value="" disabled selected>Select Status</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="tType">Type:</label>
-            <select id="tType" th:field="*{tType}" class="form-control" required>
-                <option value="" disabled selected>Select Type</option>
-                <option value="Client Project">Client Project</option>
-                <option value="Internal Project">Internal Project</option>
-            </select>
-        </div>
+            <!-- Designation (Hidden in UI) -->
+            <input type="hidden" id="eDesignation" th:field="*{eDesignation}" class="form-control" />
 
-        <div class="form-group">
-            <label for="tStatus">Status:</label>
-            <select id="tStatus" th:field="*{tStatus}" class="form-control" required>
-                <option value="" disabled selected>Select Status</option>
-                <option value="Assigned">Assigned</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-            </select>
-        </div>
+            <!-- From Employee -->
+            <div class="form-group">
+                <label for="tFromEID">From Employee:</label>
+                <select id="tFromEID" th:field="*{fromEmployee.eId}" class="form-control">
+                    <option value="" disabled th:text="${ticket.fromEmployee == null ? 'Select Employee' : ''}"></option>
+                    <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="eDesignation">Designation:</label>
-            <input type="text" id="eDesignation" th:field="*{eDesignation}" class="form-control" />
-        </div>
+            <!-- AI Suggestions Button -->
+            <button type="button" id="askAISuggestions" class="btn">Ask AI Suggestions</button>
 
-        Dropdown for From Employee
-        <div class="form-group">
-            <label for="tFromEID">From Employee:</label>
-            <select id="tFromEID" th:field="*{fromEmployee.eId}" class="form-control">
-                <option value="" disabled th:text="${ticket.fromEmployee == null ? 'Select Employee' : ''}"></option>
-                <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
-            </select>
-        </div>
+            <!-- AI Suggested Employees -->
+            <div class="form-group">
+                <label for="aiSuggestedEmployees">AI Suggested Employees:</label>
+                <select id="aiSuggestedEmployees" class="form-control">
+                    <option value="" disabled selected>Select an employee</option>
+                    <!-- AI-suggested employees will be populated here -->
+                </select>
+            </div>
 
-        <button type="button" id="askAISuggestions" class="btn btn-secondary">Ask AI Suggestions</button>
+            <!-- To Employee -->
+            <div class="form-group">
+                <label for="tToEID">To Employee:</label>
+                <select id="tToEID" th:field="*{toEmployee.eId}" class="form-control">
+                    <option value="" disabled th:text="${ticket.toEmployee == null ? 'Select Employee' : ''}"></option>
+                    <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
+                </select>
+            </div>
 
-        AI Suggested Employees Dropdown
-        <div class="form-group">
-            <label for="aiSuggestedEmployees">AI Suggested Employees:</label>
-            <select id="aiSuggestedEmployees" class="form-control">
-                <option value="" disabled selected>Select an employee</option>
-                AI-suggested employees will be populated here
-            </select>
-        </div>
+            <!-- Project -->
+            <div class="form-group">
+                <label for="tPID">Project:</label>
+                <select id="tPID" th:field="*{project.pId}" class="form-control">
+                    <option value="" disabled th:text="${ticket.project == null ? 'Select Project' : ''}"></option>
+                    <option th:each="project : ${projects}" th:value="${project.pId}" th:text="${project.pName}"></option>
+                </select>
+            </div>
 
-        Dropdown for To Employee
-        <div class="form-group">
-            <label for="tToEID">To Employee:</label>
-            <select id="tToEID" th:field="*{toEmployee.eId}" class="form-control">
-                <option value="" disabled th:text="${ticket.toEmployee == null ? 'Select Employee' : ''}"></option>
-                <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
-            </select>
-        </div>
-
-        Dropdown for Project
-        <div class="form-group">
-            <label for="tPID">Project:</label>
-            <select id="tPID" th:field="*{project.pId}" class="form-control">
-                <option value="" disabled th:text="${ticket.project == null ? 'Select Project' : ''}"></option>
-                <option th:each="project : ${projects}" th:value="${project.pId}" th:text="${project.pName}"></option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save Ticket</button>
-        <a href="/tickets" class="btn btn-secondary">Back to List</a>
-    </form>
-</div>
-
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Save Ticket</button>
+        </form>
+        
 <script>
-    // Set default date for createdDate field to today's date
-    document.addEventListener("DOMContentLoaded", function() {
-        var today = new Date().toISOString().split('T')[0]; // Get today's date in yyyy-MM-dd format
-        document.getElementById('createdDate').value = today; // Set the value
-    });
-
     document.getElementById('askAISuggestions').addEventListener('click', function() {
         // Get the ticket description
         var description = document.getElementById('tDescription').value;
@@ -173,125 +226,6 @@
         toEmployeeDropdown.value = selectedEmployeeId;
     });
 </script>
-
+    </div>
 </body>
 </html>
-
-<!-- 
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Create/Edit Ticket</title>
-    <script src="/js/ticket_AI_SuggestionEmployees.js" th:src="@{/js/ticket_AI_SuggestionEmployees.js}"></script>
-</head>
-<body>
-<h1 th:text="${ticket.tId != null ? 'Edit Ticket' : 'Create New Ticket'}"></h1>
-<form th:action="@{/tickets/save}" th:object="${ticket}" method="post">
-     <input type="hidden" th:name="tId" th:value="*{tId}"/>
-    
-    <label for="tName">Ticket Name:</label>
-    <input type="text" id="tName" th:field="*{tName}" required/><br/>
-
-    <label for="tDescription">Description:</label>
-    <textarea id="tDescription" th:field="*{tDescription}" required></textarea><br/>
-
-    <label for="tFileLink">File Link:</label>
-    <input type="text" id="tFileLink" th:field="*{tFileLink}" /><br/>
-
-    <label for="locationOfFile">Location of File:</label>
-    <input type="text" id="locationOfFile" th:field="*{locationOfFile}" /><br/>
-
-    <label for="tFlag">Flag:</label>
-    <input type="number" id="tFlag" th:field="*{tFlag}" /><br/>
-
-    <label for="deadline">Deadline:</label>
-    <input type="date" id="deadline" th:field="*{deadline}" placeholder="yyyy-MM-dd" required/><br/>
-
-    <label for="createdDate">Created Date:</label>
-    <input type="date" id="createdDate" th:field="*{createdDate}" placeholder="yyyy-MM-dd" required/><br/>
-
-    <label for="tType">Type:</label>
-    <input type="text" id="tType" th:field="*{tType}" required/><br/>
-
-    <label for="tStatus">Status:</label>
-    <input type="text" id="tStatus" th:field="*{tStatus}" required/><br/>
-
-    <label for="eDesignation">Designation:</label>
-    <input type="text" id="eDesignation" th:field="*{eDesignation}" /><br/>
-
-  Dropdown for From Employee
-<label for="tFromEID">From Employee:</label>
-<select id="tFromEID" th:field="*{fromEmployee.eId}">
-    <option value="" disabled th:text="${ticket.fromEmployee == null ? 'Select Employee' : ''}"></option>
-    <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
-</select><br/>
-
-<button type="button" id="askAISuggestions">Ask AI Suggestions</button>
-
-AI Suggested Employees Dropdown
-<label for="aiSuggestedEmployees">AI Suggested Employees:</label>
-<select id="aiSuggestedEmployees">
-    <option value="" disabled selected>Select an employee</option>
-    AI-suggested employees will be populated here
-</select><br/>
-
-Dropdown for To Employee
-<label for="tToEID">To Employee:</label>
-<select id="tToEID" th:field="*{toEmployee.eId}">
-    <option value="" disabled th:text="${ticket.toEmployee == null ? 'Select Employee' : ''}"></option>
-    <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
-</select><br/>
-
-Dropdown for Project
-<label for="tPID">Project:</label>
-<select id="tPID" th:field="*{project.pId}">
-    <option value="" disabled th:text="${ticket.project == null ? 'Select Project' : ''}"></option>
-    <option th:each="project : ${projects}" th:value="${project.pId}" th:text="${project.pName}"></option>
-</select><br/>
-
-    <button type="submit">Save Ticket</button>
-</form>
-
-<a href="/tickets">Back to List</a>
-
-<script>
-    document.getElementById('askAISuggestions').addEventListener('click', function() {
-        // Get the ticket description
-        var description = document.getElementById('tDescription').value;
-        
-        // Make an AJAX request to the backend to get AI-suggested employees
-        fetch('getAiSuggestedEmployees', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ description: description })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Clear the dropdown
-            var aiSuggestedDropdown = document.getElementById('aiSuggestedEmployees');
-            aiSuggestedDropdown.innerHTML = '<option value="" disabled selected>Select an employee</option>';
-            
-            // Populate the dropdown with AI-suggested employees
-            data.forEach(function(employee) {
-                var option = document.createElement('option');
-                option.value = employee.eId;
-                option.text = employee.eName;
-                aiSuggestedDropdown.appendChild(option);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-    });
-    
-    document.getElementById('aiSuggestedEmployees').addEventListener('change', function() {
-        var selectedEmployeeId = this.value; // Get selected AI-suggested employee ID
-        var toEmployeeDropdown = document.getElementById('tToEID'); // To Employee dropdown
-        
-        // Set the selected employee in the To Employee dropdown
-        toEmployeeDropdown.value = selectedEmployeeId;
-    });
-</script>
-
-</body>
-</html> -->
