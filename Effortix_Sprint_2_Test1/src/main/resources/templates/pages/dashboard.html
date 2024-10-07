@@ -41,31 +41,98 @@
             background-color: #007bff;
             color: white;
         }
+        .card {
+            transition: transform 0.3s;
+        }
+       
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #007bff !important;
+        }
+        .profile-image {
+            width: 100px;
+            border-radius: 50%;
+        }
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+         /* Custom styles for the navbar */
+       
+
+        .navbar-nav .nav-link {
+            color: white !important;
+            transition: color 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffdd57 !important; /* Color on hover */
+            transform: scale(1.1); /* Scale animation on hover */
+        }
+
+        .dropdown-menu {
+            background: #fff; /* Background for dropdown */
+        }
+
+        .dropdown-item {
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f1f1f1; /* Background color on hover */
+        }
+
+        .navbar-brand {
+            font-weight: bold; /* Bold brand text */
+            font-size: 1.5rem; /* Larger brand text */
+        }
+         .navbar {
+        padding: 15px 0;
+        background: none; /* Removes the background from the navbar */
+    }
+    .navbar-brand {
+        color: #007bff; /* Change the brand color */
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+    .navbar-nav {
+        flex-direction: row; /* Keep buttons in a row */
+    }
+
+        /* Responsive styles */
+        @media (max-width: 576px) {
+            .navbar {
+                background: linear-gradient(90deg, #2575fc, #6a11cb); /* Reverse gradient on mobile */
+            }
+        }
     </style>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Dashboard</a>
+<nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="#" style="font-size: 24px; font-weight: bold;">EFFORTIX</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/dashboard">Dashboard</a>
+            <li class="nav-item mx-2">
+                <a class="btn btn-outline-dark" href="/dashboard">Dashboard</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/profile">Profile</a>
+           <li class="nav-item mx-2">
+    			<a class="btn btn-outline-dark" th:href="@{/project-employee/profile/{id}(id=${session.employee.eId})}">Profile</a>
+			</li>
+            <li class="nav-item mx-2">
+                <a class="btn btn-outline-dark" href="api/timesheet/timesheet">Timesheet</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="api/timesheet/timesheet">Timesheet</a>
+            <li class="nav-item mx-2">
+                <a class="btn btn-outline-dark" href="/tickets">Tickets</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/tickets">Tickets</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}">Generate AI Task</a>
+            <li class="nav-item mx-2">
+                <a class="btn btn-outline-dark" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}">Generate AI Task</a>
             </li>
         </ul>
     </div>
@@ -98,8 +165,7 @@
             </div>
         </div>
     </div>
-
-   <!-- My Tickets Section -->
+<!-- My Tickets Section -->
 <div class="row">
     <div class="col-md-12">
          <div id="myTickets" class="dashboard-card card">
@@ -115,7 +181,9 @@
                             <tr>
                                 <th>Ticket ID</th>
                                 <th>Ticket Name</th>
+                                <th>Status</th>
                                 <th>Actions</th>
+                                <th>Deadline</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,10 +216,13 @@
                         var row = '<tr>' +
                             '<td>' + ticket.tid + '</td>' +
                             '<td>' + ticket.tname + '</td>' +
+                            '<td>' + ticket.tstatus + '</td>' +
+                            '<td>' + ticket.deadline + '</td>' +
                             '<td>' +
-                                '<a href="/ticketUpdates/ticket/' + ticket.tid + '">View</a> | ' +
-                                '<a href="/tickets/tickets/edit/' + ticket.tid + '">Edit</a> | ' +
-                                
+                                '<div class="btn-group" role="group" aria-label="Ticket Actions">' +
+                                    '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm">View</a>' +
+                                    '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm">Edit</a>' +
+                                '</div>' +
                             '</td>' +
                         '</tr>';
 
@@ -165,7 +236,6 @@
             });
         }
     });
-
 
     // Example ChartJS setup for performance and ticket charts (you can replace with real data)
     const performanceData = {
@@ -226,16 +296,17 @@
         }
     });
 </script>
-
 <div class="container my-4">
     <h2 class="text-center">Track Created Tickets</h2>
     
     <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-        <table id="createdTicketsTable" class="table table-bordered table-hover">
+        <table id="createdTicketsTable" class="table table-bordered table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Ticket ID</th>
-                    <th scope="col">Ticket Name</th>
+                    <th scope="col" style="width: 350px;">Ticket Name</th> <!-- Fixed width for Ticket Name column -->
+                    <th scope="col">Status</th>
+                    <th scope="col">Deadline</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -263,6 +334,8 @@
                     var row = '<tr>' +
                         '<td>' + ticket.tid + '</td>' +
                         '<td>' + ticket.tname + '</td>' +
+                        '<td>' + ticket.tstatus + '</td>' +
+                        '<td>' + ticket.deadline + '</td>' +
                         '<td>' +
                             '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm">View</a> ' +
                             '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm">Edit</a> ' +
@@ -313,7 +386,7 @@
                         <tr>
                             <th>Ticket ID</th>
                             <th>Description</th>
-                            <th>Assigned To</th>
+                            <th>Created By</th>
                             <th>Actions</th> <!-- New column for the claim button -->
                         </tr>
                     </thead>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .table thead th {
+            background-color: #007bff;
+            color: white;
+        }
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .nav-link {
+            color: #007bff !important;
+        }
+        .nav-link:hover {
+            color: #0056b3 !important;
+        }
+        h2, h5 {
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">EFFORTIX</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="api/timesheet/timesheet">Timesheet</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/tickets">Tickets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}">Generate AI Task</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="text-center">Employee Profile</h2>
+
+        <!-- Employee Details -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Employee Information</h5>
+                <p><strong>ID:</strong> <span th:text="${employee.eId}"></span></p>
+                <p><strong>Name:</strong> <span th:text="${employee.eName}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${employee.eEmail}"></span></p>
+                <p><strong>Contact:</strong> <span th:text="${employee.eContact}"></span></p>
+                <p><strong>Designation:</strong> <span th:text="${employee.eDesignation}"></span></p>
+                <p><strong>Join Date:</strong> <span th:text="${#dates.format(employee.eJoinDate, 'yyyy-MM-dd')}"></span></p>
+                <p><strong>Role:</strong> <span th:text="${employee.eRole}"></span></p>
+                <p><strong>On Bench:</strong> <span th:text="${employee.eInBench} ? 'Yes' : 'No'"></span></p>
+                <p><strong>Is Lead:</strong> <span th:text="${employee.eISLead} ? 'Yes' : 'No'"></span></p>
+            </div>
+        </div>
+
+        <!-- Projects Associated with Employee -->
+        <h5>Projects</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Project Role</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="project : ${projects}">
+                    <td th:text="${project.pName}"></td> <!-- Adjust according to the Project entity's attributes -->
+                    <td th:text="${project.pDetails}"></td> <!-- Adjust according to the Project entity's attributes -->
+                    <td th:text="${project.pSkills}"></td> <!-- Adjust according to the Project entity's attributes -->
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Back Button -->
+        <div class="text-center">
+            <a href="/employees" class="btn btn-secondary">Back to Employee List</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

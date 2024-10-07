@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.effortix.backend.models.Employee;
 import com.effortix.backend.models.Project;
 import com.effortix.backend.models.ProjectEmployee;
+import com.effortix.backend.services.EmployeeService;
 import com.effortix.backend.services.ProjectEmployeeService;
 
 @Controller
@@ -53,6 +55,22 @@ public class ProjectEmployeeController {
         projectEmployeeService.saveOrUpdateProjectEmployee(projectEmployee);
         return "redirect:/project-employee/all";
     }
+    
+    @Autowired
+    EmployeeService employeeService;
+    @GetMapping("/profile/{id}")
+    public String getEmployeeProfile(@PathVariable Long id, Model model) {
+        // Fetch employee details
+        Employee employee = employeeService.getEmployeeById(id).orElse(null);
+        model.addAttribute("employee", employee);
+
+        // Fetch projects associated with the employee
+        List<Project> projects = projectEmployeeService.getProjectsByEmployeeId(id);
+        model.addAttribute("projects", projects);
+
+        return "pages/employee_profile"; // Refers to the employee_profile.html Thymeleaf page
+    }
+    
 }
 
 
