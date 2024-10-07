@@ -13,7 +13,7 @@ public class GeminiTesterClass {
 	 public void runAPI() {
 	        try {
 	            // Define the API URL (Replace YOUR_API_KEY with the actual API key)
-	            String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCObxtlyDEDrzupiBXBcGZKz7u2az8zX_M";
+	            String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC0yDq9TByoPnCIwe8huyIaHnZNOOErTAU";
 
 	            // Create URL object
 	            URL url = new URL(apiUrl);

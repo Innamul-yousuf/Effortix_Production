@@ -43,7 +43,8 @@ public class GenerateEmployeeSkillsAI {
 			String escapedUpdate = theUpdate.replace("\"", "\\\"");
 			System.out.println("kkkkk: "+escapedTicketDetails);
 			// Define the API URL
-			String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCObxtlyDEDrzupiBXBcGZKz7u2az8zX_M";
+			//String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCObxtlyDEDrzupiBXBcGZKz7u2az8zX_M";
+			String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC0yDq9TByoPnCIwe8huyIaHnZNOOErTAU";
 
 			// Create URL object
 			URL url = new URL(apiUrl);

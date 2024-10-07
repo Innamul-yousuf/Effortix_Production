@@ -29,7 +29,7 @@ import org.json.JSONObject;
 public class FindEmployyeeAI {
 
     private static final String API_KEY = "AIzaSyCvv0Y7PzJrGCDfsAgBfSmncW8JW91vUpc";
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCvv0Y7PzJrGCDfsAgBfSmncW8JW91vUpc";
+    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC0yDq9TByoPnCIwe8huyIaHnZNOOErTAU";
     
     @Autowired
     private EmployeeSkillsService employeeSkillsService;
