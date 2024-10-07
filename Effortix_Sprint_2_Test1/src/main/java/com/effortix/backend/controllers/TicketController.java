@@ -103,7 +103,7 @@ public class TicketController {
 		
 	  //sendEmailToResponsible(ticket);
 	        //Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
-
+		  	ticketService.calculateCredits(ticket);
 	        Ticket savedTicket=Ticrepository.save(ticket);
 	        sendEmailToResponsible(ticket);
 	  System.out.println("saveTicket2"); 
@@ -261,7 +261,8 @@ public class TicketController {
            System.out.println("assignedEmployeeEmail: "+assignedEmployeeEmail);
            // Prepare email details
            String subject = "New Ticket Assigned: " + savedTicket.getTName();
-           String text = "Dear " + savedTicket.getToEmployee().geteName() + ",\n\n"
+           String text = "Hi " + savedTicket.getToEmployee().geteName() + ",\n\n"
+        		   +"Good Day!"
                    + "A new ticket has been assigned to you. Please check the details below:\n"
                    + "Ticket ID: " + savedTicket.getTId() + "\n"
                    + "Title: " + savedTicket.getTName() + "\n"

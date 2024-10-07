@@ -298,10 +298,15 @@ public class TicketUpdatesService{
           	Long lToEid=  ticketOptional.get().getToEmployee().geteId();
          	 Optional<Employee> toEmployee = employeeService.getEmployeeById(lToEid);
          	 
-          	 String sNewTicketUpdate="New update in Ticket: "+ticketOptional.get().getTId();
-          	 String Content="Hi "+fromEmployee.get().geteName()+","
-          	 		+ "There’s a new update on ticket "+ticketOptional.get().getTId()+": "+ticketOptional.get().getTName()+" :"
-          	 				+ "New Update: "+ticketUpdates.gettUpdate();
+          	 String sNewTicketUpdate="New Update in Ticket #"+ticketOptional.get().getTId();
+          	 String Content="Hello " + fromEmployee.get().geteName() + ",\n\n" +
+                     "Good day! We would like to inform you about a new update on your ticket:\n\n" +
+                     "Ticket ID: " + ticketOptional.get().getTId() + "\n" +
+                     "Ticket Name: " + ticketOptional.get().getTName() + "\n\n" +
+                     "New Update: " + ticketUpdates.gettUpdate() + "\n\n" +
+                     "Please review the details at your earliest convenience.\n\n" +
+                     "Best regards,\n" +
+                     "Your Support Team";
           	   emailService.sendSimpleMessage(fromEmployee.get().geteEmail(), sNewTicketUpdate, Content);
              }
         }

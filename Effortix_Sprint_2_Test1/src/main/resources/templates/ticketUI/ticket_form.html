@@ -126,6 +126,10 @@
                 <label for="tType">Type:</label>
                 <select id="tType" th:field="*{tType}" class="form-control" required>
                     <option value="" disabled selected>Select Type</option>
+                    <option value="Splitted Task">Splitted Task</option>
+                    <option value="AI Generated">AI Generated</option>
+                    <option value="Issue">Issue</option>
+                    <option value="Knowledge Transfer">Knowledge Transfer</option>
                     <option value="Client Project">Client Project</option>
                     <option value="Internal Project">Internal Project</option>
                 </select>
@@ -137,6 +141,7 @@
                 <select id="tStatus" th:field="*{tStatus}" class="form-control" required>
                     <option value="" disabled selected>Select Status</option>
                     <option value="Assigned">Assigned</option>
+                      <option value="Started">Started</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Completed">Completed</option>
                 </select>

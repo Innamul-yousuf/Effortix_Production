@@ -33,7 +33,7 @@ public class TicketService {
         Ticket savedTicket= ticketRepository.save(ticket);
        
      // Check if the ticket status is updated to "Closed"
-        if ( ticket.getTStatus().equals("Closed")) {
+        if ( ticket.getTStatus().equals("Completed")) {
         	calculateCredits(savedTicket); // Call the method when the status is closed
         }
         
@@ -165,7 +165,7 @@ public class TicketService {
        @Autowired
        EmployeeCreditsService creditsService;
 
-       private void calculateCredits(Ticket ticket) {
+       public void calculateCredits(Ticket ticket) {
        System.out.println("Processing ticket for credit calculation...");
 
        // Convert the ticket details to JSON
@@ -208,7 +208,6 @@ public class TicketService {
            newCredits.setEId(ticket.getToEmployee().geteId());
            newCredits.setCredits(calculatedValueD);  // Set the new calculated credits
            newCredits.setCreditType(ticket.getTType());  // Set appropriate credit type (adjust as needed)
-           newCredits.setCredits(calculatedValueD);
            newCredits.setDate(new Date());
            // Save the new credits in the database
            creditsService.saveOrUpdateEmployeeCredits(newCredits);
