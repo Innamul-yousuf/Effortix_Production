@@ -10,9 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+ <div th:replace="fragments/navbar"></div>
     <div class="container my-5">
         <div class="text-center">
-            <h1 class="display-4 mb-4">Employee Dashboard</h1>
+            <h1 class="display-4 mb-4">Track Employee</h1>
             <p class="lead">Select an employee to view detailed information and stats</p>
         </div>
 
@@ -91,16 +92,18 @@
                 </tbody>
             </table>
         </div>
-
+		
         <!-- Pie Chart Section -->
         <div id="creditChartContainer" class="card p-4 shadow-lg">
+        <div id="creditTotal" style="font-size: 24px; font-weight: bold; color: #333; margin-bottom: 10px;"></div>
             <h2 class="h4">Employee Credits by Type</h2>
              <div id="creditChartContainer" style="margin-top: 30px; max-width: 400px;">
             	<canvas id="creditChart" width="400" height="400"></canvas>
             </div>
         </div>
     </div>
-
+	
+	
     <!-- AJAX to fetch and update ticket, project, and AI suggestions -->
     <script>
         // Same scripts as before for AJAX handling
@@ -292,12 +295,20 @@ $(document).ready(function () {
                     // Assuming data is an array of EmployeeCredits
                     var labels = [];
                     var values = [];
+                    var totalCredits = 0; // Initialize totalCredits
 
                     data.forEach(function (creditRecord) {
                         labels.push(creditRecord.creditType);
                         values.push(creditRecord.credits);
+                        totalCredits += creditRecord.credits;
                     });
-
+	
+                    // Display total credits
+                    $('#creditTotal').text('Total Credits: ' + totalCredits).css({
+                        'color': 'rgba(75, 192, 192, 1)', // Highlight color
+                        'font-weight': 'bold'
+                    });
+                    
                     // Create or update the pie chart
                     var ctx = document.getElementById('creditChart').getContext('2d');
 
@@ -354,8 +365,162 @@ $(document).ready(function () {
     });
 });
 </script>
+	
+	
+	
+	  <div class="container">
+        <h1>Timesheet Page</h1>
 
+        <!-- Employee selection -->
+        <form id="timesheetForm" class="mb-4">
+        
 
+            <div class="form-group">
+                <label for="fromDate">From Date:</label>
+                <input type="date" name="fromDate" id="fromDate" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="toDate">To Date:</label>
+                <input type="date" name="toDate" id="toDate" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Get Timesheet</button>
+        </form>
+        
+        <!-- Button to download as Excel -->
+        <button id="downloadExcel" class="btn btn-success">Download Timesheet as Excel</button>
+
+        <!-- Render the timesheet entries -->
+        <div id="timesheetEntriesContainer" class="entry-card" style="display:none;">
+            <h2>Timesheet Entries</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody id="timesheetEntriesTable">
+                    <!-- Entries will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+$(document).ready(function() {
+    $('#timesheetEntriesContainer').hide(); // Hide initially
+    $('#timesheetForm').hide(); // Hide the form until an employee is selected
+
+    // When an employee is selected
+    $('#employeeDropdown').change(function() {
+        var employeeId = $(this).val();
+        
+        if (employeeId) {
+            $('#timesheetForm').show(); // Show the timesheet form
+            setDefaultDates(); // Set current month dates
+            loadTimesheetEntries(employeeId, getCurrentMonthStart(), getCurrentMonthEnd());
+        }
+    });
+
+    $('#timesheetForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+        var employeeId = $('#employeeDropdown').val();
+        const fromDate = $('#fromDate').val();
+        const toDate = $('#toDate').val();
+
+        loadTimesheetEntries(employeeId, fromDate, toDate);
+    });
+
+    $('#downloadExcel').click(function() {
+        var employeeId = $('#employeeDropdown').val();
+        const fromDate = $('#fromDate').val();
+        const toDate = $('#toDate').val();
+
+        if (!fromDate || !toDate) {
+            alert('Please select a date range first.');
+            return;
+        }
+
+        $.ajax({
+            url: `/api/timesheet/employee/${employeeId}/dates`,
+            type: 'GET',
+            data: {
+                fromDate: fromDate,
+                toDate: toDate
+            },
+            success: function(data) {
+                exportToExcel(data);
+            },
+            error: function() {
+                alert('Error fetching data for export.');
+            }
+        });
+    });
+
+    function loadTimesheetEntries(employeeId, fromDate, toDate) {
+        $.ajax({
+            url: `/api/timesheet/employee/${employeeId}/dates`,
+            type: 'GET',
+            data: {
+                fromDate: fromDate,
+                toDate: toDate
+            },
+            success: function(data) {
+                $('#timesheetEntriesTable').empty();
+
+                if (data.length > 0) {
+                    data.forEach(function(entry) {
+                        $('#timesheetEntriesTable').append(
+                            '<tr>' +
+                                '<td>' + entry.date + '</td>' +
+                                '<td>' + entry.etActivity + '</td>' +
+                            '</tr>'
+                        );
+                    });
+                    $('#timesheetEntriesContainer').show();
+                } else {
+                    $('#timesheetEntriesContainer').hide();
+                    alert('No timesheet entries found for the selected dates.');
+                }
+            },
+            error: function() {
+                alert('Error fetching timesheet entries.');
+            }
+        });
+    }
+
+    function exportToExcel(data) {
+        const worksheet = XLSX.utils.json_to_sheet(data.map(entry => ({
+            Date: entry.date,
+            Activity: entry.etActivity
+        })));
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Timesheet");
+
+        XLSX.writeFile(workbook, `Timesheet_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    }
+
+    function setDefaultDates() {
+        const start = getCurrentMonthStart();
+        const end = getCurrentMonthEnd();
+        $('#fromDate').val(start);
+        $('#toDate').val(end);
+    }
+
+    function getCurrentMonthStart() {
+        const date = new Date();
+        return new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+    }
+
+    function getCurrentMonthEnd() {
+        const date = new Date();
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
+    }
+});
+</script>
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>

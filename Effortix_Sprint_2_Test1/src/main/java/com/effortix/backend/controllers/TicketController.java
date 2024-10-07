@@ -78,6 +78,13 @@ public class TicketController {
         model.addAttribute("tickets", tickets);
         return "ticketUI/ticket_list"; // Returns 'ticket_list.html'
     }
+    
+    @GetMapping("/IndividualTickets")
+    public String listTicketsIndividual(Model model) {
+        List<Ticket> tickets = ticketService.getAllTickets();
+        model.addAttribute("tickets", tickets);
+        return "ticketUI/ticket_list_Individual"; // Returns 'ticket_list.html'
+    }
 
     // Show form to create a new ticket
     @GetMapping("/new")

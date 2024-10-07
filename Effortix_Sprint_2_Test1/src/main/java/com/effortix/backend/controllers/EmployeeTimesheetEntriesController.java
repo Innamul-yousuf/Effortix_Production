@@ -96,6 +96,16 @@ public class EmployeeTimesheetEntriesController {
         model.addAttribute("timesheetEntries", new ArrayList<>());
         return "timesheetUI/timesheetUser";
     }
+    
+    @GetMapping("track_employee/timesheet")
+    public String showTimesheetPageForManager(org.springframework.ui.Model model) {
+        List<Employee> employees = employeeService.getAllEmployees();
+        model.addAttribute("employees", employees);
+        model.addAttribute("selectedEmployeeId", null);
+        model.addAttribute("selectedMonth", null);
+        model.addAttribute("timesheetEntries", new ArrayList<>());
+        return "timesheetUI/timesheet";
+    }
 
     
     
