@@ -26,7 +26,7 @@ import jakarta.persistence.TemporalType;
 	    @Column(name = "status")
 	    private String status;
 
-	    @Column(name = "Activity")
+	    @Column(name = "Activity", length = 6000)
 	    private String activity;
 
 	    // Getters and Setters

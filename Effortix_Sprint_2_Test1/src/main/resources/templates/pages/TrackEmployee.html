@@ -8,10 +8,65 @@
     <!-- jQuery and Chart.js -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style type="text/css">
+      #askAiButton {
+            background-color: transparent;
+            border: 2px solid transparent;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            outline: none;
+            overflow: hidden;
+            transition: color 0.4s;
+        }
+        
+        /* Animated Gradient Border */
+        #askAiButton::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe);
+            z-index: -1;
+            transition: all 0.4s;
+            border-radius: 10px;
+            padding: 2px;
+        }
+
+        /* Transparent inner with animated border */
+        #askAiButton::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background-color: transparent;
+            z-index: -2;
+            border-radius: 8px;
+        }
+
+        /* Hover effect */
+        #askAiButton:hover {
+            color: #ffffff;
+        }
+        #askAiButton:hover::before {
+            background: linear-gradient(270deg, #ffafbd, #ffc3a0, #ff9a8b);
+        }
+        #askAiButton:hover::after {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        </style>
 </head>
 <body>
  <div th:replace="fragments/navbar"></div>
-    <div class="container my-5">
+    <div class="container" style="max-width: 100%;">
         <div class="text-center">
             <h1 class="display-4 mb-4">Track Employee</h1>
             <p class="lead">Select an employee to view detailed information and stats</p>
@@ -25,23 +80,52 @@
                 <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
             </select>
         </div>
-
-        <!-- Employee Details Section -->
-        <div id="employeeDetails" class="card p-4 mb-4 shadow-lg">
-            <h2 class="h4">Employee Details</h2>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>ID:</strong> <span id="eId"></span></li>
-                <li class="list-group-item"><strong>Name:</strong> <span id="eName"></span></li>
-                <li class="list-group-item"><strong>Email:</strong> <span id="eEmail"></span></li>
-                <li class="list-group-item"><strong>Designation:</strong> <span id="eDesignation"></span></li>
-                <li class="list-group-item"><strong>Contact:</strong> <span id="eContact"></span></li>
-                <li class="list-group-item"><strong>Lead:</strong> <span id="eLead"></span></li>
-            </ul>
-        </div>
-
-        <!-- Ticket Details Section -->
-        <div id="ticketDetails" class="card p-4 mb-4 shadow-lg">
-            <h2 class="h4">Tickets Assigned to Employee</h2>
+        <div class="d-flex justify-content-center mt-5" style="gap: 5%;">
+        		<div style="width: 90%;">
+			      	<div class="d-flex justify-content-center" style="gap: 5%;">
+			        <!-- Employee Details Section -->
+			        <div id="employeeDetails" class="card p-4 mb-4 shadow-lg" style="width: 50%;">
+			            <h2 class="h4">Employee Details</h2>
+			            <ul class="list-group list-group-flush">
+			                <li class="list-group-item"><strong>ID:</strong> <span id="eId"></span></li>
+			                <li class="list-group-item"><strong>Name:</strong> <span id="eName"></span></li>
+			                <li class="list-group-item"><strong>Email:</strong> <span id="eEmail"></span></li>
+			                <li class="list-group-item"><strong>Designation:</strong> <span id="eDesignation"></span></li>
+			                <li class="list-group-item"><strong>Contact:</strong> <span id="eContact"></span></li>
+			                <li class="list-group-item"><strong>Lead:</strong> <span id="eLead"></span></li>
+			            </ul>
+			        </div>
+			        <!-- Pie Chart Section -->
+			        <div id="creditChartContainer" class="card p-4 mb-4 shadow-lg" style="height: 90%; width: 50%;">
+			        <div id="creditTotal" style="font-size: 24px; font-weight: bold; color: #333; margin-bottom: 10px;"></div>
+			            <h2 class="h4">Credits Earned</h2>
+			             <div id="creditChartContainer" style="margin-top: 30px; max-width: 400px;">
+			            	<canvas id="creditChart" width="400" height="400"></canvas>
+			            </div>
+			        </div>
+			        
+			        <div id="aiSuggestions" class="card p-4 mb-4 shadow-lg" style="width: 40%; ">
+		            <h2 class="h4">Find Perfect Resource</h2>
+		            <textarea id="projectRequirement" class="form-control mb-3" rows="4" placeholder="Enter project or task requirements..."></textarea>
+		            <button id="askAiButton" class="btn btn-primary ">Ask AI</button>
+		            <table class="table table-striped mt-3" id="aiSuggestedEmployeesTable">
+		                <thead class="table-dark">
+		                    <tr>
+		                        <th>Employee Name</th>
+		                        <th>Actions</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <!-- Suggested employees will be dynamically added here via AJAX -->
+		                </tbody>
+		            </table>
+		        </div>
+			       </div>
+	<div class="d-flex justify-content-center" style="gap: 3%;">
+    <!-- Ticket Details Section -->
+    <div id="ticketDetails" class="card p-4 mb-4 shadow-lg" style="width:100%;">
+        <h2 class="h4">Tickets Assigned to Employee</h2>
+        <div style="max-height: 400px; overflow-y: auto;">
             <table class="table table-striped mt-3" id="ticketTable">
                 <thead class="table-dark">
                     <tr>
@@ -55,52 +139,32 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Employee Projects Section -->
-        <div id="projectDetails" class="card p-4 mb-4 shadow-lg">
-            <h2 class="h4">Employee Projects</h2>
-            <table class="table table-striped mt-3" id="projectTable">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Project ID</th>
-                        <th>Project Name</th>
-                        <th>End Date</th>
-                        <th>Priority Level</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Project rows will be dynamically added here via AJAX -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- AI Suggested Employees Section -->
-        <div id="aiSuggestions" class="card p-4 mb-4 shadow-lg">
-            <h2 class="h4">AI Suggested Employees</h2>
-            <textarea id="projectRequirement" class="form-control mb-3" rows="4" placeholder="Enter project or task requirements..."></textarea>
-            <button id="askAiButton" class="btn btn-primary">Ask AI</button>
-            <table class="table table-striped mt-3" id="aiSuggestedEmployeesTable">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Employee Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Suggested employees will be dynamically added here via AJAX -->
-                </tbody>
-            </table>
-        </div>
-		
-        <!-- Pie Chart Section -->
-        <div id="creditChartContainer" class="card p-4 shadow-lg">
-        <div id="creditTotal" style="font-size: 24px; font-weight: bold; color: #333; margin-bottom: 10px;"></div>
-            <h2 class="h4">Employee Credits by Type</h2>
-             <div id="creditChartContainer" style="margin-top: 30px; max-width: 400px;">
-            	<canvas id="creditChart" width="400" height="400"></canvas>
-            </div>
-        </div>
+    </div>
+</div>
+					        <!-- Employee Projects Section -->
+					        <div id="projectDetails" class="card p-4 mb-4 shadow-lg" style="width:100%;">
+					            <h2 class="h4">Employee Projects</h2>
+					            <table class="table table-striped mt-3" id="projectTable"  style="overflow-y: auto; max-height: 400px;">
+					                <thead class="table-dark">
+					                    <tr>
+					                        <th>Project ID</th>
+					                        <th>Project Name</th>
+					                        <th>End Date</th>
+					                        <th>Priority Level</th>
+					                        <th>Actions</th>
+					                    </tr>
+					                </thead>
+					                <tbody>
+					                    <!-- Project rows will be dynamically added here via AJAX -->
+					                </tbody>
+					            </table>
+					        </div>
+			        </div>
+		      </div>
+		        
+		        		<!-- AI Suggested Employees Section -->
+		        
+        </div>        
     </div>
 	
 	

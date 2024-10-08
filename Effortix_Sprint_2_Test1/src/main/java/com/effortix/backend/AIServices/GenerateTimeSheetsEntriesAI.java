@@ -101,7 +101,8 @@ public class GenerateTimeSheetsEntriesAI {
 
 				        // Remove the leading and trailing backticks and "json" identifier from the text
 				        String jsonText = text.replace("```json", "").replace("```", "").trim();
-				     
+				        jsonText = jsonText.replaceAll("[^a-zA-Z0-9\\s]", "");;
+
 				        
 						System.out.println();
 						return jsonText;

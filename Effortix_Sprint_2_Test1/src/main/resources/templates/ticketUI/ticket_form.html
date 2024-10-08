@@ -16,7 +16,7 @@
             margin-bottom: 15px;
         }
         /* Styling for AI Suggestions Button */
-        #askAISuggestions {
+        #askAISuggestionsBtn {
             background-color: transparent;
             border: 2px solid transparent;
             font-size: 16px;
@@ -31,7 +31,7 @@
         }
         
         /* Animated Gradient Border */
-        #askAISuggestions::before {
+        #askAISuggestionsBtn::before {
             content: '';
             position: absolute;
             top: 0;
@@ -46,7 +46,7 @@
         }
 
         /* Transparent inner with animated border */
-        #askAISuggestions::after {
+        #askAISuggestionsBtn::after {
             content: '';
             position: absolute;
             top: 2px;
@@ -59,13 +59,13 @@
         }
 
         /* Hover effect */
-        #askAISuggestions:hover {
+        #askAISuggestionsBtn:hover {
             color: #ffffff;
         }
-        #askAISuggestions:hover::before {
+        #askAISuggestionsBtn:hover::before {
             background: linear-gradient(270deg, #ffafbd, #ffc3a0, #ff9a8b);
         }
-        #askAISuggestions:hover::after {
+        #askAISuggestionsBtn:hover::after {
             background-color: rgba(255, 255, 255, 0.1);
         }
         
@@ -128,7 +128,7 @@
                     <option value="" disabled selected>Select Type</option>
                     <option value="Splitted Task">Splitted Task</option>
                     <option value="AI Generated">AI Generated</option>
-                    <option value="Issue">Issue</option>
+                    <option value="Issue">Issue or KT</option>
                     <option value="Knowledge Transfer">Knowledge Transfer</option>
                     <option value="Client Project">Client Project</option>
                     <option value="Internal Project">Internal Project</option>
@@ -160,7 +160,7 @@
             </div>
 
             <!-- AI Suggestions Button -->
-            <button type="button" id="askAISuggestions" class="btn">Ask AI Suggestions</button>
+            <button type="button" id="askAISuggestionsBtn" class="btn">Ask AI Suggestions</button>
 
             <!-- AI Suggested Employees -->
             <div class="form-group">
@@ -194,8 +194,10 @@
         </form>
         
 <script>
-    document.getElementById('askAISuggestions').addEventListener('click', function() {
+
+    document.getElementById('askAISuggestionsBtn').addEventListener('click', function() {
         // Get the ticket description
+       
         var description = document.getElementById('tDescription').value;
         
         // Make an AJAX request to the backend to get AI-suggested employees
@@ -222,15 +224,16 @@
         })
         .catch(error => console.error('Error:', error));
     });
-    
+
     document.getElementById('aiSuggestedEmployees').addEventListener('change', function() {
         var selectedEmployeeId = this.value; // Get selected AI-suggested employee ID
         var toEmployeeDropdown = document.getElementById('tToEID'); // To Employee dropdown
         
         // Set the selected employee in the To Employee dropdown
         toEmployeeDropdown.value = selectedEmployeeId;
-    });
+    
+});
 </script>
-    </div>
+   
 </body>
 </html>

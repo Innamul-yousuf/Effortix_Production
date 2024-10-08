@@ -45,7 +45,7 @@ public class TicketUpdates {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateTime;
 
-    @Column(name = "tUpdate")
+    @Column(name = "tUpdate",  length = 6000)
     private String tUpdate;
 
     @Column(name = "FileLink")

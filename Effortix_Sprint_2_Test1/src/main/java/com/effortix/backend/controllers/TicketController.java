@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.effortix.backend.AIServices.FindEmployyeeAI;
+import com.effortix.backend.AIServices.GenerateFunFridayTask;
 import com.effortix.backend.EmailsUps.EmailService;
 import com.effortix.backend.models.Employee;
 import com.effortix.backend.models.EmployeeSkills;
@@ -262,23 +263,36 @@ public class TicketController {
    	private EmailService emailService;
        //Email
        private void sendEmailToResponsible(Ticket savedTicket) {
+    	  
+    	   Optional<Ticket> TicketDB=ticketService.getTicketById( savedTicket.getTId());
+    	   if (TicketDB.isPresent()) {
+    		   Long lFromEid=  TicketDB.get().getFromEmployee().geteId();
+          	 Optional<Employee> fromEmployee = employeeService.getEmployeeById(lFromEid);
+          	Long lToEid=  TicketDB.get().getToEmployee().geteId();
+         	 Optional<Employee> toEmployee = employeeService.getEmployeeById(lToEid);
+         	 
+         	 
+         	String assignedEmployeeEmail = toEmployee.get().geteEmail(); 
+            System.out.println("assignedEmployeeEmail: "+assignedEmployeeEmail);
+            
            
-           // Retrieve the assigned employee's email
-           String assignedEmployeeEmail = savedTicket.getToEmployee().geteEmail(); 
-           System.out.println("assignedEmployeeEmail: "+assignedEmployeeEmail);
-           // Prepare email details
-           String subject = "New Ticket Assigned: " + savedTicket.getTName();
-           String text = "Hi " + savedTicket.getToEmployee().geteName() + ",\n\n"
-        		   +"Good Day!"
-                   + "A new ticket has been assigned to you. Please check the details below:\n"
-                   + "Ticket ID: " + savedTicket.getTId() + "\n"
-                   + "Title: " + savedTicket.getTName() + "\n"
-                   + "Description: " + savedTicket.getTDescription() + "\n\n"
-                   + "Best regards,\nEffortix Team";
+        	 
+            
+            String subject = "New Ticket Assigned: " + TicketDB.get().getTName();
+            String text = "Hi " + toEmployee.get().geteName() + ",\n\n"
+         		   +"Good Day!"
+                    + "A new ticket has been assigned to you. Please check the details below:\n"
+                    + "Ticket ID: " + TicketDB.get().getTId() + "\n"
+                    + "Title: " + TicketDB.get().getTName() + "\n"
+                    + "Description: " + TicketDB.get().getTDescription() + "\n\n"
+                    + "Best regards,\nEffortix Team";
 
-           // Send email notification to the assigned employee
-           emailService.sendSimpleMessage(assignedEmployeeEmail, subject, text);
+            // Send email notification to the assigned employee
+            emailService.sendSimpleMessage(assignedEmployeeEmail, subject, text);
 
+            
+    	   }
+           
        }
     
     
@@ -504,6 +518,20 @@ class TicketRESTController {
     @ResponseBody  // Returns the response as JSON
     public List<Ticket> getTicketsCreatedByEmployee(@RequestParam("employeeId") Long employeeId) {
         return ticketService.getTicketsByFromEmployeeId(employeeId);
+    }
+    
+    @Autowired
+    GenerateFunFridayTask fridayTask;
+    
+    @GetMapping("/createFunFridayTasks")
+    @ResponseBody  // Returns the response as JSON
+    public ResponseEntity<List<Ticket>> callFunFridayAI() {
+    	List<Ticket> FunTickets =fridayTask.generateFunFridayTask();
+    	for(Ticket ftickets: FunTickets) {
+
+        	ticketService.saveOrUpdateTicket(ftickets);
+    	}
+    	return ResponseEntity.ok(FunTickets);
     }
     
     

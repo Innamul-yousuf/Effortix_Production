@@ -33,38 +33,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Create PrimePicks</title>
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Create PrimePicks</h1>
+ <div th:replace="fragments/navbar"></div>
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="col-lg-6">
+        <h1 class="text-center mb-3">Create PrimePicks</h1>
+        <p class="text-center mb-4">
+            Delivery Groups and Project Managers can use this form to add future requirements for upcoming projects and trending technologies. This will help bench resources align with projects and enhance their skills.
+        </p>
 
-    <form th:action="@{/primepicks/primepicks/create}" th:object="${primePicks}" method="post" class="border p-4 rounded shadow-sm">
-        <div class="mb-3">
-            <label for="topicName" class="form-label">Topic Name</label>
-            <input type="text" id="topicName" th:field="*{topicName}" class="form-control" required>
-        </div>
+        <form th:action="@{/primepicks/primepicks/create}" th:object="${primePicks}" method="post" class="border p-4 rounded shadow-sm bg-light">
+            <!-- Technology Name -->
+            <div class="mb-3">
+                <label for="topicName" class="form-label">Technology Name</label>
+                <input type="text" id="topicName" th:field="*{topicName}" class="form-control" placeholder="Enter Technology Name" required>
+            </div>
 
-        <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select id="status" th:field="*{status}" class="form-select">
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-            </select>
-        </div>
+            <!-- Status Dropdown -->
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select id="status" th:field="*{status}" class="form-select">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
 
-        <div class="mb-3">
-            <label for="activity" class="form-label">Activity</label>
-            <input type="text" id="activity" th:field="*{activity}" class="form-control" required>
-        </div>
+            <!-- Description Box -->
+            <div class="mb-3">
+                <label for="activity" class="form-label">Detailed Description</label>
+                <textarea id="activity" th:field="*{activity}" class="form-control" rows="4" placeholder="Enter Detailed Description" required></textarea>
+            </div>
 
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary">Create PrimePicks</button>
-            <a href="/primepicks/active" class="btn btn-secondary">View Active PrimePicks</a>
-        </div>
-    </form>
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Create PrimePicks</button>
+                <a href="/primepicks/active" class="btn btn-secondary">View Active PrimePicks</a>
+            </div>
+        </form>
+    </div>
 </div>
+
 
 <!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

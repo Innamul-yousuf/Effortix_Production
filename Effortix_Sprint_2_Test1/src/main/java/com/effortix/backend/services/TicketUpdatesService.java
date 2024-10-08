@@ -169,7 +169,7 @@ public class TicketUpdatesService{
                     timesheetEntriesService.createTimesheetEntry(existingEntry);
                 } else {
                     // No existing entry, create a new one
-                    timesheetEntry.setEtActivity(savedTicketUpdates.gettUpdate() + " FROM AI");
+                    timesheetEntry.setEtActivity(savedTicketUpdates.gettUpdate());
                     timesheetEntriesService.createTimesheetEntry(timesheetEntry);
                 }
             });

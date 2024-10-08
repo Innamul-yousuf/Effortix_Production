@@ -23,7 +23,7 @@ public class EmailSchedulerCode {
 	@Autowired
 	EmployeeService employeeService;
 	@Scheduled(cron = "0 0 15 * * ?")
-	// @Scheduled(cron = "*/20 * * * * ?")
+	 //@Scheduled(cron = "*/20 * * * * ?")
     public void helloWorld() {
 		List<Ticket> liveTickets=ticketService.getTicketsByFlag(0);
 		for(Ticket liveTicket: liveTickets) {

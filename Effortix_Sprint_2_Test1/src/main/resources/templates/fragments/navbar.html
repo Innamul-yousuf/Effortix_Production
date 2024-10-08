@@ -203,13 +203,19 @@
                 
              
             
-                  <li class="nav-item mx-2">
-                <a class="btn btn-outline-dark" id="askAISuggestions" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}"onclick="showLoadingMessage()">AI Generated Task</a>
-            </li>
                 
                  <!-- Conditionally render the Track Employee button if designation is Manager -->
             <li class="nav-item mx-2" th:if="${session.employee.eDesignation == 'Manager'}">
                 <a class="btn btn-outline-dark" href="http://localhost:8088/employees/track_Employee">Track Employee</a> 
+            </li>
+            
+            <li class="nav-item mx-2" th:if="${session.employee.eDesignation == 'Manager'}">
+                <a class="btn btn-outline-dark" href="http://localhost:8088/primepicks/active">Future Technologies</a> 
+            </li>
+            
+            
+                  <li class="nav-item mx-2">
+                <a class="btn btn-outline-dark" id="askAISuggestions" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}"onclick="showLoadingMessage()">AI Generated Task</a>
             </li>
             
             </ul>
