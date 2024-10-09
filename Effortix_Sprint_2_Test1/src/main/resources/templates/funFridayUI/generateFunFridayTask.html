@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fun Friday Tasks</title>
+    <!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap 5 JS (with Popper.js) - No need for jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+</head>
+<body>
+  <!--   <div th:replace="fragments/navbar"></div> -->
+      <div th:replace="fragments/navbar"></div>
+    <div class="container mt-4">
+        <h2>Generated Fun Friday Tasks</h2>
+        
+        <!-- Button to generate tasks -->
+        <button class="btn btn-primary mb-3" id="generateTasks">Generate Fun Friday Tasks</button>
+
+        <!-- Table to display the tasks -->
+        <table class="table table-bordered" id="taskTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>File Link</th>
+                    <th>Reference File</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Action</th> <!-- New column for the claim button -->
+                </tr>
+            </thead>
+            <tbody id="taskList">
+                <!-- Dynamic content will be injected here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to create rows for the generated tasks
+        function populateTaskTable(tasks) {
+            let taskList = $('#taskList');
+            taskList.empty(); // Clear the table before populating
+            tasks.forEach(task => {
+                let row = `<tr>
+                	<td>${task.tid}</td>
+                    <td>${task.tname}</td>
+                    <td>${task.tdescription}</td>
+                    <td><a href="${task.tFileLink}">${task.tFileLink}</a></td>
+                    <td>${task.locationOfFile}</td>
+                    <td>${task.tstatus}</td>
+                    <td>${task.ttype}</td>
+                    <td>${task.deadline}</td>
+                    <td>
+                    <a href="/ticketUpdates/ticket/${task.tid}" class="btn btn-primary btn-sm">View</a>
+                    <a href="/tickets/tickets/edit/${task.tid}" class="btn btn-warning btn-sm">Edit</a>
+                    <button class="btn btn-danger btn-sm delete-ticket" data-ticket-id="${task.tid}">Delete</button>
+                </td> +
+                </tr>`;
+                taskList.append(row);
+            });
+            $('#taskTable').show(); // Show the table once populated
+        }
+
+        // Click event for the Generate button
+        $('#generateTasks').click(function() {
+            $.ajax({
+                url: '/ticketsREST/createFunFridayTasks',
+                type: 'GET',
+                success: function(data) {
+                    // Populate the table with the received task data
+                    populateTaskTable(data);
+                },
+                error: function(error) {
+                    console.error('Error generating tasks', error);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

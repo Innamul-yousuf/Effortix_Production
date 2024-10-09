@@ -1,4 +1,5 @@
 package com.effortix.backend.repository;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +25,9 @@ interface TicketRepository extends JpaRepository<Ticket, Long> {
     
     @Query("SELECT t FROM Ticket t WHERE t.tType = :type AND t.tFlag = :flag")
     List<Ticket> findByTypeAndTFlag(String type, int flag);
+    
+    @Query("SELECT t FROM Ticket t WHERE FUNCTION('DATE', t.deadline) BETWEEN :monday AND :friday AND t.tType = 'Fun Friday'")
+    List<Ticket> findFunFridayTicketsWithinWeek(@Param("monday") String mondayFormatted, @Param("friday") String fridayFormatted);
+
+
 }

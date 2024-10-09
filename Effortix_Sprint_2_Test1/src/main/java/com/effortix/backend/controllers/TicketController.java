@@ -487,6 +487,10 @@ public class TicketController {
            return "ticketUI/ticket_form";  // Return the Thymeleaf template for ticket form
        }
        
+       @GetMapping("/funFridayPage")
+       public String showFunFriday() {
+           return "funFridayUI/generateFunFridayTask";
+       }
 }
 
 
@@ -523,16 +527,26 @@ class TicketRESTController {
     @Autowired
     GenerateFunFridayTask fridayTask;
     
+    @Autowired
+    TicketRepository ticketRepository;
     @GetMapping("/createFunFridayTasks")
     @ResponseBody  // Returns the response as JSON
     public ResponseEntity<List<Ticket>> callFunFridayAI() {
     	List<Ticket> FunTickets =fridayTask.generateFunFridayTask();
-    	for(Ticket ftickets: FunTickets) {
-
-        	ticketService.saveOrUpdateTicket(ftickets);
-    	}
+		
+		  for(Ticket ftickets: FunTickets) {
+		  
+		  ticketRepository.save(ftickets); }
+		 
     	return ResponseEntity.ok(FunTickets);
     }
+    
+    @GetMapping("/funFridayTickets")
+    public ResponseEntity<List<Ticket>> getFunFridayTickets() {
+        List<Ticket> tickets = ticketService.getFunFridayTicketsForCurrentWeek();
+        return ResponseEntity.ok(tickets);
+    }
+    
     
     
 }

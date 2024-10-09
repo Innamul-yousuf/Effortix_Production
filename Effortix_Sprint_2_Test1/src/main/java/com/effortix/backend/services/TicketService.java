@@ -1,5 +1,11 @@
 package com.effortix.backend.services;
 
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -213,7 +219,7 @@ public class TicketService {
            creditsService.saveOrUpdateEmployeeCredits(newCredits);
            System.out.println("New credits created and saved for the employee.");
 
-      
+           
 
        }
        
@@ -221,5 +227,28 @@ public class TicketService {
            return ticketRepository.findByEmployeeIdAndFlag(employeeId, 0);
        }
        
+       public List<Ticket> getFunFridayTicketsForCurrentWeek() {
+           // Get the current date
+           LocalDate today = LocalDate.now();
+
+           // Get the Monday of the current week
+           LocalDate monday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+           // Get the Friday of the current week
+           LocalDate friday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
+
+           // Convert LocalDate to Date, ensuring time is set to start of day
+           Date mondayDate = Date.from(monday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+           Date fridayDate = Date.from(friday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+           
+           // Format dates to "yyyy-MM-dd"
+           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+           String mondayFormatted = sdf.format(mondayDate);
+           String fridayFormatted = sdf.format(fridayDate);
+           System.out.println(mondayFormatted+" fridayDate: "+fridayFormatted);
+
+           // Call repository method with formatted date strings
+           return ticketRepository.findFunFridayTicketsWithinWeek(mondayFormatted, fridayFormatted);
+       }
       
 }
