@@ -101,13 +101,24 @@ public class TicketService {
     public List<Ticket> getTicketsByTypeAndFlag(String type, int flag) {
         return ticketRepository.findByTypeAndTFlag(type, flag);
     }
-
+    
+    @Autowired
+    EmailService emailService2;
     // Update ticket status
     public Ticket updateTicketStatus(Long tId, String newStatus) {
         Optional<Ticket> ticketOptional = ticketRepository.findById(tId);
         if (ticketOptional.isPresent()) {
             Ticket ticket = ticketOptional.get();
             ticket.setTStatus(newStatus);
+            Optional<Employee> fromEmp=employeeService.getEmployeeById(ticket.getFromEmployee().geteId());
+            String Subject = "Your Ticket has been "+newStatus;
+            String text = "Dear " + fromEmp.get().geteName() + ",\n\n"
+                    + "A new ticket has been assigned to you. Please check the details below:\n"
+                    + "Ticket ID: " + ticketOptional.get().getTId() + "\n"
+                    + "Title: " + ticketOptional.get().getTName() + "\n"
+                    + "Status: " +newStatus + "\n\n"
+                    + "Best regards,\nEffortix Team";
+            emailService2.sendSimpleMessage(fromEmp.get().geteEmail(),Subject,"");
             return ticketRepository.save(ticket);
         }
         return null; // Or throw a custom exception

@@ -459,7 +459,7 @@
         justify-content: start;
         overflow-x: auto; /* Allows horizontal scrolling */
         margin-top: 20px;
-        max-height: 400px;
+        max-height: 460px;
        /*  border: 2px solid #FFD700; */
         border-radius: 10px;
         padding: 20px;
@@ -471,14 +471,15 @@
     .ticket-card {
         background-color: white;
         border: 2px solid #FFD700;
-         border-top-left-radius: 10%;
-  border-top-right-radius: 30%;
-  border-bottom-right-radius: 20%;
-  border-bottom-left-radius: 10%;
+         border-top-left-radius: 2%;
+ 		 border-top-right-radius: 15%;
+  		border-bottom-right-radius: 2%;
+ 		 border-bottom-left-radius: 15%;
         margin: 10px;
+        justify-content:center;
         padding: 15px;
-        width: 350px; /* Adjust width to make the boxes medium-sized */
-        height: 270px; /* Adjust height */
+        width: 300px; /* Adjust width to make the boxes medium-sized */
+        height: 370px; /* Adjust height */
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s;
         flex-shrink: 0; /* Prevent shrinking, each card has fixed width */
@@ -544,8 +545,11 @@
                 $.each(response, function(index, ticket) {
                     var card = `<div class="ticket-card" id="ticket-${ticket.tid}" draggable="true">
                                     <div class="ticket-title">${ticket.tname}</div>
-                                    <div class="ticket-description">${ticket.tdescription}</div>
                                     <div class="ticket-type">${ticket.ttype}</div>
+                                    <div class="ticket-type">Last Date: ${ticket.deadline}</div>
+                                    
+                                    <div class="ticket-description">${ticket.tdescription}</div>
+                                  
                                     <div class="view-button">
                                         <a href="/ticketUpdates/ticket/${ticket.tid}" class="btn btn-warning btn-sm">View</a>
                                     </div>

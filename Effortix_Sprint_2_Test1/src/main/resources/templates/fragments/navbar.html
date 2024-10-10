@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+
 	<!-- Bootstrap 5 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Bootstrap 5 JS (with Popper.js) - No need for jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Add jQuery before Bootstrap JS -->
+
     <style>
         body {
             background-color: #f7f9fa;
@@ -102,77 +105,143 @@
         flex-direction: row; /* Keep buttons in a row */
     }
 	
-	
-	   #askAISuggestions {
-            background-color: transparent;
-            border: 2px solid transparent;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 10px 20px;
-            cursor: pointer;
-            position: relative;
-            z-index: 1;
-            outline: none;
-            overflow: hidden;
-            transition: color 0.4s;
-        }
-        
-        /* Animated Gradient Border */
-        #askAISuggestions::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe);
-            z-index: -1;
-            transition: all 0.4s;
-            border-radius: 10px;
-            padding: 2px;
-        }
+#askAISuggestions {
+ position: relative;
+  padding: 10px 20px; /* Adjust padding to match other buttons */
+  font-size: 16px; /* Adjust font-size to match other buttons */
+  color: #fff;
+ background: linear-gradient(to right, #00c6ff, #0072ff); /* Gradient blue */
+color: white; /* White text */
 
-        /* Transparent inner with animated border */
-        #askAISuggestions::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            background-color: transparent;
-            z-index: -2;
-            border-radius: 8px;
-        }
+  border-color:black;
+  border: medium;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  
+}
 
-        /* Hover effect */
-        #askAISuggestions:hover {
-            color: #ffffff;
-        }
-        #askAISuggestions:hover::before {
-            background: linear-gradient(270deg, #ffafbd, #ffc3a0, #ff9a8b);
-        }
-        #askAISuggestions:hover::after {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
+#askAISuggestions::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  
+  background: radial-gradient(circle, #00ffff 0%, #4a00e0 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+}
+
+#askAISuggestions:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+#askAISuggestions:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(74, 0, 224, 0.4);
+}
+
+#askAISuggestions span {
+  position: relative;
+  z-index: 2;
+}
+
+#askAISuggestions:active {
+  animation: colorShift 0.5s ease-in-out;
+}
+
+#askAISuggestions:active::before {
+  animation: liquidExplode 0.5s ease-in-out;
+}
+
+#askAISuggestions:active::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: rippleExplode 0.5s ease-out;
+}
+
+        /* From Uiverse.io by Nawsome */
+.pl {
+  width: 6em;
+  height: 6em;
+}
+
+.pl__ring {
+  animation: ringA 2s linear infinite;
+}
+
+.pl__ring--a {
+  stroke: #f42f25;
+}
+
+.pl__ring--b {
+  animation-name: ringB;
+  stroke: #f49725;
+}
+
+.pl__ring--c {
+  animation-name: ringC;
+  stroke: #255ff4;
+}
+
+.pl__ring--d {
+  animation-name: ringD;
+  stroke: #f42582;
+}
+
+/* Animations */
+@keyframes ringA {
+  from, 4% {
+    stroke-dasharray: 0 660;
+    stroke-width: 20;
+    stroke-dashoffset: -330;
+  }
+  12% {
+    stroke-dasharray: 60 600;
+    stroke-width: 30;
+    stroke-dashoffset: -335;
+  }
+  32% {
+    stroke-dasharray: 60 600;
+    stroke-width: 30;
+    stroke-dashoffset: -595;
+  }
+  40%, 54% {
+    stroke-dasharray: 0 660;
+    stroke-width: 20;
+    stroke-dashoffset: -660;
+  }
+  62% {
+    stroke-dasharray: 60 600;
+    stroke-width: 30;
+    stroke-dashoffset: -665;
+  }
+  82% {
+    stroke-dasharray: 60 600;
+    stroke-width: 30;
+    stroke-dashoffset: -925;
+  }
+  90%, to {
+    stroke-dasharray: 0 660;
+    stroke-width: 20;
+    stroke-dashoffset: -990;
+  }
+}
+
+/* Other animations (ringB, ringC, and ringD) follow the same structure as provided above */
         
-         /* Loading Message Styles */
-        #loadingMessage {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-       
-            border: 2px solid #f5576c;
-            border-radius: 10px;
-            padding: 20px;
-             background: linear-gradient(90deg, #ffafbd, #ffc3a0, #ff9a8b);
-            animation: loading 1.5s linear infinite; 
-            z-index: 9999; /* On top of everything */
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
         
         /* Responsive styles */
         @media (max-width: 576px) {
@@ -180,63 +249,11 @@
                 background: linear-gradient(90deg, #2575fc, #6a11cb); /* Reverse gradient on mobile */
             }
         }
+        
     </style>
 </head>
 <body>
-   <!--  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/dashboard">EFFORTIX</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item mx-2">
-                    <a class="btn btn-outline-dark" href="/dashboard">Dashboard</a>
-                </li>
-                <li class="nav-item mx-2">
-    <a class="btn btn-outline-dark" th:href="@{/project-employee/profile/{id}(id=${session.employee.eId})}">Profile</a>
-</li>
-                <li class="nav-item mx-2">
-                
-                    <a class="btn btn-outline-dark" href="/api/timesheet/timesheet">Timesheet</a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="btn btn-outline-dark" href="/tickets/IndividualTickets">Tickets</a>
-                </li>
-                
-             
-            
-                
-                 Conditionally render the Track Employee button if designation is Manager
-            <li class="nav-item mx-2" th:if="${session.employee.eDesignation == 'Manager'}">
-                <a class="btn btn-outline-dark" href="http://localhost:8088/employees/track_Employee">Track Employee</a> 
-            </li>
-           
-            Dropdown for Manager-only links
-            <li class="nav-item dropdown mx-2" th:if="${session.employee.eDesignation == 'Manager'}">
-                <a class="btn btn-outline-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Track Employee
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/tickets/funFridayPage">Manage Fun Friday Tasks</a>
-                    <a class="dropdown-item" href="http://localhost:8088/primepicks/create">Add Future Technologies</a>
-                    <a class="dropdown-item" href="/employees">Manage Employee</a>
-                </div>
-            </li>
-            
-            <li class="nav-item mx-2" th:if="${session.employee.eDesignation == 'Manager'}">
-                <a class="btn btn-outline-dark" href="http://localhost:8088/primepicks/active">Future Technologies</a> 
-            </li>
-            
-            
-                  <li class="nav-item mx-2">
-                <a class="btn btn-outline-dark" id="askAISuggestions" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}"onclick="showLoadingMessage()">AI Generated Task</a>
-            </li>
-            
-            </ul>
-              <a class="btn btn-danger ml-auto" href="/logout">Logout</a>
-        </div>
-    </nav> -->
+
     
     
  <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -274,34 +291,37 @@
                 <a class="btn btn-outline-dark" href="http://localhost:8088/primepicks/active">Future Technologies</a>
             </li>
 
+          <a class="btn btn-outline-dark" id="askAISuggestions" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}" onclick="showLoadingMessage()">
+  <span>AI Generated Task</span>
+</a>
+ <!-- Loader spinner next to the AI Generated Task button -->
             <li class="nav-item mx-2">
-                <a class="btn btn-outline-dark" id="askAISuggestions" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}" onclick="showLoadingMessage()">AI Generated Task</a>
+                <div id="loading-spinner" class="pl" style="display: none;">
+                    <svg class="pl__ring" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <circle class="pl__ring--a" cx="50" cy="50" r="40"></circle>
+                        <circle class="pl__ring--b" cx="50" cy="50" r="35"></circle>
+                        <circle class="pl__ring--c" cx="50" cy="50" r="30"></circle>
+                        <circle class="pl__ring--d" cx="50" cy="50" r="25"></circle>
+                    </svg>
+                </div>
             </li>
         </ul>
         <!-- Adding 'ms-auto' to push Logout to the right -->
         <a class="btn btn-danger ms-auto" href="/logout">Logout</a>
     </div>
 </nav>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <div id="loadingMessage">AI is generating suitable tasks for you...</div>
- 
-    
-    <script>
+<script>
     function showLoadingMessage() {
-        const loadingMessage = document.getElementById('loadingMessage');
-        loadingMessage.style.display = 'block'; // Show loading message
-        
-        // Hide the loading message after 3 seconds or when the page loads
-        setTimeout(() => {
-            loadingMessage.style.display = 'none'; // Hide after 3 seconds
-        }, 3000);
+        // Show the loading spinner
+        document.getElementById('loading-spinner').style.display = 'block';
     }
-
-    // Optional: Hide loading message when the page finishes loading
-    window.onload = function() {
-        document.getElementById('loadingMessage').style.display = 'none'; // Hide when page loads
-    };
 </script>
+    
+    
+   
 </body>
 </html>

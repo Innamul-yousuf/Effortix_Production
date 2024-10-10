@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,15 +107,20 @@ public class TicketController {
 		  if (ticket.getTId() == null) {
 		        System.out.println("Ticket ID is null, indicating a new ticket");
 		        // Handle creating a new ticket if necessary
+		        Ticket savedTicket=Ticrepository.save(ticket);
+		        sendEmailToResponsibleSaveOrUpdate(ticket, true);
 		    } else {
+		    	Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
 		        System.out.println("Updating existing ticket with ID: " + ticket.getTId());
+		        sendEmailToResponsibleSaveOrUpdate(ticket, false);
 		    }
 		
 	  //sendEmailToResponsible(ticket);
 	        //Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
 		  	ticketService.calculateCredits(ticket);
-	        Ticket savedTicket=Ticrepository.save(ticket);
-	        sendEmailToResponsible(ticket);
+	        //Ticket savedTicket=Ticrepository.save(ticket);
+	        
+	        
 	  System.out.println("saveTicket2"); 
 	  return "redirect:/tickets"; // Redirects//to the ticket list }
 	  }
@@ -289,9 +296,50 @@ public class TicketController {
 
             // Send email notification to the assigned employee
             emailService.sendSimpleMessage(assignedEmployeeEmail, subject, text);
-
-            
     	   }
+    	   }
+    	   
+    	   private void sendEmailToResponsibleSaveOrUpdate(Ticket savedTicket, boolean flag) {
+    	    	  
+        	   Optional<Ticket> TicketDB=ticketService.getTicketById( savedTicket.getTId());
+        	   if (TicketDB.isPresent()) {
+        		   Long lFromEid=  TicketDB.get().getFromEmployee().geteId();
+              	 Optional<Employee> fromEmployee = employeeService.getEmployeeById(lFromEid);
+              	Long lToEid=  TicketDB.get().getToEmployee().geteId();
+             	 Optional<Employee> toEmployee = employeeService.getEmployeeById(lToEid);
+             	 
+             	 
+             	String assignedEmployeeEmail = toEmployee.get().geteEmail(); 
+                System.out.println("assignedEmployeeEmail: "+assignedEmployeeEmail);
+                
+                String subject, text=null;
+            	 if(flag) {
+            		 subject = "New Ticket Assigned: " + TicketDB.get().getTName();
+                     text = "Hi " + toEmployee.get().geteName() + ",\n\n"
+                  		   +"Good Day!"
+                             + "A new ticket has been assigned to you. Please check the details below:\n"
+                             + "Ticket ID: " + TicketDB.get().getTId() + "\n"
+                             + "Title: " + TicketDB.get().getTName() + "\n"
+                             + "Description: " + TicketDB.get().getTDescription() + "\n\n"
+                             + "Best regards,\nEffortix Team";
+
+            	 }else {
+            		 subject = "Your Ticket Has Been Updated, " + TicketDB.get().getTName();
+                     text = "Hi " + toEmployee.get().geteName() + ",\n\n"
+                  		   +"Good Day!"
+                             + "Your ticket has been updated by "+fromEmployee.get().geteName()+" Please check the details below:\n"
+                             + "Ticket ID: " + TicketDB.get().getTId() + "\n"
+                             + "Title: " + TicketDB.get().getTName() + "\n"
+                             + "Description: " + TicketDB.get().getTDescription() + "\n\n"
+                             + "Status: "+TicketDB.get().getTStatus()+"\n\n"
+                             + "Best regards,\nTeam Effortix";
+            	 }
+                
+                
+                // Send email notification to the assigned employee
+                emailService.sendSimpleMessage(assignedEmployeeEmail, subject, text);
+        	   }
+    	   
            
        }
     
@@ -547,6 +595,14 @@ class TicketRESTController {
         return ResponseEntity.ok(tickets);
     }
     
-    
+    @PutMapping("/updateStatus")
+    public ResponseEntity<Ticket> updateTicketStatus(@RequestParam Long tId, @RequestParam String newStatus) {
+        Ticket updatedTicket = ticketService.updateTicketStatus(tId, newStatus);
+        if (updatedTicket != null) {
+            return ResponseEntity.ok(updatedTicket);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // If no ticket found, return 404
+        }
+    }
     
 }
