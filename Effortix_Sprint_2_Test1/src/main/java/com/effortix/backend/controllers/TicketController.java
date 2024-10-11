@@ -248,9 +248,7 @@ public class TicketController {
 	  employees); model.addAttribute("projects", projects);
 	  
 	  return "ticketUI/ticket_form"; 
-	  
-	  
-	  }
+	 }
 	 
 
 	

@@ -246,8 +246,14 @@
             // Populate the dropdown with AI-suggested employees
             data.forEach(function(employee) {
                 var option = document.createElement('option');
+                var loc;
+                if(employee.eInBench){
+                	loc="Bench";
+                }else{
+                	loc="Project";
+                }
                 option.value = employee.eId;
-                option.text = employee.eName;
+                option.text = employee.eName +" ("+loc+")";
                 aiSuggestedDropdown.appendChild(option);
             });
         })

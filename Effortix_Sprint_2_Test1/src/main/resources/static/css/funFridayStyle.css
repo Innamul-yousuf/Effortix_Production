@@ -1,0 +1,108 @@
+/* General styling */
+.table-responsive {
+    margin-top: 20px;
+}
+
+.table {
+    border-radius: 8px; /* Add rounded corners */
+    overflow: hidden;
+}
+
+.thead-dark th {
+    background-color: #343a40; /* Dark header */
+    color: #fff;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1; /* Light gray hover effect */
+}
+
+td, th {
+    vertical-align: middle;
+}
+
+.btn {
+    margin-right: 5px; /* Add space between buttons */
+}
+
+.d-flex {
+    display: flex;
+    justify-content: center;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .btn {
+        margin-bottom: 5px; /* Stack buttons vertically on small screens */
+    }
+}
+
+.text-center {
+    text-align: center;
+}
+
+.container h2 {
+    margin-bottom: 20px;
+}
+
+ .table-responsive {
+        margin-top: 20px;
+    }
+
+    .table {
+        border-radius: 8px; /* Add rounded corners */
+        overflow: hidden;
+    }
+
+    .thead-dark th {
+        background-color: #343a40; /* Dark header */
+        color: black;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1; /* Light gray hover effect */
+    }
+
+    td, th {
+        vertical-align: middle;
+    }
+
+    .btn {
+        margin-right: 5px; /* Add space between buttons */
+    }
+
+    .d-flex {
+        display: flex;
+        justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+        .btn {
+            margin-bottom: 5px; /* Stack buttons vertically on small screens */
+        }
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .container h2 {
+        margin-bottom: 20px;
+    }
+/* Custom adjustments for the buttons and table */
+.btn {
+    margin-bottom: 5px;
+}
+
+.table {
+    border-radius: 10px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa; /* Light background on hover */
+}
+
+.table-responsive {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add some shadow for a lifted look */
+}
+    

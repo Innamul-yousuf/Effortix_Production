@@ -49,7 +49,11 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Contact</th>
+                    
+                    <th>Date Of Join</th>
+                    <th>Role</th>
+                    <th>In Bench</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,7 +61,13 @@
                     <td th:text="${employee.eId}"></td>
                     <td th:text="${employee.eName}"></td>
                     <td th:text="${employee.eEmail}"></td>
-                    <td th:text="${employee.eContact}"></td>
+                   
+                    <td th:text="${employee.eJoinDate}"></td>
+                    <td th:text="${employee.eRole}"></td>
+                    <td th:text="${employee.eInBench} ? 'Yes' :'No'"></td>
+                    <td> 
+                             <a th:href="@{/project-employee/profile/{id}(id=${employee.eId})}" class="btn btn-primary btn-sm">View</a>
+                        </td>
                 </tr>
             </tbody>
         </table>

@@ -224,8 +224,8 @@ public class TicketUpdatesService{
             
             // Append AI-generated skills and work experience
             String newSkills = skillAndWorkExp.get("skills");
-            String newWorks = skillAndWorkExp.get("work_experience");
-            
+            String newWorks = skillAndWorkExp.get("Previous Works");
+            System.out.println("newSkills: "+newSkills+" newWorks: "+newWorks);
             
             employeeSkill.setSkills(previousSkills + ", " + newSkills);
             employeeSkill.setSkills_detail(previousWorks + ", " + newWorks);

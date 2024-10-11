@@ -157,7 +157,7 @@
          <div id="myTickets" class="dashboard-card card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>My Tickets</h5>
-                <a href="http://localhost:8088/tickets/tickets/new" class="btn btn-light">Create New Ticket</a>
+                <a href="/tickets/tickets/new" class="btn btn-light">Create New Ticket</a>
             </div>
            
             <div class="card-body">
@@ -286,10 +286,51 @@
                             }
                         }
                     }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,  // This ensures the Y-axis starts at 0
+                        min: 0,             // Set minimum value for Y-axis
+                        max: 30,           // Set maximum value for Y-axis
+                        ticks: {
+                            stepSize: 5,  // Set the interval between ticks (10 in this example)
+                            callback: function(value) {
+                                return value + ' tickets';  // Customize the Y-axis tick labels (e.g., append ' tickets')
+                            }
+                        }
+                    }
                 }
             }
         });
+        
     }
+    
+    // Example ChartJS setup for performance and ticket charts (you can replace with real data)
+    const performanceData = {
+        labels: ['January', 'February', 'March', 'April', 'May'],
+        datasets: [{
+            label: 'Performance',
+            data: [65, 59, 80, 81, 56],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    };
+    
+ // Create Performance Chart
+    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(performanceCtx, {
+        type: 'line',
+        data: performanceData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
 </script>
 <div class="container my-4">
     <h2 class="text-center">Track Created Tickets</h2>

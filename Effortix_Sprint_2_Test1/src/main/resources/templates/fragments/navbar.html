@@ -172,76 +172,7 @@ color: white; /* White text */
   animation: rippleExplode 0.5s ease-out;
 }
 
-        /* From Uiverse.io by Nawsome */
-.pl {
-  width: 6em;
-  height: 6em;
-}
 
-.pl__ring {
-  animation: ringA 2s linear infinite;
-}
-
-.pl__ring--a {
-  stroke: #f42f25;
-}
-
-.pl__ring--b {
-  animation-name: ringB;
-  stroke: #f49725;
-}
-
-.pl__ring--c {
-  animation-name: ringC;
-  stroke: #255ff4;
-}
-
-.pl__ring--d {
-  animation-name: ringD;
-  stroke: #f42582;
-}
-
-/* Animations */
-@keyframes ringA {
-  from, 4% {
-    stroke-dasharray: 0 660;
-    stroke-width: 20;
-    stroke-dashoffset: -330;
-  }
-  12% {
-    stroke-dasharray: 60 600;
-    stroke-width: 30;
-    stroke-dashoffset: -335;
-  }
-  32% {
-    stroke-dasharray: 60 600;
-    stroke-width: 30;
-    stroke-dashoffset: -595;
-  }
-  40%, 54% {
-    stroke-dasharray: 0 660;
-    stroke-width: 20;
-    stroke-dashoffset: -660;
-  }
-  62% {
-    stroke-dasharray: 60 600;
-    stroke-width: 30;
-    stroke-dashoffset: -665;
-  }
-  82% {
-    stroke-dasharray: 60 600;
-    stroke-width: 30;
-    stroke-dashoffset: -925;
-  }
-  90%, to {
-    stroke-dasharray: 0 660;
-    stroke-width: 20;
-    stroke-dashoffset: -990;
-  }
-}
-
-/* Other animations (ringB, ringC, and ringD) follow the same structure as provided above */
-        
         
         /* Responsive styles */
         @media (max-width: 576px) {
@@ -288,23 +219,12 @@ color: white; /* White text */
             </li>
 
             <li class="nav-item mx-2" th:if="${session.employee.eDesignation == 'Manager'}">
-                <a class="btn btn-outline-dark" href="http://localhost:8088/primepicks/active">Future Technologies</a>
+                <a class="btn btn-outline-dark" href="/primepicks/active">Future Technologies</a>
             </li>
 
           <a class="btn btn-outline-dark" id="askAISuggestions" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}" onclick="showLoadingMessage()">
   <span>AI Generated Task</span>
 </a>
- <!-- Loader spinner next to the AI Generated Task button -->
-            <li class="nav-item mx-2">
-                <div id="loading-spinner" class="pl" style="display: none;">
-                    <svg class="pl__ring" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                        <circle class="pl__ring--a" cx="50" cy="50" r="40"></circle>
-                        <circle class="pl__ring--b" cx="50" cy="50" r="35"></circle>
-                        <circle class="pl__ring--c" cx="50" cy="50" r="30"></circle>
-                        <circle class="pl__ring--d" cx="50" cy="50" r="25"></circle>
-                    </svg>
-                </div>
-            </li>
         </ul>
         <!-- Adding 'ms-auto' to push Logout to the right -->
         <a class="btn btn-danger ms-auto" href="/logout">Logout</a>
@@ -314,13 +234,7 @@ color: white; /* White text */
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    function showLoadingMessage() {
-        // Show the loading spinner
-        document.getElementById('loading-spinner').style.display = 'block';
-    }
-</script>
-    
+
     
    
 </body>

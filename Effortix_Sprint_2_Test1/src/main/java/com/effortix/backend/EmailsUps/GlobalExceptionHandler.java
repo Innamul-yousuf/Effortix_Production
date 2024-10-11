@@ -1,9 +1,15 @@
 package com.effortix.backend.EmailsUps;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -20,5 +26,7 @@ public class GlobalExceptionHandler {
 
         return modelAndView;
     }
+    
+   
 }
 

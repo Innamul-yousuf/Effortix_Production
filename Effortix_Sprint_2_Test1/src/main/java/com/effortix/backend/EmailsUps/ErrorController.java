@@ -2,6 +2,7 @@ package com.effortix.backend.EmailsUps;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import ch.qos.logback.core.model.Model;
 import jakarta.servlet.RequestDispatcher;
@@ -27,5 +28,11 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
         
         model.addAttribute("errorMessage", errorMessage);
         return "error";
+    }
+    
+    @RequestMapping("favicon.ico")
+    @ResponseBody
+    void handleFaviconRequest() {
+        // Do nothing, prevents 404 errors for favicon
     }
 }
