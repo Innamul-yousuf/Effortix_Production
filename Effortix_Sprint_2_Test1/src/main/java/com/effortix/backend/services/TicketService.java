@@ -39,8 +39,15 @@ public class TicketService {
         Ticket savedTicket= ticketRepository.save(ticket);
        
      // Check if the ticket status is updated to "Closed"
-        if ( ticket.getTStatus().equals("Completed")) {
+        if( ticket.getTStatus().equals("Completed")) {
+        	ticketRepository.updateTicketFlag(ticket.getTId(), 1);
+        if (  (ticket.getTType().equals("Issue")) || (ticket.getTType().equals("Splitted Task"))) {
+        	
         	calculateCredits(savedTicket); // Call the method when the status is closed
+        	
+        }
+        }else {
+        
         }
         
         sendEmailToResponsible(ticket);
@@ -212,7 +219,7 @@ public class TicketService {
 
        // Parse the newly calculated credits
        Double calculatedValueD = Double.parseDouble(sCalculatedValues);
-
+       System.out.println("calculated Value: "+ calculatedValueD);
        // Add the new calculated value to total credits
        totalCredits += calculatedValueD;
 
@@ -229,8 +236,6 @@ public class TicketService {
            // Save the new credits in the database
            creditsService.saveOrUpdateEmployeeCredits(newCredits);
            System.out.println("New credits created and saved for the employee.");
-
-           
 
        }
        

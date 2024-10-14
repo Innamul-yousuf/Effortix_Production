@@ -362,9 +362,24 @@ $(document).ready(function () {
                     var totalCredits = 0; // Initialize totalCredits
 
                     data.forEach(function (creditRecord) {
-                        labels.push(creditRecord.creditType);
-                        values.push(creditRecord.credits);
-                        totalCredits += creditRecord.credits;
+                    	var label = creditRecord.creditType;
+                        var value = creditRecord.credits;
+                        
+                        // Check if the label already exists in the labels array
+                        var labelIndex = labels.indexOf(label);
+                        
+                        if (labelIndex !== -1) {
+                            // If the label exists, add the value to the existing value in the values array
+                            values[labelIndex] += value;
+                        } else {
+                            // Otherwise, add a new label and value
+                            labels.push(label);
+                            values.push(value);
+                        }
+                        
+                    	
+                    	
+                        totalCredits += value;
                     });
 	
                     // Display total credits

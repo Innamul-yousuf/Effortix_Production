@@ -260,7 +260,13 @@
         .catch(error => console.error('Error:', error));
     });
 
-  
+    document.getElementById('aiSuggestedEmployees').addEventListener('change', function() {
+        var selectedEmployeeId = this.value; // Get selected AI-suggested employee ID
+        var toEmployeeDropdown = document.getElementById('tToEID'); // To Employee dropdown
+        
+        // Set the selected employee in the To Employee dropdown
+        toEmployeeDropdown.value = selectedEmployeeId;
+    });
 
 </script>
 

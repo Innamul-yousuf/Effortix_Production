@@ -100,6 +100,9 @@ public class TicketController {
 	  // Save a new ticket
 	  @Autowired
 	  TicketRepository Ticrepository;
+	  
+	  private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for async tasks
+
     @PostMapping("/save") public String saveTicket2(@ModelAttribute("ticket")Ticket ticket) {
 		  System.out.println("Ticket"+ticket.getTName()+" ");
 		  System.out.println("Ticket"+ticket.getToEmployee().geteEmail()+" ");
@@ -108,21 +111,25 @@ public class TicketController {
 		        System.out.println("Ticket ID is null, indicating a new ticket");
 		        // Handle creating a new ticket if necessary
 		        Ticket savedTicket=Ticrepository.save(ticket);
-		        sendEmailToResponsibleSaveOrUpdate(ticket, true);
+		        executorService.submit(() -> sendEmailToResponsibleSaveOrUpdate(ticket, true));
+
+//		        sendEmailToResponsibleSaveOrUpdate(ticket, true);
 		    } else {
 		    	Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
 		        System.out.println("Updating existing ticket with ID: " + ticket.getTId());
-		        sendEmailToResponsibleSaveOrUpdate(ticket, false);
+		        executorService.submit(() -> sendEmailToResponsibleSaveOrUpdate(ticket, false));
+		    
+		    //    sendEmailToResponsibleSaveOrUpdate(ticket, false);
 		    }
 		
 	  //sendEmailToResponsible(ticket);
 	        //Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
-		  	ticketService.calculateCredits(ticket);
+		  	//ticketService.calculateCredits(ticket);
 	        //Ticket savedTicket=Ticrepository.save(ticket);
 	        
 	        
 	  System.out.println("saveTicket2"); 
-	  return "redirect:/tickets"; // Redirects//to the ticket list }
+	  return "redirect:/tickets/IndividualTickets"; // Redirects//to the ticket list }
 	  }
    
 
