@@ -1,227 +1,277 @@
 <head>
-    <title>Create/Edit Ticket</title>
-    <script src="/js/ticket_AI_SuggestionEmployees.js" th:src="@{/js/ticket_AI_SuggestionEmployees.js}"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f7f9fa;
-            padding: 20px;
-        }
-        h1 {
-            color: #007bff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .form-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: auto;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .row > .col {
-            padding-right: 15px;
-        }
-        /* Styling for AI Suggestions Button */
-        #askAISuggestionsBtn {
-            background-color: transparent;
-            border: 2px solid transparent;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 10px 20px;
-            cursor: pointer;
-            position: relative;
-            z-index: 1;
-            outline: none;
-            overflow: hidden;
-            transition: color 0.4s;
-        }
-        #askAISuggestionsBtn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe);
-            z-index: -1;
-            transition: all 0.4s;
-            border-radius: 10px;
-            padding: 2px;
-        }
-        #askAISuggestionsBtn::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            background-color: transparent;
-            z-index: -2;
-            border-radius: 8px;
-        }
-        #askAISuggestionsBtn:hover {
-            color: #ffffff;
-        }
-        #askAISuggestionsBtn:hover::before {
-            background: linear-gradient(270deg, #ffafbd, #ffc3a0, #ff9a8b);
-        }
-        #askAISuggestionsBtn:hover::after {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        #tFlag, #eDesignation {
-            display: none;
-        }
-    </style>
+<title>Create/Edit Ticket</title>
+<script src="/js/ticket_AI_SuggestionEmployees.js"
+	th:src="@{/js/ticket_AI_SuggestionEmployees.js}"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+body {
+	background-color: #f7f9fa;
+	padding: 20px;
+}
+
+h1 {
+	color: #007bff;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.form-container {
+	background-color: #fff;
+	border-radius: 10px;
+	padding: 30px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	max-width: 800px;
+	margin: auto;
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+.row>.col {
+	padding-right: 15px;
+}
+/* Styling for AI Suggestions Button */
+#askAISuggestionsBtn {
+	background-color: transparent;
+	border: 2px solid transparent;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 10px 20px;
+	cursor: pointer;
+	position: relative;
+	z-index: 1;
+	outline: none;
+	overflow: hidden;
+	transition: color 0.4s;
+}
+
+#askAISuggestionsBtn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe);
+	z-index: -1;
+	transition: all 0.4s;
+	border-radius: 10px;
+	padding: 2px;
+}
+
+#askAISuggestionsBtn::after {
+	content: '';
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	right: 2px;
+	bottom: 2px;
+	background-color: transparent;
+	z-index: -2;
+	border-radius: 8px;
+}
+
+#askAISuggestionsBtn:hover {
+	color: #ffffff;
+}
+
+#askAISuggestionsBtn:hover::before {
+	background: linear-gradient(270deg, #ffafbd, #ffc3a0, #ff9a8b);
+}
+
+#askAISuggestionsBtn:hover::after {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+#tFlag, #eDesignation {
+	display: none;
+}
+</style>
 </head>
 <body>
-    <div th:replace="fragments/navbar"></div>
-    <div class="container">
-        <div class="form-container">
-            <h1 th:text="${ticket.tId != null ? 'Edit Ticket' : 'Create Ticket'}"></h1>
+	<div th:replace="fragments/navbar"></div>
+	<div class="container">
+		<div class="form-container">
+			<h1 th:text="${ticket.tId != null ? 'Edit Ticket' : 'Create Ticket'}"></h1>
 
-            <form th:action="@{/tickets/save}" th:object="${ticket}" method="post" id="ticketForm">
-                <input type="hidden" th:field="*{tId}" />
+			<form th:action="@{/tickets/save}" th:object="${ticket}"
+				method="post" id="ticketForm">
+				<input type="hidden" th:field="*{tId}" />
 
-                <!-- Ticket Name -->
-                <div class="form-group">
-                    <label for="tName">Ticket Name:</label>
-                    <input type="text" id="tName" th:field="*{tName}" class="form-control" required />
-                </div>
+				<!-- Ticket Name -->
+				<div class="form-group">
+					<label for="tName">Ticket Name:</label> <input type="text"
+						id="tName" th:field="*{tName}" class="form-control" required />
+				</div>
 
-                <!-- Description -->
-                <div class="form-group">
-                    <label for="tDescription">Description:</label>
-                    <textarea id="tDescription" th:field="*{tDescription}" class="form-control" required></textarea>
-                </div>
+				<!-- Description -->
+				<div class="form-group">
+					<label for="tDescription">Description:</label>
+					<textarea id="tDescription" th:field="*{tDescription}"
+						class="form-control" required></textarea>
+				</div>
 
-                <!-- File Link and Location in a Row -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="tFileLink">File Link:</label>
-                            <input type="text" id="tFileLink" th:field="*{tFileLink}" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="locationOfFile">Location of File:</label>
-                            <input type="text" id="locationOfFile" th:field="*{locationOfFile}" class="form-control" />
-                        </div>
-                    </div>
-                </div>
+				<!-- File Link and Location in a Row -->
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="tFileLink">File Link:</label> <input type="text"
+								id="tFileLink" th:field="*{tFileLink}" class="form-control" />
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="locationOfFile">Location of File:</label> <input
+								type="text" id="locationOfFile" th:field="*{locationOfFile}"
+								class="form-control" />
+						</div>
+					</div>
+				</div>
 
-                <!-- Created Date and Deadline in a Row -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="createdDate">Created Date:</label>
-                            <input type="date" id="createdDate" th:field="*{createdDate}" class="form-control" required />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="deadline">Deadline:</label>
-                            <input type="date" id="deadline" th:field="*{deadline}" class="form-control" required />
-                        </div>
-                    </div>
-                </div>
+				<!-- Created Date and Deadline in a Row -->
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="createdDate">Created Date:</label> <input type="date"
+								id="createdDate" th:field="*{createdDate}" class="form-control"
+								required />
+						</div>
+					</div>
 
-                <!-- Type and Status in a Row -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="tType">Type:</label>
-                            <select id="tType" th:field="*{tType}" class="form-control" required>
-                                <option value="" disabled selected>Select Type</option>
-                                <option value="Splitted Task">Splitted Task</option>
-                                <option value="AI Generated">AI Generated</option>
-                                <option value="Issue">Issue or KT</option>
-                                <option value="Knowledge Transfer">Knowledge Transfer</option>
-                                <option value="Client Project">Client Project</option>
-                                <option value="Internal Project">Internal Project</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="tStatus">Status:</label>
-                            <select id="tStatus" th:field="*{tStatus}" class="form-control" required>
-                                <option value="" disabled selected>Select Status</option>
-                                <option value="Assigned">Assigned</option>
-                                <option value="Open">Open</option>
-                                <option value="Started">Started</option>
-                                <option value="In Progress">In Progress</option>
-                                <option value="Completed">Completed</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+					<!-- JavaScript to set current date in yyyy-MM-dd format -->
+					<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const createdDateInput = document.getElementById('createdDate');
+        
+        // Get current date
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = today.getFullYear();
 
-                <!-- Hidden Fields -->
-                <input type="hidden" id="tFlag" th:field="*{tFlag}" th:value="0"/>
-                <input type="hidden" id="eDesignation" th:field="*{eDesignation}" class="form-control" />
+        // Format the date as yyyy-MM-dd (which is required for the input type="date")
+        const formattedDate = `${year}-${month}-${day}`;
 
-               <!-- Row containing From Employee, AI Suggestions Button, and To Employee -->
-<div class="row">
-    <!-- From Employee -->
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="tFromEID">From Employee:</label>
-            <select id="tFromEID" th:field="*{fromEmployee.eId}" class="form-control">
-                <option value="" disabled th:text="${ticket.fromEmployee == null ? 'Select Employee' : ''}"></option>
-                <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
-            </select>
-        </div>
-    </div>
+        // Set the value of the input field to the current date in yyyy-MM-dd format
+        createdDateInput.value = formattedDate;
+    });
+</script>
 
-    <!-- AI Suggestions Button -->
-    <div class="col-md-4 d-flex align-items-center">
-        <button type="button" id="askAISuggestionsBtn" class="btn btn-primary">Ask AI Suggestions</button>
-    </div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="deadline">Deadline:</label> <input type="date"
+								id="deadline" th:field="*{deadline}" class="form-control"
+								required />
+						</div>
+					</div>
+				</div>
 
-    <!-- To Employee -->
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="tToEID">To Employee:</label>
-            <select id="tToEID" th:field="*{toEmployee.eId}" class="form-control">
-                <option value="" disabled th:text="${ticket.toEmployee == null ? 'Select Employee' : ''}"></option>
-                <option th:each="employee : ${employees}" th:value="${employee.eId}" th:text="${employee.eName}"></option>
-            </select>
-        </div>
-    </div>
+				<!-- Type and Status in a Row -->
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="tType">Type:</label> <select id="tType"
+								th:field="*{tType}" class="form-control" required>
+								<option value="" disabled selected>Select Type</option>
+								<option value="Splitted Task">Splitted Task</option>
+								<option value="AI Generated">AI Generated</option>
+								<option value="Issue">Issue or KT</option>
+								<option value="Knowledge Transfer">Knowledge Transfer</option>
+								<option value="Client Project">Client Project</option>
+								<option value="Internal Project">Internal Project</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="tStatus">Status:</label> <select id="tStatus"
+								th:field="*{tStatus}" class="form-control" required>
+								<option value="" disabled selected>Select Status</option>
+								<option value="Assigned">Assigned</option>
+								<option value="Open">Open</option>
+								<option value="Started">Started</option>
+								<option value="In Progress">In Progress</option>
+								<option value="Completed">Completed</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<!-- Hidden Fields -->
+				<input type="hidden" id="tFlag" th:field="*{tFlag}" th:value="0" />
+				<input type="hidden" id="eDesignation" th:field="*{eDesignation}"
+					class="form-control" />
+	
+					<!-- Row containing From Employee, AI Suggestions Button, and To Employee -->
+					<div class="row">
+	<!-- From Employee -->
+				<!-- 	<div class="col-md-4">
+						<div class="form-group">
+							<label for="tFromEID">From Employee:</label> <select
+								id="tFromEID" th:field="*{fromEmployee.eId}"
+								class="form-control">
+								<option value="" disabled
+									th:text="${ticket.fromEmployee == null ? 'Select Employee' : ''}"></option>
+								<option th:each="employee : ${employees}"
+									th:value="${employee.eId}" th:text="${employee.eName}"></option>
+							</select>
+						</div>
+					</div>		 -->		
+	
+	
+	
+					
+	
+						<!-- To Employee -->
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="tToEID">To Employee:</label> <select id="tToEID"
+								th:field="*{toEmployee.eId}" class="form-control">
+								<option value="" disabled
+									th:text="${ticket.toEmployee == null ? 'Select Employee' : ''}"></option>
+								<option th:each="employee : ${employees}"
+									th:value="${employee.eId}" th:text="${employee.eName}"></option>
+							</select>
+						</div>
+					</div>
+				
+					<!-- AI Suggestions Button -->
+						<div class="col-md-4 d-flex align-items-center">
+							<button type="button" id="askAISuggestionsBtn"
+								class="btn btn-primary">Ask AI Suggestions</button>
+						</div>
+
+				<!-- AI Suggested Employees (Hidden by default) -->
+				<div class="form-group col-md-4" id="aiSuggestedEmployeesContainer"
+					style="display: none;">
+					<label for="aiSuggestedEmployees">AI Suggested Employees:</label> <select
+						id="aiSuggestedEmployees" class="form-control">
+						<option value="" disabled selected>Select an employee</option>
+					</select>
+				</div>
+
 </div>
+				<!-- Project -->
 
-<!-- AI Suggested Employees (Hidden by default) -->
-<div class="form-group" id="aiSuggestedEmployeesContainer" style="display: none;">
-    <label for="aiSuggestedEmployees">AI Suggested Employees:</label>
-    <select id="aiSuggestedEmployees" class="form-control">
-        <option value="" disabled selected>Select an employee</option>
-    </select>
-</div>
+				<div class="form-group">
+					<label for="tPID">Project:</label> <select id="tPID"
+						th:field="*{project.pId}" class="form-control">
+						<option value="" disabled
+							th:text="${ticket.project == null ? 'Select Project' : ''}"></option>
+						<option th:each="project : ${projects}" th:value="${project.pId}"
+							th:text="${project.pName}"></option>
+					</select>
+				</div>
 
+				<!-- Submit Button -->
+				<button type="submit" class="btn btn-primary">Save Ticket</button>
+			</form>
+		</div>
+	</div>
 
-                <!-- Project -->
-                
-                <div class="form-group">
-                    <label for="tPID">Project:</label>
-                    <select id="tPID" th:field="*{project.pId}" class="form-control">
-                        <option value="" disabled th:text="${ticket.project == null ? 'Select Project' : ''}"></option>
-                        <option th:each="project : ${projects}" th:value="${project.pId}" th:text="${project.pName}"></option>
-                    </select>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary">Save Ticket</button>
-            </form>
-        </div>
-    </div>
-
-<script>
+	<script>
 
     document.getElementById('askAISuggestionsBtn').addEventListener('click', function() {
         // Get the ticket description

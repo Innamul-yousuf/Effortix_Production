@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -103,11 +104,19 @@ public class TicketController {
 	  
 	  private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for async tasks
 
-    @PostMapping("/save") public String saveTicket2(@ModelAttribute("ticket")Ticket ticket) {
+    @PostMapping("/save") public String saveTicket2(@ModelAttribute("ticket")Ticket ticket, HttpSession session) {
 		  System.out.println("Ticket"+ticket.getTName()+" ");
 		  System.out.println("Ticket"+ticket.getToEmployee().geteEmail()+" ");
+		  Employee loggedInEmployee = (Employee) session.getAttribute("employee");
 		  
 		  if (ticket.getTId() == null) {
+			  if(ticket.getTType().equals("AI Generated")) {
+				  
+				  ticket.setFromEmployee(employeeService.getEmployeeById(152L).get());  
+			  }else {
+				  ticket.setFromEmployee(loggedInEmployee);
+			  }
+			  
 		        System.out.println("Ticket ID is null, indicating a new ticket");
 		        // Handle creating a new ticket if necessary
 		        Ticket savedTicket=Ticrepository.save(ticket);
@@ -115,6 +124,12 @@ public class TicketController {
 
 //		        sendEmailToResponsibleSaveOrUpdate(ticket, true);
 		    } else {
+		    	if(ticket.getTType().equals("AI Generated")) {
+					  
+					  ticket.setFromEmployee(employeeService.getEmployeeById(152L).get());  
+				  }else {
+					  ticket.setFromEmployee(loggedInEmployee);
+				  }
 		    	Ticket savedTicket=ticketService.saveOrUpdateTicket(ticket);
 		        System.out.println("Updating existing ticket with ID: " + ticket.getTId());
 		        executorService.submit(() -> sendEmailToResponsibleSaveOrUpdate(ticket, false));

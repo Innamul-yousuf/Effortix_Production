@@ -90,7 +90,7 @@ public class GenerateTimeSheetsEntriesAI {
 							response.append(responseLine.trim());
 						}
 						System.out.println("Response Body: " + response.toString());
-						System.out.println("============AI Sugested Employees===========");
+						System.out.println("============AI Sugested Timesheet Content===========");
 						System.out.println(response.toString());
 
 						JSONObject jsonObject = new JSONObject(response.toString());
