@@ -333,7 +333,7 @@ $(document).ready(function () {
                 // Loop through the tickets and only display assigned ones
                 data.forEach(function (ticket) {
                     // Only display tickets with the "Assigned" status
-                    if (ticket.tstatus === 'Assigned') {
+                    if (ticket.tstatus === 'Assigned' || ticket.tstatus === 'Open') {
                         
                         var row = '<tr>' +
                             '<td>' + ticket.tid + '</td>' +

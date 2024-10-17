@@ -335,7 +335,7 @@ $(document).ready(function () {
 	
     // When the employee dropdown changes
     $('#employeeDropdown').change(function () {
-    	
+    	 
         var employeeId = $(this).val();
         
         if (employeeId) {
@@ -391,11 +391,11 @@ $(document).ready(function () {
                     // Create or update the pie chart
                     var ctx = document.getElementById('creditChart').getContext('2d');
 
-                  /*   // Destroy the previous chart instance if it exists
-                    if (window.creditChart) {
+                     // Destroy the previous chart instance if it exists
+                  // Destroy the previous chart instance if it exists
+                    if (window.creditChart !== null && typeof window.creditChart.destroy === 'function') {
                         window.creditChart.destroy();
                     }
- */
                     window.creditChart = new Chart(ctx, {
                         type: 'pie',
                         data: {
