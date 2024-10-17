@@ -106,15 +106,28 @@ public class GenerateEmployeeSkillsAI {
 
 			        // Remove the leading and trailing backticks and "json" identifier from the text
 			        String jsonText = text.replace("```json", "").replace("```", "").trim();
-			        String[] sections = text.split("## Previous Works:");
-			        String skillsSection = sections[0].replace("## Skills:\n\n", "").trim();
-			        skillsSection = skillsSection.replaceAll("[^a-zA-Z0-9\\s]", "");;
+			     // Parse the cleaned-up JSON string
+			        JSONObject parsedJson = new JSONObject(jsonText);
+			        String skillsSection = parsedJson.optString("Skills", "").trim();
+			        String workExperienceSection = parsedJson.optString("Previous Works", "").trim();
+			        
+			        skillsSection = skillsSection.replaceAll("[^a-zA-Z0-9\\s,]", ""); // Keeps commas and alphanumeric characters
+			        workExperienceSection = workExperienceSection.replaceAll("[^a-zA-Z0-9\\s,]", ""); // Same for previous works
 
-			        String workExperienceSection = (sections.length > 1) ? sections[1].trim() : "";
-			        workExperienceSection= workExperienceSection.replaceAll("[^a-zA-Z0-9\\s]", "");
+			        
+			        /*
+					 * String[] sections = text.split("## Previous Works:"); String skillsSection =
+					 * sections[0].replace("## Skills:\n\n", "").trim(); skillsSection =
+					 * skillsSection.replaceAll("[^a-zA-Z0-9\\s]", "");;
+					 */
+
+			        //String workExperienceSection = (sections.length > 1) ? sections[1].trim() : "";
+			        //workExperienceSection= workExperienceSection.replaceAll("[^a-zA-Z0-9\\s]", "");
+			        System.out.println("Before MAP: "+skillsSection);
+			        System.out.println("Before MAP2: "+workExperienceSection);
 			        skillAndWorkExp.put("skills", skillsSection);
 			        skillAndWorkExp.put("work_experience", workExperienceSection);
-
+			        
 					System.out.println();
 					return skillAndWorkExp;
 				}

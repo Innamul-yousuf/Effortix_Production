@@ -169,7 +169,8 @@ public class TicketUpdatesService{
                     timesheetEntriesService.createTimesheetEntry(existingEntry);
                 } else {
                     // No existing entry, create a new one
-                    timesheetEntry.setEtActivity(savedTicketUpdates.gettUpdate());
+                	String AIEntry = callTimeSheetAI(savedTicketUpdates.getTicket().getTId(), savedTicketUpdates);
+                    timesheetEntry.setEtActivity(AIEntry);
                     timesheetEntriesService.createTimesheetEntry(timesheetEntry);
                 }
             });
@@ -224,7 +225,7 @@ public class TicketUpdatesService{
             
             // Append AI-generated skills and work experience
             String newSkills = skillAndWorkExp.get("skills");
-            String newWorks = skillAndWorkExp.get("Previous Works");
+            String newWorks = skillAndWorkExp.get("work_experience");
             System.out.println("newSkills: "+newSkills+" newWorks: "+newWorks);
             
             employeeSkill.setSkills(previousSkills + ", " + newSkills);
@@ -239,6 +240,8 @@ public class TicketUpdatesService{
         	   EmployeeSkills employeeSkills =new EmployeeSkills();
         	 String newSkills = skillAndWorkExp.get("skills");
              String newWorks = skillAndWorkExp.get("work_experience");
+            
+            
              employeeSkills.setSkills( newSkills);
              employeeSkills.setSkills_detail(newWorks);
              employeeSkills.setEId(ticket.getToEmployee().geteId());
