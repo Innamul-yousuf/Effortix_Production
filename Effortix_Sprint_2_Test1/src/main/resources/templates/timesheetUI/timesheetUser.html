@@ -51,7 +51,7 @@
         
         <!-- Button to download as Excel -->
         <button id="downloadExcel" class="btn btn-success">Download Timesheet as Excel</button>
-
+		<button id="pushToIConnect" class="btn btn-warning">Push to I-Connect</button>
         <!-- Render the timesheet entries -->
         <div id="timesheetEntriesContainer" class="entry-card" style="display:none;">
             <h2>Timesheet Entries</h2>
@@ -70,7 +70,104 @@
     </div>
 
     <script>
-        // Timesheet logic will go here
+    // Handle "Push to I-Connect" button click
+    $("#pushToIConnect").click(function() {
+        const employeeId = $("#employeeId").val();
+        const fromDate = $("#fromDate").val();
+        const toDate = $("#toDate").val();
+
+        if (!employeeId || !fromDate || !toDate) {
+            alert("Please select an employee and date range first.");
+            return;
+        }
+
+        // Fetch data for the timesheet first
+        $.ajax({
+            url: `/api/timesheet/employee/${employeeId}/dates`,
+            method: 'GET',
+            data: {
+                fromDate: fromDate,
+                toDate: toDate
+            },
+            success: function(data) {
+                if (data.length > 0) {
+                    // Prepare the payload in the required format
+                    const payload = preparePayload(data);
+                    pushToIConnect(payload);
+                } else {
+                    alert("No timesheet data found for the selected dates.");
+                }
+            },
+            error: function(err) {
+                alert("Error fetching data.");
+                console.log(err);
+            }
+        });
+    });
+
+    // Function to prepare the payload in the required format
+    function preparePayload(timesheetEntries) {
+        return {
+            empId: "38621",
+            employeeCompanyId: "1",
+            employeeName: "INNAMUL YOUSUF ZATH R",
+            selectedMonth: "October",
+            timesheetWeekDataBinder: {
+                ts_id: 3781324,
+                weekStartDate: "14/10/2024",
+                status: "Requested",
+                sumOfHours: 40,
+                timesheetWeekDataRowList: timesheetEntries.map((entry, index) => ({
+                    tsRowId: 2741214 + index, // Example id, adjust accordingly
+                    tsId: 3781324,
+                    izProjectId: 6391,
+                    empId: 38621,
+                    status: "Active",
+                    rowSumHours: 8,
+                    intranetProjectTaskId: 23781,
+                    empprid: 267121,
+                    timesheetDatesList: [
+                        {
+                            tdId: 30562984 + index, // Example id, adjust accordingly
+                            dayOfWeek: getDayOfWeek(entry.date),
+                            dateOfDay: entry.date,
+                            hoursOfDay: 8,
+                            activitiesOfDay: entry.etActivity,
+                            holiday: false,
+                        }
+                    ]
+                }))
+            }
+        };
+    }
+
+    // Helper function to get the day of the week
+    function getDayOfWeek(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleString('en-us', { weekday: 'long' });
+    }
+
+    // Push the timesheet data to I-Connect API
+    function pushToIConnect(payload) {
+        $.ajax({
+            url: 'https://iconnect-rest.intelizign.com/user/userTimesheet/save-user-timesheet',
+            method: 'PUT',
+            contentType: 'application/json',
+            headers: {
+                Authorization: 'Bearer '
+            },
+            data: JSON.stringify(payload),
+            success: function(response) {
+                alert('Timesheet successfully pushed to I-Connect.');
+                console.log(response);
+            },
+            error: function(err) {
+                alert('Error pushing timesheet to I-Connect.');
+                console.log(err);
+            }
+        });
+    }
+
     </script>
 </body>
 </html>

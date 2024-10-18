@@ -162,7 +162,7 @@ public class TicketUpdatesService{
                     // Update existing entry
                     EmployeeTimesheetEntries existingEntry = existingEntries.get(0); // Assuming only one entry per day
                     String AIEntry = callTimeSheetAI(savedTicketUpdates.getTicket().getTId(), savedTicketUpdates);
-                    String updatedActivity = existingEntry.getEtActivity() + ", " + AIEntry;
+                    String updatedActivity = existingEntry.getEtActivity() + ",\n" + AIEntry;
                     existingEntry.setEtActivity(updatedActivity);
                     
                     // Save the updated entry
