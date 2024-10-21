@@ -42,7 +42,7 @@ public class GenerateEmployeeCredits {
 				String escapedUpdate = theUpdates.replace("\"", "\\\"");
 				System.out.println("kkkkk: "+escapedTicketDetails);
 				// Define the API URL
-				String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC0yDq9TByoPnCIwe8huyIaHnZNOOErTAU";
+				String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBpwx92JlgpI9IApoF7iU8Kwihf36JbvQ4";
 
 				// Create URL object
 				URL url = new URL(apiUrl);

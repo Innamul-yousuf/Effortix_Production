@@ -44,7 +44,7 @@ public class GenerateEmployeeSkillsAI {
 			System.out.println("kkkkk: "+escapedTicketDetails);
 			// Define the API URL
 			//String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCObxtlyDEDrzupiBXBcGZKz7u2az8zX_M";
-			String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC0yDq9TByoPnCIwe8huyIaHnZNOOErTAU";
+			String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBpwx92JlgpI9IApoF7iU8Kwihf36JbvQ4";
  
 			// Create URL object
 			URL url = new URL(apiUrl);
@@ -62,7 +62,7 @@ public class GenerateEmployeeSkillsAI {
 			String systemInstruction="You are an AI assistant responsible for generating a short Skill(very short) to be added in work experience columns in an employee's record by analyzing the updates provided in a ticket. "
 					+ "You will receive a new ticket update, which includes the details of the task completed by the employee. "
 					+ "Your task is to read the update, identify any new skills or work experiences, and generate a brief, concise description of the skills or tasks learned from the ticket update. Give it as plain text and don't inculde other detalils in your responce. "
-					+ "Give it in json format skills in Skills and previous works in Previous Works: Try to find the skill from the ticket update. Give it as plain text. If no skill or previous work is gained then just give the responce with a blank space";
+					+ "Give it in json format skills in Skills and previous works in Previous Works: Try to find the skill from the ticket update. Give it as plain text. If no skill or previous work is gained then just give the responce with a blank space. Note: Give the contnt in short. Skills with maximum 3 word and Previous work with short understandable content maximum 9 words.";
 			// JSON request payload
 			String jsonInputString = "{"
 				    + "\"contents\": ["

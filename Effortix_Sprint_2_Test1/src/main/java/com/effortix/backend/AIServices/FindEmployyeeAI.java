@@ -29,13 +29,16 @@ import org.json.JSONObject;
 public class FindEmployyeeAI {
 
     private static final String API_KEY = "AIzaSyCvv0Y7PzJrGCDfsAgBfSmncW8JW91vUpc";
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC0yDq9TByoPnCIwe8huyIaHnZNOOErTAU";
+    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBpwx92JlgpI9IApoF7iU8Kwihf36JbvQ4";
     
     @Autowired
     private EmployeeSkillsService employeeSkillsService;
     public void callerMethod() {
     	 Gson gson = new Gson();
      	List<EmployeeSkills> employeeSkills= employeeSkillsService.getAllEmployeeSkills();
+     	for(int i=0;i<employeeSkills.size();i++) {
+     		employeeSkills.get(i).setSkills("NULL");
+     	}
      	String json = gson.toJson(employeeSkills);
          System.out.println("JSON output: " + json);
         // json="Find the employee who worked on or has similar work or previous worked with Impact Analysis from the json "+json;
@@ -44,7 +47,7 @@ public class FindEmployyeeAI {
 
          // Submit the task for asynchronous execution
          executorService.submit(() -> {
-        	 findEmployeeWithSkill("You are an AI assistant responsible for finding the Eid of employees who match specific skills or work experiences. The data may contain repetitive entries where the same employee Eid appears multiple times with different skills or work details. The term skill refers to a specific work area or task the employee has previously worked on. Only return the `Eid` of the matching employee. Do not include the skill or work detail in your response. If there are many employees with particular skill give only the top 3 employees suitable for the skill mentioned. Find the employee who worked on or has accurate and prisice work or previous worked with Teamcenter data model from", json);
+        	 findEmployeeWithSkill("You are an AI assistant responsible for finding the Eid of employees who match specific skills or work experiences. The data may contain repetitive entries where the same employee Eid appears multiple times with different skills or work details. The term skill refers to a specific work area or task the employee has previously worked on. Only return the `Eid` of the matching employee. Do not include the skill or work detail in your response. If there are many employees with particular skill give only the top 3 employees suitable for the skill mentioned. Find the employee who worked on or has accurate and prisice work or previous worked from", json);
         	    
          });
          
@@ -59,11 +62,13 @@ public class FindEmployyeeAI {
     EmployeeService employeeService;
     public List<Employee> findEmployeeWithSkill(String ticketDescription, String EmployeeSkillsTable) {
         try {
+        	System.out.println("ticketDescription"+ticketDescription);
+        	System.out.println("EmployeeSkillsTable"+EmployeeSkillsTable);
             // Escape the EmployeeSkillsTable JSON string
             String escapedEmployeeSkillsTable = EmployeeSkillsTable.replace("\"", "\\\"");
 
             // Define the API URL
-            String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC0yDq9TByoPnCIwe8huyIaHnZNOOErTAU";
+            String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDaDPREzETk0KTH3x2sAhLP3s5dsF2pe9I";
 
             // Create URL object
             URL url = new URL(apiUrl);
@@ -85,7 +90,13 @@ public class FindEmployyeeAI {
             		+ "Find the employee who worked on or has accurate and prisice work or previous worked with the description of the ticket. The desciprion from the ticket is: "+ticketDescription +" from ";
             // JSON request payload
             String PostInstruction="Only give top 3 employees";
-            String jsonInputString = "{ \"contents\": [{ \"parts\": [{ \"text\": \""+SystemInstruciton+ "\" }, { \"text\": \"" + escapedEmployeeSkillsTable  +"\" }] }] }";
+            String jsonInputString = "{ \"contents\": [{ \"parts\": [{ \"text\": \""+SystemInstruciton+ "\" }, { \"text\": \"" + escapedEmployeeSkillsTable  +"\" }] }],"+ "\"generationConfig\": {"
+                    + "\"temperature\": 1,"
+                    + "\"topK\": 128,"
+                    + "\"topP\": 0.8,"
+                    + "\"maxOutputTokens\": 8192,"
+                    + "\"responseMimeType\": \"text/plain\""
+                    + "}}";
 
             // Write JSON input string to the request body
             try (OutputStream os = connection.getOutputStream()) {
