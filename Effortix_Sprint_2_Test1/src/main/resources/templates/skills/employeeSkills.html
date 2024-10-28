@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Employee Skills</title>
@@ -24,3 +24,115 @@
     </table>
 </body>
 </html>
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Skills - Dark Theme</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS with Dark Theme -->
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/dark/1.0.0/css/dataTables.dark.min.css" rel="stylesheet">
+    
+    <!-- jQuery and DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- Custom CSS for improved readability -->
+    <style>
+        /* Make DataTables controls more readable on dark theme */
+        .dataTables_wrapper .dataTables_filter label, 
+        .dataTables_wrapper .dataTables_length label {
+            color: #ffffff;  /* Set label color to white */
+        }
+
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            color: #cccccc;  /* Slightly lighter color for less emphasis */
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #ffffff !important;
+            background-color: #444444 !important; /* Hover effect for pagination */
+        }
+
+        /* Table adjustments */
+        .table-dark thead th {
+            color: #ffffff;
+            background-color: #333333;
+        }
+
+        .table-dark tbody td {
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <div class="container my-4">
+        <h1 class="text-center text-light mb-4">SKILL MATRIX</h1>
+
+        <div class="card bg-dark border-light shadow-sm">
+            <div class="card-body">
+                <table id="employeeSkillsTable" class="table table-dark table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Skills</th>
+                            <th>Skill Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be dynamically added here via AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initialize DataTables with Dark Theme and AJAX Call -->
+    <script>
+        $(document).ready(function() {
+            $('#employeeSkillsTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "lengthChange": true,
+                "pageLength": 5,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "ajax": {
+                    "url": "/employeeSkillsREST/getAll",  // The endpoint to fetch data from
+                    "type": "GET",
+                    "dataSrc": ""  // Assuming the data is an array of objects
+                },
+                "columns": [
+                    { "data": "eid" },       // Employee ID
+                    { "data": "skills" },    // Skills
+                    { "data": "skills_detail" }  // Skill Details
+                ],
+                "language": {
+                    "search": "<span class='text-light'>Filter records:</span>",
+                    "lengthMenu": "<span class='text-light'>Display _MENU_ records per page</span>",
+                    "zeroRecords": "<span class='text-light'>No matching records found</span>",
+                    "info": "<span class='text-light'>Showing page _PAGE_ of _PAGES_</span>",
+                    "infoEmpty": "<span class='text-light'>No records available</span>",
+                    "infoFiltered": "<span class='text-light'>(filtered from _MAX_ total records)</span>"
+                }
+            });
+        });
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+

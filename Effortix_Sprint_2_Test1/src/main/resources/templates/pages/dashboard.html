@@ -6,11 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <!-- Bootstrap 5 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Bootstrap 5 JS (with Popper.js) - No need for jQuery -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+Bootstrap 5 JS (with Popper.js) - No need for jQuery
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    
+     -->
+     
+      <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    <!-- Bootstrap 5 JS (with Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+     
+    
     <style>
         body {
             background-color: #f7f9fa;
@@ -182,70 +202,71 @@
     </div>
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     $(document).ready(function () {
-        var employeeId = [[${session.employee.eId}]]; // Fetch employeeId from session
+    	
+    	   var employeeId = [[${session.employee.eId}]]; // Fetch employeeId from session
 
-        // Define initial counts for each ticket status
-        var ticketCounts = {
-            open: 0,
-            assigned: 0,
-            InProgress:0,
-            closed: 0,
-            
-        };
+           // Define initial counts for each ticket status
+           var ticketCounts = {
+               open: 0,
+               assigned: 0,
+               InProgress: 0,
+               closed: 0
+           };
 
-        // Fetch tickets for the employee when the page loads
-        if (employeeId) {
-            $.ajax({
-                url: '/ticketsREST/flag?employeeId=' + employeeId,  // Send employeeId to the backend
-                type: 'GET',
-                success: function (data) {
-                    // Clear the existing ticket rows
-                    $('#ticketTable tbody').empty();
+           // Fetch tickets for the employee when the page loads
+           if (employeeId) {
+               $.ajax({
+                   url: '/ticketsREST/flag?employeeId=' + employeeId,  // Send employeeId to the backend
+                   type: 'GET',
+                   success: function (data) {
+                       // Clear the existing ticket rows
+                       $('#ticketTable tbody').empty();
 
-                    // Loop through the tickets and create rows for each
-                    data.forEach(function(ticket) {
-                        // Count the ticket status
-                        if (ticket.tstatus === 'Open') {
-                            ticketCounts.open++;
-                        } else if (ticket.tstatus === 'Assigned') {
-                            ticketCounts.assigned++;
-                        } else if (ticket.tstatus === 'Completed') {
-                            ticketCounts.closed++;
-                        }
-                        else if (ticket.tstatus === 'In Progress') {
-                            ticketCounts.InProgress++;
-                        }
+                       // Loop through the tickets and create rows for each
+                       data.forEach(function(ticket) {
+                           // Count the ticket status
+                           if (ticket.tstatus === 'Open') {
+                               ticketCounts.open++;
+                           } else if (ticket.tstatus === 'Assigned') {
+                               ticketCounts.assigned++;
+                           } else if (ticket.tstatus === 'Completed') {
+                               ticketCounts.closed++;
+                           } else if (ticket.tstatus === 'In Progress') {
+                               ticketCounts.InProgress++;
+                           }
 
-                        var row = '<tr>' +
-                            '<td>' + ticket.tid + '</td>' +
-                            '<td>' + ticket.tname + '</td>' +
-                            '<td>' + ticket.tstatus + '</td>' +
-                            '<td>' + ticket.deadline + '</td>' +
-                            '<td>' +
-                                '<div class="btn-group" role="group" aria-label="Ticket Actions">' +
-                                    '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm">View</a>' +
-                                    '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm">Edit</a>' +
-                                '</div>' +
-                            '</td>' +
-                        '</tr>';
+                           var row = '<tr>' +
+                               '<td>' + ticket.tid + '</td>' +
+                               '<td>' + ticket.tname + '</td>' +
+                               '<td>' + ticket.tstatus + '</td>' +
+                               '<td>' + ticket.deadline + '</td>' +
+                               '<td>' +
+                                   '<div class="btn-group" role="group" aria-label="Ticket Actions">' +
+                                       '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm">View</a>' +
+                                       '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm">Edit</a>' +
+                                   '</div>' +
+                               '</td>' +
+                           '</tr>';
 
-                        // Append the row to the table
-                        $('#ticketTable tbody').append(row);
-                    });
-
-                    // Now update the chart data based on ticketCounts
-                    updateChartData(ticketCounts);
-                },
-                error: function () {
-                    alert('Failed to fetch tickets!');
-                }
-            });
-        }
-    });
+                           // Append the row to the table
+                           $('#ticketTable tbody').append(row);
+                       });
+						
+                       
+                      
+                    
+                       // Now update the chart data based on ticketCounts
+                       updateChartData(ticketCounts);
+                   },
+                   error: function () {
+                       alert('Failed to fetch tickets!');
+                   }
+               });
+           }
+       });
 
     // Function to update the chart data based on ticket status counts
     function updateChartData(ticketCounts) {

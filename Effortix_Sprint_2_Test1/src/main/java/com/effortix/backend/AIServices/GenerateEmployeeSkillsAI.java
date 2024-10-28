@@ -36,8 +36,10 @@ public class GenerateEmployeeSkillsAI {
 
 	public Map<String, String> generateSkillsAndUpdatePreviousWorks(String ticketDetails, String theUpdate) {
 		
-		Map<String, String> skillAndWorkExp = new HashMap();
-		try {
+		
+		
+		try { 
+			Map<String, String> skillAndWorkExp = new HashMap();
 			// Escape the EmployeeSkillsTable JSON string
 			String escapedTicketDetails = ticketDetails.replace("\"", "\\\"");
 			String escapedUpdate = theUpdate.replace("\"", "\\\"");
@@ -125,10 +127,11 @@ public class GenerateEmployeeSkillsAI {
 			        //workExperienceSection= workExperienceSection.replaceAll("[^a-zA-Z0-9\\s]", "");
 			        System.out.println("Before MAP: "+skillsSection);
 			        System.out.println("Before MAP2: "+workExperienceSection);
+			        skillAndWorkExp.clear();  
 			        skillAndWorkExp.put("skills", skillsSection);
 			        skillAndWorkExp.put("work_experience", workExperienceSection);
 			        
-					System.out.println();
+					System.out.println("skillAndWorkExp: "+skillAndWorkExp.toString());
 					return skillAndWorkExp;
 				}
 			} else {

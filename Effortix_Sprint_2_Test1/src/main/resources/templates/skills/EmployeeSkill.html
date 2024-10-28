@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Skills Table</title>
+</head>
+<body>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Skill</th>
+                <th>Sub-Skills</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="skillEntry : ${skillsMap}">
+                <td th:text="${skillEntry.key}"></td>
+                <td>
+                    <ul>
+                        <li th:each="subSkill : ${skillEntry.value}" th:text="${subSkill}"></li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
