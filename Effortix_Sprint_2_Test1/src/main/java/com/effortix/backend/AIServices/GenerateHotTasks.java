@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.effortix.backend.models.EmployeeSkills;
@@ -29,7 +30,10 @@ public class GenerateHotTasks {
 	
 	@Autowired
 	private EmployeeSkillsService employeeSkillsService;
-
+	
+	@Value("${api.key}")
+	private String apiKey;
+    
 	public void callerMethod() {
 		Gson gson = new Gson();
 		List<EmployeeSkills> employeeSkills = employeeSkillsService.getAllEmployeeSkills();
@@ -56,7 +60,7 @@ public class GenerateHotTasks {
 			String escapedPrimePicks = primePicks.replace("\"", "\\\"");
 
 			// Define the API URL
-			String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBpwx92JlgpI9IApoF7iU8Kwihf36JbvQ4";
+			String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key="+apiKey;
 
 			// Create URL object
 			URL url = new URL(apiUrl);

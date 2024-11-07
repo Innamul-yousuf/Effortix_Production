@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -145,34 +144,81 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
 </head>
 <body>
   <div th:replace="fragments/navbar"></div>
-<div class="container">
-   
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div id="dashboard" class="dashboard-card card">
-                <div class="card-header">
-                    <h5>Welcome, <span th:text="${session.employee.eName}"></span></h5>
+            <div id="dashboard" class="dashboard-card card shadow-sm my-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Welcome, <span th:text="${session.employee.eName}"></span></h5>
                 </div>
-                <div class="card-body text-center">
-                 <img src="images/employee.jpg" alt="photo" class="profile-image">
-                    <!-- <img src="https://images.app.goo.gl/4PnuF4FoM4oc7m9B9" alt="User Photo" class="profile-image"> -->
-                    <h6 class="mt-3" th:text="${session.employee.eName}">Employee Name</h6>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Performance Graph</h6>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <!-- Profile Section -->
+                       <!--  <div class="col-md-4 text-center">
+                            <img src="images/employee.jpg" alt="photo" class="profile-image rounded-circle mb-3" style="width: 150px; height: 150px;">
+                            <h6 class="mt-2" th:text="${session.employee.eName}">Employee Name</h6>
+                        </div> -->
+
+                        <!-- Performance Graph -->
+                        <div class="col-md-4 text-center">
+                            <h6 class="mb-3">Performance Graph</h6>
                             <canvas id="performanceChart" height="150"></canvas>
                         </div>
-                        <div class="col-md-6">
-                            <h6>Tickets Overview</h6>
+
+                        <!-- Tickets Overview -->
+                        <div class="col-md-4 text-center">
+                            <h6 class="mb-3">Tickets Overview</h6>
                             <canvas id="ticketsChart" height="150"></canvas>
                         </div>
-                    </div>
-                </div>
-            </div>
+                   
+
+                   
+                      <div class="col-md-4">
+    <div>
+        <div class="d-flex justify-content-between align-items-center mb-3 text-center">
+            <h5 class="mb-0 text-center">Task Request</h5>
+        </div>
+        
+        <div class="table-responsive custom-scrollbar" style="max-height: 230px; overflow-y: auto;">
+            <table id="ticketTableAssigned" class="table table-hover table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Ticket Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Ticket rows will be added dynamically via AJAX -->
+                </tbody>
+            </table>
         </div>
     </div>
-<!-- My Tickets Section -->
-<div class="row">
+</div>
+</div>
+</div>
+
+
+<!-- CSS for custom scroll bar -->
+<style>
+    /* Custom scroll bar styling */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #6c757d; /* Custom color */
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #343a40; /* Darker color on hover */
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f8f9fa; /* Light background */
+    }
+</style>
+        </div>
+    
+
     <div class="col-md-12">
          <div id="myTickets" class="dashboard-card card">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -201,6 +247,93 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
         </div>
     </div>
 </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    var employeeId = [[${session.employee.eId}]]; // Fetch employeeId from session
+
+    // Define initial counts for each ticket status
+  
+
+    // Fetch tickets for the employee when the page loads
+    if (employeeId) {
+        $.ajax({
+            url: '/ticketsREST/flag?employeeId=' + employeeId,  // Send employeeId to the backend
+            type: 'GET',
+            success: function (data) {
+                // Clear the existing ticket rows
+                $('#ticketTableAssigned tbody').empty();
+
+                // Loop through the tickets and only display assigned ones
+                data.forEach(function (ticket) {
+                    // Only display tickets with the "Assigned" status
+                    if (ticket.tstatus === 'Assigned' || ticket.tstatus === 'Open') {
+                        
+                        var row = '<tr>' +
+                            '<td>' + ticket.tid + '</td>' +
+                            '<td>' + ticket.tname + '</td>' +
+                          
+                            '<td>' +
+                            '<div class="d-flex justify-content-around align-items-center">' +
+                              
+                                
+                            '<button onclick="location.href=\'/ticketUpdates/ticket/' + ticket.tid + '\'" class="btn btn-link" title="View">' +
+                            '<img src="images/share.png" alt="View" style="width: 20px; height: 20px;">' +
+                        
+                            
+                                '<button class="btn btn-link approve-btn" data-tid="' + ticket.tid + '" title="Approve">' +
+                                    '<img src="images/check.png" alt="Approve" style="width: 20px; height: 20px;">' +
+                                '</button>' +
+                                '<button class="btn btn-link reject-btn" data-tid="' + ticket.tid + '" title="Reject">' +
+                                    '<img src="images/cross.png" alt="Reject" style="width: 15px; height: 15px;">' +
+                                '</button>' +
+                            '</div>' +
+                        '</td>' +
+                        '</tr>';
+
+                        // Append the row to the table
+                        $('#ticketTableAssigned tbody').append(row);
+                    }
+                });
+
+                
+            },
+            error: function () {
+                alert('Failed to fetch tickets!');
+            }
+        });
+    }
+
+    // Handle Approve button click
+    $('#ticketTableAssigned').on('click', '.approve-btn', function () {
+        var tId = $(this).data('tid');
+        updateTicketStatus(tId, 'Approved');
+    });
+
+    // Handle Reject button click
+    $('#ticketTableAssigned').on('click', '.reject-btn', function () {
+        var tId = $(this).data('tid');
+        updateTicketStatus(tId, 'Rejected');
+    });
+
+    // Function to send the update request to the backend
+    function updateTicketStatus(tId, newStatus) {
+        $.ajax({
+            url: '/ticketsREST/updateStatus',
+            type: 'PUT',
+            data: { tId: tId, newStatus: newStatus },
+            success: function (response) {
+                alert('Ticket status updated to ' + newStatus);
+                location.reload(); // Reload the page to reflect changes
+            },
+            error: function () {
+                alert('Failed to update ticket status.');
+            }
+        });
+    }
+});
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

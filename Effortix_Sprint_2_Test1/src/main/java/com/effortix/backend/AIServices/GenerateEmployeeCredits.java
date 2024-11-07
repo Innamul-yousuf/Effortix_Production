@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.effortix.backend.models.EmployeeSkills;
@@ -32,7 +33,9 @@ public class GenerateEmployeeCredits {
 	@Autowired
 	private EmployeeSkillsService employeeSkillsService;
 
-	
+	@Value("${api.key}")
+	private String apiKey;
+    
 	
 		public String calculateCredits(String ticketDetails, String theUpdates) {
 			Map<String, String> skillAndWorkExp = new HashMap();
@@ -42,7 +45,7 @@ public class GenerateEmployeeCredits {
 				String escapedUpdate = theUpdates.replace("\"", "\\\"");
 				System.out.println("kkkkk: "+escapedTicketDetails);
 				// Define the API URL
-				String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBpwx92JlgpI9IApoF7iU8Kwihf36JbvQ4";
+				String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key="+apiKey;
 
 				// Create URL object
 				URL url = new URL(apiUrl);

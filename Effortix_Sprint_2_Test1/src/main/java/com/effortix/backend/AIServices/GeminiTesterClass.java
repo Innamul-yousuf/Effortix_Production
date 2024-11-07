@@ -6,14 +6,18 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
 public class GeminiTesterClass {
+	@Value("${api.key}")
+	private String apiKey;
+    
 	 public void runAPI() {
 	        try {
 	            // Define the API URL (Replace YOUR_API_KEY with the actual API key)
-	            String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC0yDq9TByoPnCIwe8huyIaHnZNOOErTAU";
+	            String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key="+apiKey;
 
 	            // Create URL object
 	            URL url = new URL(apiUrl);

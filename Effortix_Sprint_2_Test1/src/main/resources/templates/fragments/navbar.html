@@ -242,7 +242,7 @@ color: white; /* White text */
 
     
     
- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+ <nav class="navbar navbar-expand-lg navbar-light " style="background-color:  rgb(118 255 223 / 14%) !important">
     <a class="navbar-brand" href="/dashboard">EFFORTIX</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -250,19 +250,19 @@ color: white; /* White text */
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <!-- Other nav items -->
-            <li class="nav-item mx-2">
-                <a class="btn btn-outline-dark" th:href="@{/project-employee/profile/{id}(id=${session.employee.eId})}">Profile</a>
+            <li class="nav-item">
+                <a class="btn" th:href="@{/project-employee/profile/{id}(id=${session.employee.eId})}">Profile</a>
             </li>
-            <li class="nav-item mx-2">
-                <a class="btn btn-outline-dark" href="/api/timesheet/timesheet">Timesheet</a>
+            <li class="nav-item">
+                <a class="btn" href="/api/timesheet/timesheet">Timesheet</a>
             </li>
-            <li class="nav-item mx-2">
-                <a class="btn btn-outline-dark" href="/tickets/IndividualTickets">Tickets</a>
+            <li class="nav-item">
+                <a class="btn" href="/tickets/IndividualTickets">Tickets</a>
             </li>
 
             <!-- Dropdown for Manager-only links -->
-            <li class="nav-item dropdown mx-2" th:if="${session.employee.eDesignation == 'Manager'}">
-                <a class="btn btn-outline-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <li class="nav-item dropdown" th:if="${session.employee.eDesignation == 'Manager'}">
+                <a class="btn dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Track Employee
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -273,8 +273,8 @@ color: white; /* White text */
                 </ul>
             </li>
 
-            <li class="nav-item mx-2" th:if="${session.employee.eDesignation == 'Manager'}">
-                <a class="btn btn-outline-dark" href="/primepicks/active">Future Technologies</a>
+            <li class="nav-item mx0" th:if="${session.employee.eDesignation == 'Manager'}">
+                <a class="btn" href="/primepicks/active">Future Technologies</a>
             </li>
 
           <a class="btn btn-outline-dark" id="askAISuggestions" th:href="@{/primepicks/generate-tasks/{id}(id=${session.employee.eId})}" onclick="showLoadingMessage()">

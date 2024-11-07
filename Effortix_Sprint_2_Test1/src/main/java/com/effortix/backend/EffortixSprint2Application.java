@@ -27,7 +27,7 @@ public class EffortixSprint2Application {
 		SpringApplication.run(EffortixSprint2Application.class, args);
 		System.out.println("		Hello, World!     ");
 	}
-
+  
 	@Bean
 	public CommandLineRunner demo() {
 		return (args) -> {
@@ -38,7 +38,7 @@ public class EffortixSprint2Application {
 			projectEmployeeTester.printProjectEmployeeById(1L); // Replace with actual ID
 		};
 	}
-
+ 
 	@Autowired
 	private TicketTester ticketTester;
 
