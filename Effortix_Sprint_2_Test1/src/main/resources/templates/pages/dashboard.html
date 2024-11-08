@@ -172,20 +172,20 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
                         </div>
                    
 
-                   
-                      <div class="col-md-4">
+                    
+                     <div class="col-md-4">
     <div>
-        <div class="d-flex justify-content-between align-items-center mb-3 text-center">
-            <h5 class="mb-0 text-center">Task Request</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 w-100 text-center">Task Request</h5>
         </div>
         
         <div class="table-responsive custom-scrollbar" style="max-height: 230px; overflow-y: auto;">
-            <table id="ticketTableAssigned" class="table table-hover table-bordered">
+            <table id="ticketTableAssigned" class="table table-hover table-bordered text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); border-radius: 8px;">
                 <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Ticket Name</th>
-                        <th>Actions</th>
+                        <th style="width: 400px;">Ticket Name</th>
+                        <th style="width: 100px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -271,22 +271,22 @@ $(document).ready(function () {
                     if (ticket.tstatus === 'Assigned' || ticket.tstatus === 'Open') {
                         
                         var row = '<tr>' +
-                            '<td>' + ticket.tid + '</td>' +
-                            '<td>' + ticket.tname + '</td>' +
+                            '<td class="text-start">' + ticket.tid + '</td>' +
+                            '<td class="text-start">' + ticket.tname + '</td>' +
                           
                             '<td>' +
                             '<div class="d-flex justify-content-around align-items-center">' +
                               
                                 
-                            '<button onclick="location.href=\'/ticketUpdates/ticket/' + ticket.tid + '\'" class="btn btn-link" title="View">' +
-                            '<img src="images/share.png" alt="View" style="width: 20px; height: 20px;">' +
+                            '<button onclick="location.href=\'/ticketUpdates/ticket/' + ticket.tid + '\'" class="btn btn-link p-1" title="View">' +
+                            '<img src="images/share.png" alt="View" style="width: 18px; height: 18px;">' +
                         
                             
-                                '<button class="btn btn-link approve-btn" data-tid="' + ticket.tid + '" title="Approve">' +
-                                    '<img src="images/check.png" alt="Approve" style="width: 20px; height: 20px;">' +
+                                '<button class="btn btn-link p-1 approve-btn" data-tid="' + ticket.tid + '" title="Approve">' +
+                                    '<img src="images/check.png" alt="Approve" style="width: 17px; height: 17px;">' +
                                 '</button>' +
-                                '<button class="btn btn-link reject-btn" data-tid="' + ticket.tid + '" title="Reject">' +
-                                    '<img src="images/cross.png" alt="Reject" style="width: 15px; height: 15px;">' +
+                                '<button class="btn btn-link p-1 reject-btn" data-tid="' + ticket.tid + '" title="Reject">' +
+                                    '<img src="images/cross.png" alt="Reject" style="width: 18px; height: 15px;">' +
                                 '</button>' +
                             '</div>' +
                         '</td>' +

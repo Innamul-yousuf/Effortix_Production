@@ -27,7 +27,7 @@ public class EffortixSprint2Application {
 		SpringApplication.run(EffortixSprint2Application.class, args);
 		System.out.println("		Hello, World!     ");
 	}
-  
+   
 	@Bean
 	public CommandLineRunner demo() {
 		return (args) -> {
