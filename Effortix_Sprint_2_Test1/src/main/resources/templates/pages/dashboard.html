@@ -49,8 +49,8 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
             height: 100px;
         }
         .card-header {
-            background-color: #343a40;;
-            color: white;
+            background-color: #e7f6f7;
+            color: #111d4a;
         }
         #ticketTable {
             margin-top: 20px;
@@ -60,10 +60,7 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
             padding: 10px;
             text-align: left;
         }
-        #ticketTable th {
-            background-color:#343a40;;
-            color: white;
-        }
+        
         .card {
             transition: transform 0.3s;
         }
@@ -157,7 +154,7 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
 }
 
 .table-hover tbody tr:hover {
-    background-color: rgb(230 234 255);
+    background-color: rgb(191 255 251 / 37%);
 }
 
 .btn-outline-primary {
@@ -181,6 +178,12 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
         }
     
 
+.btn-sm {
+    padding: 0.2rem 0.5rem;  /* Adjust vertical and horizontal padding */
+    font-size: 0.8rem;        /* Reduce font size slightly */
+}
+
+
     </style>
 </head>
 <body>
@@ -189,8 +192,8 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
     <div class="row">
         <div class="col-md-12">
             <div id="dashboard" class="dashboard-card card shadow-sm my-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Welcome, <span th:text="${session.employee.eName}"></span></h5>
+                <div class="card-header   text-white" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">
+                    <h5 class="mb-0" style="color: rgb(5 32 76);" >Welcome, <span th:text="${session.employee.eName}"></span></h5>
                 </div>
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -214,19 +217,19 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
                    
 
                     
-                     <div class="col-md-4">
+                    <div class="col-md-4">
     <div>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0 w-100 text-center">Task Request</h5>
         </div>
         
         <div class="table-responsive custom-scrollbar" style="max-height: 230px; overflow-y: auto;">
-            <table id="ticketTableAssigned" class="table table-hover table-bordered text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); border-radius: 8px; ">
+            <table id="ticketTableAssigned" class="table table-hover table-bordered text-center" style="border-radius: 8px; ">
                 <thead class="thead-dark">
                     <tr>
-                        <th>ID</th>
-                        <th style="width: 400px;">Name</th>
-                        <th style="width: 100px;">Actions</th>
+                        <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">ID</th>
+                        <th style="width: 400px; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">Name</th>
+                        <th style="width: 100px; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -238,7 +241,10 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
 </div>
 </div>
 </div>
-
+</div>
+</div>
+</div>
+</div>
 
 <!-- CSS for custom scroll bar -->
 <style>
@@ -260,23 +266,24 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
         
    
 	<div class="row" >
+	
     <div class="col-md-6">
          <div id="myTickets" class="dashboard-card card">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">
                 <h5>My Tickets</h5>
-                <a href="/tickets/tickets/new" class="btn btn-light">Create New Ticket</a>
+                
             </div>
            
             <div class="card-body" style="padding: 0;">
                 <div class="table-responsive" style="max-height: 432px; overflow-y: auto;">
-                    <table id="ticketTable" class="table table-bordered table-hover">
+                    <table id="ticketTable" class="table table-bordered table-hover" >
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Ticket Name</th>
-                                <th>Status</th>
-                                <th>Deadline</th>
-                                <th>Actions</th>
+                                <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">ID</th>
+                                <th class="text-center" style="width: 330px; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Ticket Name</th>
+                                <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Status</th>
+                                <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Deadline</th>
+                                <th class="text-center" style="min-width: 80px; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -289,9 +296,9 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
 </div>
   <div class="col-md-6">
  <div id="createdTickets" class="dashboard-card card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">
             <h5>Track Created Tickets</h5>
-            <a href="/tickets/tickets/new" class="btn btn-light">Create New Ticket</a>
+            <a href="/tickets/tickets/new" class="btn btn-dark">Create New Ticket</a>
         </div>
 
         <div class="card-body">
@@ -299,11 +306,11 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
                 <table id="createdTicketsTable" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th style="width: 250px;">Ticket Name</th>
-                            <th>Status</th>
-                            <th>Deadline</th>
-                            <th style="min-width: 200px;">Actions</th>
+                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">ID</th>
+                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); width: 330px;">Ticket Name</th>
+                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Status</th>
+                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Deadline</th>
+                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); min-width: 80px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -339,7 +346,7 @@ $(document).ready(function () {
                             '<td class="text-start">' + ticket.tname + '</td>' +
                           
                             '<td>' +
-                            '<div class="d-flex justify-content-around align-items-center">' +
+                            '<div class="d-flex justify-content-around align-items-center text-center">' +
                               
                                 
                             '<button onclick="location.href=\'/ticketUpdates/ticket/' + ticket.tid + '\'" class="btn btn-link p-1" title="View">' +
@@ -440,10 +447,10 @@ $(document).ready(function () {
                                '<td>' + ticket.tname + '</td>' +
                                '<td>' + ticket.tstatus + '</td>' +
                                '<td>' + ticket.deadline + '</td>' +
-                               '<td>' +
+                               '<td class="text-center">' +
                                    '<div class="btn-group" role="group" aria-label="Ticket Actions">' +
-                                       '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm">View</a>' +
-                                       '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm">Edit</a>' +
+                                       '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm px-3">View</a>' +
+                                       '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm px-3">Edit</a>' +
                                    '</div>' +
                                '</td>' +
                            '</tr>';
@@ -580,16 +587,18 @@ $(document).ready(function () {
                         '<td>' + ticket.tname + '</td>' +
                         '<td>' + ticket.tstatus + '</td>' +
                         '<td>' + ticket.deadline + '</td>' +
-                        '<td>' +
-                        '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm" style="border-radius: 15px; margin-right: 5px;">' +
-                        '<i class="fas fa-eye"></i> View</a>' +
-                    '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm" style="border-radius: 15px; margin-right: 5px;">' +
-                        '<i class="fas fa-edit"></i> Edit</a>' +
-                    '<button class="btn btn-danger btn-sm delete-ticket" style="border-radius: 15px;" data-ticket-id="' + ticket.tid + '">' +
-                        '<i class="fas fa-trash-alt"></i> Delete</button>' +
-                '</td>' +
+                        '<td class="text-center">' +
+                        '<div class="btn-group" role="group" aria-label="Ticket Actions">' +
+                            '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm px-3 ">' +
+                                '<i class="fas fa-eye"></i> View</a>' +
+                            '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm px-3">' +
+                                '<i class="fas fa-edit"></i>  Edit </a>' +
+                            '<button class="btn btn-danger btn-sm px-2 delete-ticket" data-ticket-id="' + ticket.tid + '">' +
+                                '<i class="fas fa-trash-alt"></i> Delete</button>' +
+                        '</div>' +
+                    
+                    '</td>';
                     '</tr>';
-
                     // Append the row to the table
                     $('#createdTicketsTable tbody').append(row);
                 });

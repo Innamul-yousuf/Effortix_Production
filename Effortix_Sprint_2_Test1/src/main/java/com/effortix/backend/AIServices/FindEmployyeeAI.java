@@ -94,7 +94,7 @@ public class FindEmployyeeAI {
             String PostInstruction="Only give top 3 employees";
             String jsonInputString = "{ \"contents\": [{ \"parts\": [{ \"text\": \""+SystemInstruciton+ "\" }, { \"text\": \"" + escapedEmployeeSkillsTable  +"\" }] }],"+ "\"generationConfig\": {"
                     + "\"temperature\": 1,"
-                    + "\"topK\": 128,"
+                    + "\"topK\": 40,"
                     + "\"topP\": 0.8,"
                     + "\"maxOutputTokens\": 8192,"
                     + "\"responseMimeType\": \"text/plain\""

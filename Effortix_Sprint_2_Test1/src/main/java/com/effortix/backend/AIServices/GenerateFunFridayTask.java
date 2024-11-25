@@ -87,11 +87,24 @@ public class GenerateFunFridayTask {
 
 			// Allow sending the request body
 			connection.setDoOutput(true);
-			String systemInstruction="You are an AI assistant responsible for Assigning  fun Friday tasks like professional dares for the office Employees they will perform it during the Fun Friday time. It should be like a fun filled fun friday tasks in format of tickets. Give it like you directly create a fun task and anyone in the office can do it. You can generate a maximum 5 task with a breaf description about the task, task name, It should be innovative and funfilled and can be done in an office Environment.The task sould be like dares given to them. Please only give the details of the task in json format and not any other instruction about the your respose. The Json must have taskName, description, deadline as the comming friday date"
-					+ "in this format yyyy-mm-dd";
-			// JSON request payload
-			String jsonInputString = "{ \"contents\": [{ \"parts\": [{ \"text\": \"" +systemInstruction+" "
-					+ "\" }, { \"text\": \""  + "\" }] }] }";
+			String systemInstruction = "You are an AI assistant responsible for Assigning  fun Friday tasks like professional dares for the office Employees they will perform it during the Fun Friday time. It should be like a fun filled fun friday tasks in format of tickets. Give it like you directly create a fun task and anyone in the office can do it. You can generate a maximum 5 task with a breaf description about the task, task name, It should be innovative and funfilled and can be done in an office Environment.The task sould be like dares given to them. Please only give the details of the task in json format and not any other instruction about the your respose. The Json must have taskName, description, deadline as the comming friday date in this format yyyy-mm-dd";
+
+			String jsonInputString = "{"
+			    + "\"contents\": [{"
+			    + "  \"role\": \"user\","
+			    + "  \"parts\": [{"
+			    + "    \"text\": \"" + systemInstruction.replace("\"", "\\\"") + "\""
+			    + "  }]"
+			    + "}],"
+			    + "\"generationConfig\": {"
+			    + "  \"temperature\": 1,"
+			    + "  \"topK\": 40,"
+			    + "  \"topP\": 0.95,"
+			    + "  \"maxOutputTokens\": 8192"
+			    + "}"
+			    + "}";
+
+
 
 			// Write JSON input string to the request body
 			try (OutputStream os = connection.getOutputStream()) {
