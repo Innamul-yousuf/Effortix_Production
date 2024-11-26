@@ -14,17 +14,22 @@
       <div th:replace="fragments/navbar"></div>
   
  <div class="container mt-4">
-        <h2 class="text-center mb-4">Generated Fun Friday Tasks</h2>
+       
         
         <!-- Button to generate tasks -->
         <div class="text-center mb-3">
             <button class="btn btn-primary btn-lg" id="generateTasks">Generate Fun Friday Tasks</button>
         </div>
-
-         <!-- Scrollable and Responsive Table - initially hidden -->
+        
+<div class="container mt-4">
+    <!-- Scrollable and Responsive Table - initially hidden -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-warning text-white text-center">
+            <h5 class="mb-0">Fun Friday Task List</h5>
+        </div>
         <div class="table-responsive" id="taskTableContainer" style="max-height: 400px; overflow-y: auto; display: none;">
-            <table class="table table-bordered table-hover table-striped text-center">
-                <thead class="thead-dark">
+            <table class="table table-bordered table-hover text-center mb-0">
+                <thead class="table-warning">
                     <tr>
                         <th>Task ID</th>
                         <th>Task Name</th>
@@ -37,6 +42,8 @@
                 </tbody>
             </table>
         </div>
+    </div>
+</div>
     </div>
 	
 	
@@ -52,11 +59,22 @@
                 	<td>${task.tid}</td>
                     <td>${task.tname}</td>
                     <td>${task.tdescription}</td>
-                    <td>
-                    <a href="/ticketUpdates/ticket/${task.tid}" class="btn btn-primary btn-sm">View</a>
-                    <a href="/tickets/tickets/edit/${task.tid}" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm delete-ticket" data-ticket-id="${task.tid}">Delete</button>
-                </td> +
+                    <td class="d-flex justify-content-center">
+                    <!-- View Icon -->
+                    <a href="/ticketUpdates/ticket/${task.tid}" class="btn btn-sm btn-info mx-1 p-1" title="View">
+                        <img src="/images/view.png" alt="View" style="width: 20px; height: 20px;" />
+                    </a>
+                    
+                    <!-- Edit Icon -->
+                    <a href="/tickets/tickets/edit/${task.tid}" class="btn btn-warning btn-info mx-1 p-1" title="Edit">
+                        <img src="/images/edit.png" alt="Edit" style="width: 20px; height: 20px;" />
+                    </a>
+                    
+                    <!-- Delete Icon -->
+                    <button class="btn btn-sm btn-danger mx-1 p-1 delete-ticket" data-ticket-id="${task.tid}" title="Delete">
+                        <img src="/images/delete.png" alt="Delete" style="width: 20px; height: 20px;" />
+                    </button>
+                </td>+
                 </tr>`;
                 taskList.append(row);
             });
@@ -113,7 +131,7 @@
             <thead style="background-color: #FFD700;"> <!-- Yellow header -->
                 <tr>
                     <th>Task Name</th>
-                    <th>Description</th>
+                    <th style="max-width: 600px;">Description</th>
                     <th>Action</th> <!-- Action for viewing the ticket -->
                 </tr>
             </thead>

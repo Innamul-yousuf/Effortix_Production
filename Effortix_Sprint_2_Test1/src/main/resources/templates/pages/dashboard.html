@@ -275,7 +275,7 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
             </div>
            
             <div class="card-body" style="padding: 0;">
-                <div class="table-responsive" style="max-height: 432px; overflow-y: auto;">
+                <div class="table-responsive" style="max-height: 446px; overflow-y: auto;">
                     <table id="ticketTable" class="table table-bordered table-hover" >
                         <thead>
                             <tr>
@@ -447,11 +447,16 @@ $(document).ready(function () {
                                '<td>' + ticket.tname + '</td>' +
                                '<td>' + ticket.tstatus + '</td>' +
                                '<td>' + ticket.deadline + '</td>' +
-                               '<td class="text-center">' +
-                                   '<div class="btn-group" role="group" aria-label="Ticket Actions">' +
-                                       '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm px-3">View</a>' +
-                                       '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm px-3">Edit</a>' +
-                                   '</div>' +
+                               '<td class="text-center align-middle">' +
+                               '<div class="btn-group" role="group" aria-label="Ticket Actions">' +
+                                   '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-sm" style="padding: 0.2rem 0.6rem; font-size: 0.75rem; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">' +
+                                   '<img src="/images/view.png" alt="View" style="width: 20px; height: 20px;" />' +
+                                   '</a>' +
+                                   // Edit button with icon
+                                   '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-sm" style="padding: 0.2rem 0.6rem; font-size: 0.75rem; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">' +
+                                       '<img src="/images/edit.png" alt="Edit" style="width: 17px; height: 17px;" />' +
+                                   '</a>'+'</div'+
+                                   
                                '</td>' +
                            '</tr>';
 
@@ -587,14 +592,22 @@ $(document).ready(function () {
                         '<td>' + ticket.tname + '</td>' +
                         '<td>' + ticket.tstatus + '</td>' +
                         '<td>' + ticket.deadline + '</td>' +
-                        '<td class="text-center">' +
+                        '<td class="text-center align-middle">' +
                         '<div class="btn-group" role="group" aria-label="Ticket Actions">' +
-                            '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-primary btn-sm px-3 ">' +
-                                '<i class="fas fa-eye"></i> View</a>' +
-                            '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn btn-warning btn-sm px-3">' +
-                                '<i class="fas fa-edit"></i>  Edit </a>' +
-                            '<button class="btn btn-danger btn-sm px-2 delete-ticket" data-ticket-id="' + ticket.tid + '">' +
-                                '<i class="fas fa-trash-alt"></i> Delete</button>' +
+                        '<a href="/ticketUpdates/ticket/' + ticket.tid + '" class="btn btn-sm" style="padding: 0.2rem 0.4rem; font-size: 0.75rem; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">' +
+                        '<img src="/images/view.png" alt="View" style="width: 20px; height: 20px;" />' +
+                    '</a>' +
+                    // Edit button with icon
+                    '<a href="/tickets/tickets/edit/' + ticket.tid + '" class="btn  btn-sm" style="padding: 0.2rem 0.4rem; font-size: 0.75rem; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">' +
+                        '<img src="/images/edit.png" alt="Edit" style="width: 17px; height: 17px;" />' +
+                    '</a>' +
+                    '<a href="/tickets/' + ticket.tid + '/delete" class="btn  btn-sm" style="padding: 0.1rem 0.2rem; font-size: 0.55rem; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">' +
+                    '<form action="/tickets/' + ticket.tid + '/delete" method="post">' +
+                        '<button type="submit" class="btn  btn-sm" style="padding: 0.2rem 0.4rem; font-size: 7px; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">' +
+                            '<img src="/images/delete.png" alt="Delete" style="width: 16px; height: 16px;" />' +
+                        '</button>' +
+                    '</form>'
+                    +'</a>'+
                         '</div>' +
                     
                     '</td>';
@@ -632,31 +645,9 @@ $(document).ready(function () {
 
 
 
-  <!-- Hot Issues of the Day Section -->
-   <div class="row mt-4">
-    <div class="col-md-12">
-        <h1 class="dashboard-header text-center mb-4">Trending Issues And KTs</h1>
-        <div class="card">
-            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;"> <!-- Scrollable table -->
-                <table id="issuesTable" class="table table-hover table-striped">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Ticket ID</th>
-                            <th>Description</th>
-                            <th>Created By</th>
-                            <th>Actions</th> <!-- New column for the claim button -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Ticket data will be populated here via AJAX -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
+  </div>
+  </div>
+  
 <!-- Fun Friday Announcement -->
 <div class="row mt-5">
     <div class="col-md-12">
@@ -700,8 +691,7 @@ $(document).ready(function () {
 </script>
 
 <div class="container mt-5">
-    <h2 class="text-center">Fun Friday Tickets</h2>
-
+    
     <!-- Scrollable Container for Tickets -->
     <div class="cards-container">
         <!-- Ticket cards will be injected here by AJAX -->

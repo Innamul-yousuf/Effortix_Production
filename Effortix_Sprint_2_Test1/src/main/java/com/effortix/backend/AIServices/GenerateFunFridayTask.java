@@ -77,7 +77,7 @@ public class GenerateFunFridayTask {
 			// Create URL object
 			URL url = new URL(apiUrl);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
+ 
 			// Set request method to POST
 			connection.setRequestMethod("POST");
 

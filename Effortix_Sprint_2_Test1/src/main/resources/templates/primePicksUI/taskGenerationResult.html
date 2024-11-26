@@ -9,46 +9,43 @@
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
-    <div class="container mt-4">
-        <h2>Generated Tasks</h2>
-
-        <!-- Table to display the tasks -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Task Name</th>
-                    <th>Description</th>
-                    <th>File Link</th>
-                    <th>Reference File</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>Action</th> <!-- New column for the claim button -->
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Iterate over the list of tickets -->
-                <tr th:each="ticket : ${ticketList}">
-                    <td th:text="${ticket.tName}"></td>
-                    <td th:text="${ticket.tDescription}"></td>
-                    <td>
-                        <a th:href="${ticket.tFileLink}" th:text="${ticket.tFileLink}"></a>
-                    </td>
-                    <td th:text="${ticket.locationOfFile}"></td>
-                    <td th:text="${ticket.tStatus}"></td>
-                    <td th:text="${ticket.tType}"></td>
-                    <td>
-                        <!-- Redirect to the ticket creation page with pre-filled task data -->
-                        <a th:href="@{/tickets/tickets/ticketsAI/new(topicName=${ticket.tName}, activity=${ticket.tDescription})}" class="btn btn-primary">
-                            Claim Task
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Back to employee selection or any other link -->
-      <!--   <a href="/employee-list" class="btn btn-primary">Back to Employee List</a> -->
+   <div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header text-white d-flex justify-content-between align-items-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">
+            <h4 class="mb-0" style="color: rgb(5 32 76);">Generated Tasks</h4>
+        </div>
+        
+        <br>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr class="text-center">
+                            <th class="align-middle" style="color: rgb(5 32 76);">Task Name</th>
+                            <th class="align-middle" style="color: rgb(5 32 76);">Description</th>
+                            <th class="align-middle" style="color: rgb(5 32 76);">Status</th>
+                            <th class="align-middle" style="color: rgb(5 32 76);">Type</th>
+                            <th class="align-middle" style="color: rgb(5 32 76); min-width: 120px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ticket : ${ticketList}" class="text-center align-middle">
+                            <td th:text="${ticket.tName}" class="align-middle"></td>
+                            <td th:text="${ticket.tDescription}" class="align-middle"></td>
+                            <td th:text="${ticket.tStatus}" class="align-middle"></td>
+                            <td th:text="${ticket.tType}" class="align-middle"></td>
+                            <td class="align-middle">
+                                <a th:href="@{/tickets/tickets/ticketsAI/new(topicName=${ticket.tName}, activity=${ticket.tDescription})}" class="btn btn-sm px-3" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">
+                                    Claim Task
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

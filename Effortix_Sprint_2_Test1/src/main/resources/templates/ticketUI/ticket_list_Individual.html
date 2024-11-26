@@ -25,19 +25,20 @@
 <body>
 <div th:replace="fragments/navbar"></div>
 <div class="container my-4">
-    <h1 class="text-center">Tickets Dashboard</h1>
-
+   
     <!-- Button to create new ticket -->
     <div class="text-center">
-        <a href="/tickets/tickets/new" class="btn btn-warning create-ticket-btn">+ Create Ticket</a>
+        <a href="/tickets/tickets/new" class="btn btn-dark create-ticket-btn">+ Create New Ticket</a>
     </div>
 <br>
     <!-- My Tickets Section -->
 
           <div id="myTickets" class="dashboard-card card">
             <div class="card-header d-flex justify-content-between align-items-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">
+                <div class="row">
                 <h5>My Tickets</h5>
                 
+    </div>
             </div>
            
             <div class="card-body" style="padding: 0;">

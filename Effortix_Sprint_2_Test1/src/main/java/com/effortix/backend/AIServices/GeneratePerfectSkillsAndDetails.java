@@ -105,11 +105,13 @@ public class GeneratePerfectSkillsAndDetails {
 	                    // Extract the "text" part from the first candidate
 	                    String text = candidates.getJSONObject(0).getJSONObject("content").getJSONArray("parts").getJSONObject(0).getString("text");
 
-	                    // Remove the leading and trailing backticks and "json" identifier from the text
+	                    // Clean up the text by removing the backticks and JSON identifier
 	                    String jsonText = text.replace("```json", "").replace("```", "").trim();
 
-	                    // Parse the JSON response
-	                    JSONArray skillsArray = new JSONArray(jsonText); // Assuming the response is now a simple array
+	                    // Parse the cleaned JSON response
+	                    JSONObject skillsJsonObject = new JSONObject(jsonText);
+	                    JSONArray skillsArray = skillsJsonObject.getJSONArray("skills"); // Extract the skills array
+
 	                    for (int i = 0; i < skillsArray.length(); i++) {
 	                        JSONObject skillObject = skillsArray.getJSONObject(i);
 
@@ -117,7 +119,7 @@ public class GeneratePerfectSkillsAndDetails {
 	                        String skillName = skillObject.getString("skill");
 	                        double rating = skillObject.getDouble("rating");
 
-	                        // Store skill and rating
+	                        // Store skill and rating in the map
 	                        skillsMap.computeIfAbsent(skillName, k -> new ArrayList<>()).add("Rating: " + rating);
 	                        System.out.println("Skill: " + skillName + " (Rating: " + rating + ")");
 	                    }
@@ -134,7 +136,6 @@ public class GeneratePerfectSkillsAndDetails {
 	                    System.out.println("Error Response Body: " + errorResponse.toString());
 	                }
 	            }
-
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
