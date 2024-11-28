@@ -241,7 +241,18 @@ h1 {
 						<div class="col-md-4 d-flex align-items-center">
 							<button type="button" id="askAISuggestionsBtn"
 								class="btn btn-primary">Ask AI Suggestions</button>
+
+						<!-- Button to Trigger AJAX Call -->
+						<button type="button" id="splitTasksBtn" class="btn btn-primary">Split
+							Tasks</button>
+
+						<!-- Add a container to display the results -->
+						<div id="splittedTasksContainer" style="display: none;">
+							<h5>Generated Sub-Tasks:</h5>
+							<ul id="splittedTasksList"></ul>
 						</div>
+
+					</div>
 
 				<!-- AI Suggested Employees (Hidden by default) -->
 				<div class="form-group col-md-4" id="aiSuggestedEmployeesContainer"
@@ -318,6 +329,46 @@ h1 {
         toEmployeeDropdown.value = selectedEmployeeId;
     });
 
+</script>
+<script>
+    document.getElementById('splitTasksBtn').addEventListener('click', function() {
+        // Get the ticket description
+        var description = document.getElementById('tDescription').value;
+
+        // Display the container for sub-tasks
+        document.getElementById('splittedTasksContainer').style.display = 'block';
+
+        // Make a fetch request to the backend
+        fetch('/ticketsREST/tickets/makeSubTasks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ description: description })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();  // Parse the JSON response
+        })
+        .then(data => {
+            // Clear the existing list
+            var tasksList = document.getElementById('splittedTasksList');
+            tasksList.innerHTML = '';
+
+            // Populate the list with generated sub-tasks
+            data.forEach(function(task) {
+                var listItem = document.createElement('li');
+                listItem.textContent = task.tName || task.description; // Adjust based on task properties
+                tasksList.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error generating sub-tasks.');
+        });
+    });
 </script>
 
 </body>

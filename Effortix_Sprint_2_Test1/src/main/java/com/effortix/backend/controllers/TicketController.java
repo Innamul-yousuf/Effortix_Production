@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.effortix.backend.AIServices.FindEmployyeeAI;
 import com.effortix.backend.AIServices.GenerateFunFridayTask;
+import com.effortix.backend.AIServices.GenerateSmartSplitSubTasks;
 import com.effortix.backend.EmailsUps.EmailService;
 import com.effortix.backend.models.Employee;
 import com.effortix.backend.models.EmployeeSkills;
@@ -617,6 +618,9 @@ class TicketRESTController {
         return ResponseEntity.ok(tickets);
     }
     
+    
+   
+    
     @PutMapping("/updateStatus")
     public ResponseEntity<Ticket> updateTicketStatus(@RequestParam Long tId, @RequestParam String newStatus) {
         Ticket updatedTicket = ticketService.updateTicketStatus(tId, newStatus);
@@ -625,6 +629,42 @@ class TicketRESTController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // If no ticket found, return 404
         }
+    }
+    
+    @Autowired
+    GenerateSmartSplitSubTasks generateSmartSplitSubTasks;
+    @Autowired
+    EmployeeSkillsService employeeSkillsService;
+    
+    @PostMapping("/tickets/makeSubTasks")
+    @ResponseBody
+    public List<Ticket> splitTasksController(@RequestBody Map<String, String> requestBody) {
+        String description = requestBody.get("description");
+       
+        Gson gson = new Gson();
+     	List<EmployeeSkills> employeeSkills= employeeSkillsService.getAllEmployeeSkills();
+     	String EmployeeSkillsJSON = gson.toJson(employeeSkills);
+         System.out.println("JSON output: " + EmployeeSkillsJSON);
+        // ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+         // Submit the task for asynchronous execution
+			/*
+			 * executorService.submit(() -> {
+			 * findEmployyeeAI.findEmployeeWithSkill(description, EmployeeSkillsJSON); });
+			 */
+         System.out.println("Continuing with other operations while finding employees with skill...");
+
+         // Shutdown the executor service after your tasks are complete
+         //executorService.shutdown();
+         
+         
+       
+        
+      
+         List<Ticket> SplittedTasks = generateSmartSplitSubTasks.generateSub_Tasks(description, EmployeeSkillsJSON);
+        
+        // Filter out Optional.empty() and return the list of employees
+        return SplittedTasks;
     }
     
 }

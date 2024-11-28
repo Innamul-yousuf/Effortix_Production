@@ -2,9 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Employee List</title>
-    <!-- Bootstrap CDN -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <!-- Custom Styles -->
+      <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+   <!-- jQuery and DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
     <style>
         body {
             padding: 40px;
@@ -24,59 +32,90 @@
         table {
             margin-bottom: 20px;
         }
-        .btn-primary {
-            margin-bottom: 20px;
-        }
+        
         th {
             background-color: #007bff;
             color: white;
         }
+         .dataTables_wrapper .dataTables_filter {
+            float: right;
+            text-align: right;
+        }
+        .dataTables_wrapper .dataTables_length {
+            float: left;
+            text-align: left;
+        }
+        .dataTables_wrapper .dataTables_info {
+            float: left;
+            margin-top: 10px;
+        }
+        .dataTables_wrapper .dataTables_paginate {
+            float: right;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-<div th:replace="fragments/navbar"></div>
-<div class="container">
-    <div class="table-container">
-        <h1>Employee List</h1>
-        
-        <!-- Add New Employee Button -->
-        <a href="/employees/new" class="btn btn-primary">Add New Employee</a>
-        
-        <!-- Employee Table -->
-        <table class="table table-bordered table-hover">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    
-                    <th>Date Of Join</th>
-                    <th>Role</th>
-                    <th>In Bench</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="employee : ${employees}">
-                    <td th:text="${employee.eId}"></td>
-                    <td th:text="${employee.eName}"></td>
-                    <td th:text="${employee.eEmail}"></td>
-                   
-                    <td th:text="${employee.eJoinDate}"></td>
-                    <td th:text="${employee.eRole}"></td>
-                    <td th:text="${employee.eInBench} ? 'Yes' :'No'"></td>
-                    <td> 
-                             <a th:href="@{/project-employee/profile/{id}(id=${employee.eId})}" class="btn btn-primary btn-sm">View</a>
-                        </td>
-                </tr>
-            </tbody>
-        </table>
+    <div th:replace="fragments/navbar"></div>
+    <div class="container" style="width: 70%">
+        <div class="table-container">
+            <h1>Employee List</h1>
+            
+            <!-- Add New Employee Button -->
+            <a href="/employees/new" class="btn btn-primary">Add New Employee</a>
+            
+            <!-- Employee Table -->
+            <div class="table-responsive">
+            
+                <table id="employeeTable" class="table table-bordered table-hover">
+                    <thead>
+                        <tr >
+                            <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">ID</th>
+                            <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Name</th>
+                            <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Email</th>
+                            <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Date Of Join</th>
+                            <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Role</th>
+                            <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">In Bench</th>
+                            <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="employee : ${employees}">
+                            <td th:text="${employee.eId}"></td>
+                            <td th:text="${employee.eName}"></td>
+                            <td th:text="${employee.eEmail}"></td>
+                            <td th:text="${employee.eJoinDate}"></td>
+                            <td th:text="${employee.eRole}"></td>
+                            <td th:text="${employee.eInBench} ? 'Yes' :'No'"></td>
+                            <td> 
+                                <a th:href="@{/project-employee/profile/{id}(id=${employee.eId})}" class="btn btn-primary btn-sm">View</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
 
-<!-- Bootstrap JS (for future use if you need interactions) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
+  
+    <!-- Initialize DataTables -->
+    <script>
+        $(document).ready(function() {
+            $('#employeeTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "responsive": true,
+                "language": {
+                    "search": "Find Here:",
+                    "lengthMenu": " Show Entries _MENU_ ",
+                    "zeroRecords": "No matching records found",
+                    "info": "Showing _PAGE_ of _PAGES_",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+        });
+    </script>
 </body>
 </html>

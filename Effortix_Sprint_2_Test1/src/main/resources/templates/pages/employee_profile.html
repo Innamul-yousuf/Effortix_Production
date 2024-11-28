@@ -48,20 +48,23 @@
         </div>
 
         <!-- Projects Associated with Employee -->
-        <h5>Projects</h5>
+        <h5>Project Details</h5>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Project Name</th>
-                    <th style="width: 900px;">Project Role</th>
-                    <th>Skills</th>
-                    
+                    <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Project Name</th>
+                    <th style="width: 800px; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Project Role</th>
+                    <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">End Date</th>
+                    <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Priority</th>
+                    <th style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Skills</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="project : ${projects}">
                     <td th:text="${project.pName}"></td> <!-- Adjust according to the Project entity's attributes -->
                     <td th:text="${project.pDetails}"></td> <!-- Adjust according to the Project entity's attributes -->
+                    <td th:text="${project.pEndDate}"></td>
+                    <td th:text="${project.pPriority}"></td>
                     <td th:text="${project.pSkills}"></td> <!-- Adjust according to the Project entity's attributes -->
                 </tr>
             </tbody>
