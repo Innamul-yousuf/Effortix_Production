@@ -1,5 +1,6 @@
 package com.effortix.backend.controllers;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -223,12 +224,17 @@ public class TicketController {
         }
     }
 
-    // Delete a ticket
-    @PostMapping("/{id}/delete")
-    public String deleteTicket(@PathVariable("id") Long id) {
-        boolean deleted = ticketService.deleteTicketById(id);
-        return "redirect:/tickets"; // Redirects to the ticket list
-    }
+	
+	  // Delete a ticket
+	  
+	  @PostMapping("/{id}/delete") public String deleteTicket(@PathVariable("id")
+	  Long id) { 
+		  boolean deleted = ticketService.deleteTicketById(id); 
+	  return "redirect:/dashboard"; // Redirects to the ticket list 
+	  }
+	 
+    
+   
     
     
     @GetMapping("/tickets/edit/{tId}")
@@ -635,12 +641,48 @@ class TicketRESTController {
     GenerateSmartSplitSubTasks generateSmartSplitSubTasks;
     @Autowired
     EmployeeSkillsService employeeSkillsService;
-    
+    @Autowired
+    TicketRepository ticketRepository2;
     @PostMapping("/tickets/makeSubTasks")
     @ResponseBody
-    public List<Ticket> splitTasksController(@RequestBody Map<String, String> requestBody) {
-        String description = requestBody.get("description");
-       
+    public List<Ticket> splitTasksController(@RequestBody Map<String, Object> requestBody, HttpSession session) {
+        String description = (String) requestBody.get("description");
+        String tName = (String) requestBody.get("taskName");
+        String tFileLink = (String) requestBody.get("tFileLink");
+        String locationOfFile = (String) requestBody.get("locationOfFile");
+        String deadline = (String) requestBody.get("deadline");
+        System.out.println(tName+ tFileLink+locationOfFile+deadline+" hereeeee");
+        Ticket UiTicket= new Ticket();
+        UiTicket.setTDescription(description);
+        UiTicket.setTName(tName);
+        UiTicket.setTFileLink(tFileLink);
+        UiTicket.setLocationOfFile(locationOfFile);
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        
+        
+        
+        
+        String deadlineString = deadline;
+        
+        if (deadlineString != null && !deadlineString.isEmpty()) {
+            // Parse the deadline string into a Date object
+            Date Ticketdeadline;
+			try {
+				Ticketdeadline = dateFormat.parse(deadlineString);
+				  UiTicket.setDeadline(Ticketdeadline);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+          
+        }
+        
+        
+        
+
+        Employee loggedInEmployee = (Employee) session.getAttribute("employee");
+        System.out.println("Logged in use splitTasksController: "+loggedInEmployee.geteName());
         Gson gson = new Gson();
      	List<EmployeeSkills> employeeSkills= employeeSkillsService.getAllEmployeeSkills();
      	String EmployeeSkillsJSON = gson.toJson(employeeSkills);
@@ -661,8 +703,10 @@ class TicketRESTController {
        
         
       
-         List<Ticket> SplittedTasks = generateSmartSplitSubTasks.generateSub_Tasks(description, EmployeeSkillsJSON);
-        
+         List<Ticket> SplittedTasks = generateSmartSplitSubTasks.generateSub_Tasks(description, EmployeeSkillsJSON,loggedInEmployee, UiTicket);
+         for(int i=0;i<SplittedTasks.size();i++) {
+        	 ticketRepository2.save(SplittedTasks.get(i));
+         }
         // Filter out Optional.empty() and return the list of employees
         return SplittedTasks;
     }

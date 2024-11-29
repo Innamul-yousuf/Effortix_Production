@@ -88,6 +88,65 @@ h1 {
 #tFlag, #eDesignation {
 	display: none;
 }
+
+ .cards-container {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto; /* Enable horizontal scrolling */
+        white-space: nowrap; /* Prevent wrapping to the next line */
+        padding: 10px;
+        gap: 20px;
+        cursor: grab;
+    }
+
+   .task-card {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    width: 250px; /* Fixed width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    white-space: normal; /* Allow content to wrap */
+    word-wrap: break-word; /* Ensure long words break and wrap */
+    overflow: hidden; /* Prevent overflow */
+}
+
+    .task-card:hover {
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .task-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.task-description {
+    font-size: 14px;
+    color: #555;
+}
+
+    .view-button {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .btn-sm {
+        font-size: 12px;
+    }
+
+    /* Optional: Hide scrollbar */
+    .cards-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .cards-container::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 10px;
+    }
+    
+    
 </style>
 </head>
 <body>
@@ -203,11 +262,11 @@ h1 {
 				<input type="hidden" id="tFlag" th:field="*{tFlag}" th:value="0" />
 				<input type="hidden" id="eDesignation" th:field="*{eDesignation}"
 					class="form-control" />
-	
-					<!-- Row containing From Employee, AI Suggestions Button, and To Employee -->
-					<div class="row">
-	<!-- From Employee -->
-				<!-- 	<div class="col-md-4">
+
+				<!-- Row containing From Employee, AI Suggestions Button, and To Employee -->
+				<div class="row">
+					<!-- From Employee -->
+					<!-- 	<div class="col-md-4">
 						<div class="form-group">
 							<label for="tFromEID">From Employee:</label> <select
 								id="tFromEID" th:field="*{fromEmployee.eId}"
@@ -218,13 +277,13 @@ h1 {
 									th:value="${employee.eId}" th:text="${employee.eName}"></option>
 							</select>
 						</div>
-					</div>		 -->		
-	
-	
-	
-					
-	
-						<!-- To Employee -->
+					</div>		 -->
+
+
+
+
+
+					<!-- To Employee -->
 					<div class="col-md-4">
 						<div class="form-group">
 							<label for="tToEID">To Employee:</label> <select id="tToEID"
@@ -236,34 +295,29 @@ h1 {
 							</select>
 						</div>
 					</div>
-				
+
 					<!-- AI Suggestions Button -->
-						<div class="col-md-4 d-flex align-items-center">
-							<button type="button" id="askAISuggestionsBtn"
-								class="btn btn-primary">Ask AI Suggestions</button>
+					<div class="col-md-4 d-flex align-items-center">
+						<button type="button" id="askAISuggestionsBtn"
+							class="btn btn-primary">Ask AI Suggestions</button>
 
 						<!-- Button to Trigger AJAX Call -->
-						<button type="button" id="splitTasksBtn" class="btn btn-primary">Split
-							Tasks</button>
+						
 
-						<!-- Add a container to display the results -->
-						<div id="splittedTasksContainer" style="display: none;">
-							<h5>Generated Sub-Tasks:</h5>
-							<ul id="splittedTasksList"></ul>
-						</div>
+
 
 					</div>
 
-				<!-- AI Suggested Employees (Hidden by default) -->
-				<div class="form-group col-md-4" id="aiSuggestedEmployeesContainer"
-					style="display: none;">
-					<label for="aiSuggestedEmployees">AI Suggested Employees:</label> <select
-						id="aiSuggestedEmployees" class="form-control">
-						<option value="" disabled selected>Select an employee</option>
-					</select>
-				</div>
+					<!-- AI Suggested Employees (Hidden by default) -->
+					<div class="form-group col-md-4" id="aiSuggestedEmployeesContainer"
+						style="display: none;">
+						<label for="aiSuggestedEmployees">AI Suggested Employees:</label>
+						<select id="aiSuggestedEmployees" class="form-control">
+							<option value="" disabled selected>Select an employee</option>
+						</select>
+					</div>
 
-</div>
+				</div>
 				<!-- Project -->
 
 				<div class="form-group">
@@ -278,8 +332,19 @@ h1 {
 
 				<!-- Submit Button -->
 				<button type="submit" class="btn btn-primary">Save Ticket</button>
+				<button type="button" id="splitTasksBtn" class="btn btn-primary">Magic Split</button>
 			</form>
 		</div>
+		<!-- Container for the generated sub-tasks as cards -->
+		<div class="container mt-4">
+			<div class="cards-container" id="splittedTasksContainer"
+				style="display: none;">
+				<!-- Sub-task cards will be dynamically injected here -->
+			</div>
+		</div>
+		
+		
+
 	</div>
 
 	<script>
@@ -287,6 +352,7 @@ h1 {
     document.getElementById('askAISuggestionsBtn').addEventListener('click', function() {
         // Get the ticket description
         document.getElementById('aiSuggestedEmployeesContainer').style.display = 'block';
+        
         
         var description = document.getElementById('tDescription').value;
         
@@ -333,10 +399,15 @@ h1 {
 <script>
     document.getElementById('splitTasksBtn').addEventListener('click', function() {
         // Get the ticket description
+        var taskName = document.getElementById('tName').value;
         var description = document.getElementById('tDescription').value;
+        var tFileLink = document.getElementById('tFileLink').value;
+        var locationOfFile = document.getElementById('locationOfFile').value;
+        var deadline = document.getElementById('deadline').value;
+		console.log(taskName+ description)
 
         // Display the container for sub-tasks
-        document.getElementById('splittedTasksContainer').style.display = 'block';
+        document.getElementById('splittedTasksContainer').style.display = 'flex';
 
         // Make a fetch request to the backend
         fetch('/ticketsREST/tickets/makeSubTasks', {
@@ -344,7 +415,13 @@ h1 {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ description: description })
+            body: JSON.stringify({ 
+            	taskName: taskName,
+            	description: description,
+            	tFileLink: tFileLink,
+            	locationOfFile: locationOfFile,
+            	deadline: deadline
+            })
         })
         .then(response => {
             if (!response.ok) {
@@ -353,15 +430,47 @@ h1 {
             return response.json();  // Parse the JSON response
         })
         .then(data => {
-            // Clear the existing list
-            var tasksList = document.getElementById('splittedTasksList');
-            tasksList.innerHTML = '';
+            // Clear existing cards
+            var tasksContainer = document.getElementById('splittedTasksContainer');
+            tasksContainer.innerHTML = '';
 
-            // Populate the list with generated sub-tasks
+            // Populate the container with generated sub-task cards
             data.forEach(function(task) {
-                var listItem = document.createElement('li');
-                listItem.textContent = task.tName || task.description; // Adjust based on task properties
-                tasksList.appendChild(listItem);
+                var card = document.createElement('div');
+                card.classList.add('task-card');
+
+                // Card content
+                card.innerHTML = `
+                    <div class="task-title">${task.tname || 'No Name'}</div>
+                    <div class="task-description">${task.tdescription || 'No Description'}</div>
+                    <div class="task-description">Assigned to: ${task.toEmployee?.eName || 'Not Assigned'}</div>
+                    
+            
+<div class="btn-group" role="group" aria-label="Ticket Actions">
+            
+            <!-- View Button -->
+            <a href="/ticketUpdates/ticket/${task.tid}" class="btn btn-sm" style="padding: 0.2rem 0.4rem; font-size: 0.75rem; color: rgb(5 32 76); background-color: rgba(185, 229, 232, 0.34);">
+                <img src="/images/view.png" alt="View" style="width: 20px; height: 20px;" />
+            </a>
+
+            <!-- Edit Button -->
+            <a href="/tickets/tickets/edit/${task.tid}" class="btn btn-sm" style="padding: 0.2rem 0.4rem; font-size: 0.75rem; color: rgb(5 32 76); background-color: rgba(185, 229, 232, 0.34);">
+                <img src="/images/edit.png" alt="Edit" style="width: 17px; height: 17px;" />
+            </a>
+
+            <!-- Delete Button -->
+            <a href="/tickets/$task.tid/delete" class="btn  btn-sm" style="padding: 0.1rem 0.2rem; font-size: 0.55rem; color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">
+            <form action="/tickets/${task.tid}/delete" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-sm" style="padding: 0.2rem 0.4rem; font-size: 0.75rem; color: rgb(5 32 76); background-color: rgba(185, 229, 232, 0.34); border: none;">
+                    <img src="/images/delete.png" alt="Delete" style="width: 16px; height: 16px;" />
+                </button>
+            </form>
+            </a>
+        </div>
+                `;
+
+                // Append the card to the container
+                tasksContainer.appendChild(card);
             });
         })
         .catch(error => {

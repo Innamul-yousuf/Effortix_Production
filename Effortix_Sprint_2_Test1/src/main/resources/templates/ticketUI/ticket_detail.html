@@ -79,10 +79,10 @@
             <p><strong>Assigned To:</strong> <span th:text="${ticket.toEmployee.eName}"></span></p>
             <p><strong>Type:</strong> <span th:text="${ticket.tType}"></span></p>
             <p><strong>Status:</strong> <span th:text="${ticket.tStatus}"></span></p>
-            <p><strong>Designation:</strong> <span th:text="${ticket.eDesignation}"></span></p>
+           <!--  <p><strong>Designation:</strong> <span th:text="${ticket.eDesignation}"></span></p> -->
         </div>
 
-        Form to Add a New Update
+    
         <h2>Add Update</h2>
         <form id="updateForm" th:action="@{/ticketUpdates/ticketUpdates}" method="post">
             <input type="hidden" th:value="${ticket.tId}" name="ticketId"/>
