@@ -29,7 +29,8 @@
 <body>
  <div th:replace="fragments/navbar"></div>
    <div class="container">
-    <h1 class="mb-4">Timesheet Page</h1>
+   <br>
+    <h2 class="mb-4">Timesheet</h2>
 
     <!-- Timesheet form -->
     <form id="timesheetForm" class="mb-4">
@@ -51,9 +52,9 @@
 
         <!-- Flex container for buttons -->
         <div class="d-flex justify-content-start mt-3">
-            <button type="submit" class="btn btn-primary me-2">Get Timesheet</button>
-            <button id="downloadExcel" class="btn btn-success me-2">Download as Excel</button>
-            <button id="pushToIConnect" class="btn btn-warning">Push to I-Connect</button>
+            <button type="submit" class="btn btn-primary me-2">View Timesheet</button>
+            <button id="downloadExcel" class="btn btn-success me-2">Export As Excel</button>
+            <button id="pushToIConnect" class="btn btn-warning">Merge With iConnect</button>
         </div>
     </form>
 

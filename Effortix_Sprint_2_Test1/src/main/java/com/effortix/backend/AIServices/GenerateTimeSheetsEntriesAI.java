@@ -60,7 +60,7 @@ public class GenerateTimeSheetsEntriesAI {
 
 				// Allow sending the request body
 				connection.setDoOutput(true);
-				String systemInstruction="You are an AI assistant responsible for generating timesheet entries based on an update made by an employee in an ticket. You have to read the update of the ticket and need to generate timesheet content for him. It should be very short describing a small details of the update: ";
+				String systemInstruction="You are an AI assistant responsible for generating timesheet entries based on an update made by an employee in an ticket. You have to read the update of the ticket and need to generate timesheet content for him. It should be very short describing a details of the update, just give it as the content that can be directly pasted in timesheet no other extra details: ";
 				// JSON request payload
 				String jsonInputString = "{"
 					    + "\"contents\": ["

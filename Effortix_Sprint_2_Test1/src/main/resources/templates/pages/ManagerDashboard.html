@@ -183,6 +183,32 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
     font-size: 0.8rem;        /* Reduce font size slightly */
 }
 
+.chart-container {
+    position: relative;
+    width: 100%;           /* Use full width of the container */
+    max-width: 300px;      /* Limit the max width */
+    height: 250px;         /* Set a fixed height for consistency */
+    margin: 0 auto;        /* Center the charts */
+}
+
+h6 {
+    font-weight: bold;     /* Enhance heading visibility */
+    color: #333;           /* Darker color for better contrast */
+}
+
+
+.ptchart-container {
+    position: relative;
+    width: 100%;           /* Use full width of the container */
+    max-width: 900px;      /* Limit the max width */
+    height: 325px;         /* Set a fixed height for consistency */
+    margin: 0 auto;        /* Center the charts */
+}
+
+h6 {
+    font-weight: bold;     /* Enhance heading visibility */
+    color: #333;           /* Darker color for better contrast */
+}
 
     </style>
 </head>
@@ -192,32 +218,29 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
     <div class="row">
         <div class="col-md-12">
             <div id="dashboard" class="dashboard-card card shadow-sm my-4">
-                <div class="card-header   text-white" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">
-                    <h5 class="mb-0" style="color: rgb(5 32 76);" >Welcome, <span th:text="${session.employee.eName}"></span></h5>
+                <div class="card-header text-white" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">
+                    <h5 class="mb-0" style="color: rgb(5 32 76);">Welcome, <span th:text="${session.employee.eName}"></span></h5>
                 </div>
                 <div class="card-body">
-                    <div class="row align-items-center">
-                        <!-- Profile Section -->
-                       <!--  <div class="col-md-4 text-center">
-                            <img src="images/employee.jpg" alt="photo" class="profile-image rounded-circle mb-3" style="width: 150px; height: 150px;">
-                            <h6 class="mt-2" th:text="${session.employee.eName}">Employee Name</h6>
-                        </div> -->
-
+                    <div class="row align-items-center justify-content-center">
                         <!-- Performance Graph -->
-                        <div class="col-md-4 text-center">
-                            <h6 class="mb-3">Performance Graph</h6>
-                            <canvas id="performanceChart" height="150"></canvas>
+                        <div class="col-md-5 text-center">
+                            <h6 class="mb-3"> Overall Performance</h6>
+                            <div class="ptchart-container">
+                                <canvas id="performanceChart"></canvas>
+                            </div>
                         </div>
 
                         <!-- Tickets Overview -->
-                        <div class="col-md-4 text-center">
-                            <h6 class="mb-3">Tickets Overview</h6>
-                            <canvas id="ticketsChart" height="150"></canvas>
-                        </div>
+                        <div class="col-md-5 text-center">
+                            <h6 class="mb-3">Overall Tickets</h6>
+                            <div class="ptchart-container">
+                                <canvas id="ticketsChart"></canvas>
+                            </div>
                    
 
                     
-                    <div class="col-md-4">
+                <!--     <div class="col-md-4">
     <div>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0 w-100 text-center">Task Request</h5>
@@ -233,18 +256,69 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Ticket rows will be added dynamically via AJAX -->
+                    Ticket rows will be added dynamically via AJAX
                 </tbody>
             </table>
         </div>
     </div>
+</div> -->
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
+<div class="container-fluid my-4"> <!-- Full-width container -->
+  <div class="row g-4"> <!-- Added spacing between columns -->
+
+    <!-- Resource Graph -->
+    <div class="col-md-3 text-center">
+      <div class="card shadow-sm p-4 h-100"> <!-- Consistent padding and full height -->
+        <h6 class="mb-3">Resource Category</h6>
+        <div class="chart-container">
+          <canvas id="resourceChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skill Set of Resource -->
+    <div class="col-md-3 text-center">
+      <div class="card shadow-sm p-4 h-100">
+        <h6 class="mb-3">Skill Sets</h6>
+        <div class="chart-container">
+          <canvas id="skillChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="col-md-6">
+      <div class="card shadow-sm p-4 h-100">
+        <h6 class="mb-3 text-center">Hot Issues</h6>
+        <div class="table-responsive">
+          <table id="issuesTable" class="table table-bordered table-hover text-center">
+            <thead class="table-primary"> <!-- Styled header -->
+              <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Ticket data will be populated here via AJAX -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+
+
+
+
 
 <!-- CSS for custom scroll bar -->
 <style>
@@ -264,7 +338,7 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
     }
 </style>
         
-   
+ <!--   
 	<div class="row" >
 	
     <div class="col-md-6">
@@ -287,39 +361,14 @@ Bootstrap 5 JS (with Popper.js) - No need for jQuery
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Ticket rows will be added dynamically via AJAX -->
+                            Ticket rows will be added dynamically via AJAX
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-</div>
-  <div class="col-md-6">
- <div id="createdTickets" class="dashboard-card card">
-        <div class="card-header d-flex justify-content-between align-items-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); ">
-            <h5>Created By Me</h5>
-            <a href="/tickets/tickets/new" class="btn btn-dark">Create New Ticket</a>
-        </div>
-
-        <div class="card-body">
-            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                <table id="createdTicketsTable" class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">ID</th>
-                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); width: 500px;">Ticket Name</th>
-                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%);">Status</th>
-                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); width: 110px;">Deadline</th>
-                            <th class="text-center" style="color: rgb(5 32 76); background-color: rgb(185 229 232 / 34%); min-width: 60px;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Created tickets will be dynamically added here via AJAX -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+</div> -->
+ 
 <script>
 $(document).ready(function () {
     var employeeId = [[${session.employee.eId}]]; // Fetch employeeId from session
@@ -414,10 +463,10 @@ $(document).ready(function () {
 
            // Define initial counts for each ticket status
            var ticketCounts = {
-               open: 0,
-               assigned: 0,
-               InProgress: 0,
-               closed: 0
+               open: 160,
+               assigned: 80,
+               InProgress: 70,
+               closed: 150
            };
 
            // Fetch tickets for the employee when the page loads
@@ -521,11 +570,11 @@ $(document).ready(function () {
                     y: {
                         beginAtZero: true,  // This ensures the Y-axis starts at 0
                         min: 0,             // Set minimum value for Y-axis
-                        max: 14,           // Set maximum value for Y-axis
+                        max: 200,           // Set maximum value for Y-axis
                         ticks: {
-                            stepSize: 2,  // Set the interval between ticks (10 in this example)
+                            stepSize: 20,  // Set the interval between ticks (10 in this example)
                             callback: function(value) {
-                                return value + ' tickets';  // Customize the Y-axis tick labels (e.g., append ' tickets')
+                                return value;  // Customize the Y-axis tick labels (e.g., append ' tickets')
                             }
                         }
                     }
@@ -547,13 +596,29 @@ $(document).ready(function () {
     const performanceData = {
         labels: ['January', 'February', 'March', 'April', 'May'],
         datasets: [{
-            label: 'Performance',
+            label: 'Alpha',
            /*  data: [65, 59, 80, 81, 56], */
            data: generateRandomData(5), 
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1
-        }]
+        }, {
+            label: 'One PLM',
+            /*  data: [65, 59, 80, 81, 56], */
+            data: generateRandomData(5), 
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+             borderWidth: 1
+         },
+         {
+             label: 'Mat+',
+            /*  data: [65, 59, 80, 81, 56], */
+            data: generateRandomData(5), 
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+             borderWidth: 1
+         }
+         ]
     };
     
  // Create Performance Chart
@@ -646,16 +711,8 @@ $(document).ready(function () {
 
 
   </div>
-  </div>
+ 
   
-<!-- Fun Friday Announcement -->
-<div class="row mt-5">
-    <div class="col-md-12">
-        <div class="fun-friday-announcement text-center py-4" style="background-color: #f9c74f; border-radius: 8px;">
-            <h2 class="text-dark">Fun Friday Coming Soon!</h2>
-        </div>
-    </div>
-</div>
 <script>
 // Fetch Hot Issues of the Day via AJAX
         $.ajax({
@@ -669,13 +726,13 @@ $(document).ready(function () {
                     var row = $('<tr></tr>');
                     row.append('<td>' + ticket.tid + '</td>');  // Ticket ID
                     row.append('<td>' + ticket.tdescription + '</td>');  // Ticket Description
-                    row.append('<td>' + (ticket.fromEmployee? ticket.fromEmployee.eName : 'N/A') + '</td>');  // Assigned Employee
+                    /* row.append('<td>' + (ticket.fromEmployee? ticket.fromEmployee.eName : 'N/A') + '</td>');  */ // Assigned Employee
 
                     // Create the Claim Task button
                     var claimButton = $('<a></a>')
                         .attr('href', '/ticketUpdates/ticket/' + encodeURIComponent(ticket.tid))
                         .addClass('btn btn-primary')
-                        .text('Claim Task');
+                        .text('Claim');
 
                     var actionCell = $('<td></td>').append(claimButton);
                     row.append(actionCell);
@@ -689,14 +746,14 @@ $(document).ready(function () {
         });
    
 </script>
-
+<!-- 
 <div class="container mt-5">
     
-    <!-- Scrollable Container for Tickets -->
+    Scrollable Container for Tickets
     <div class="cards-container">
-        <!-- Ticket cards will be injected here by AJAX -->
+        Ticket cards will be injected here by AJAX
     </div>
-</div>
+</div> -->
 
 <!-- jQuery and jQuery UI for Draggable Feature -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -851,6 +908,95 @@ $(document).ready(function () {
             container.scrollLeft(scrollLeft - walk);
         });
     });
+</script>
+<script>
+$(document).ready(function () {
+    // Function to generate random data for a given number of data points
+    function generateRandomValues(numPoints, maxValue = 100) {
+        let values = [];
+        for (let i = 0; i < numPoints; i++) {
+            values.push(Math.floor(Math.random() * maxValue) + 1); // Values between 1 and maxValue
+        }
+        return values;
+    }
+
+    // Resource Graph Data (random values)
+    const resourceData = {
+        labels: ['Project', 'Bench', 'Training'],
+        datasets: [{
+            data: generateRandomValues(3), // 3 random values
+            backgroundColor: [
+            	'rgba(54, 162, 235, 0.2)',
+            	'rgba(255, 99, 132, 0.2)',
+            	'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // Skill Set Graph Data (random values)
+    const skillData = {
+        labels: ['AWC', 'Teamcenter', 'RAC', 'Java', 'ITK', 'Others'],
+        datasets: [{
+            data: generateRandomValues(5), // 5 random values
+            backgroundColor: [
+            	'rgba(255, 99, 132, 0.2)',
+            	'rgba(255, 171, 145, 0.2)',
+            	'rgba(121, 85, 72, 0.2)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(128, 0, 128, 0.2)',
+                'rgba(221, 160, 221, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 171, 145, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(128, 0, 128, 0.2)',
+                'rgba(221, 160, 221, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // Initialize Resource Pie Chart
+    const resourceCtx = document.getElementById('resourceChart').getContext('2d');
+    new Chart(resourceCtx, {
+        type: 'pie',
+        data: resourceData,
+        options: {
+            responsive: false,  // Disable responsive behavior
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+
+    // Initialize Skill Set Pie Chart
+    const skillCtx = document.getElementById('skillChart').getContext('2d');
+    new Chart(skillCtx, {
+        type: 'pie',
+        data: skillData,
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+});
+
 </script>
 
 
